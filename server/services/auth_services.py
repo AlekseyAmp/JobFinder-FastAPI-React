@@ -101,16 +101,6 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
                         True,
                         "lax")
 
-    response.set_cookie("logged_in",
-                        True,
-                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
-                        settings.ACCESS_TOKEN_EXPIRES_IN * 60,
-                        "/",
-                        None,
-                        False,
-                        False,
-                        "lax")
-
     return access_token
 
 
