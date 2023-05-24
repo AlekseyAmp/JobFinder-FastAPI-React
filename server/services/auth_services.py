@@ -10,18 +10,51 @@ from schemas.auth_schema import Register, Login
 from models.user import User
 
 
-async def create_new_user(data: Register, db: Session = Depends(get_db)):
-    phone_exists = db.query(User).filter(User.phone_number == data.phone_number).first()
+async def create_new_user(data: Register, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
+    phone_exists = db.query(User).filter(
+        User.phone_number == data.phone_number
+        ).first()
 
     if phone_exists:
         raise HTTPException(
             status_code=409,
             detail="Аккаунт уже существует"
         )
-    
 
-async def login_user(data: Login, db: Session = Depends(get_db), response: Response, authorize: AuthJWT = Depends()):
-    user = db.query(User).filter(User.phone_number == data.phone_number).first()
+    new_user = User(
+        name=data.email,
+        surname=data.email,
+        email=data.email.lower(),
+        phone_number=data.phone_number,
+        password=hash_password(data.password),
+    )
+
+    db.add(new_user)
+    db.commit()
+
+    access_token = await create_access_token(authorize, str(new_user.id))
+    refresh_token = await create_refresh_token(authorize, str(new_user.id))
+
+    response.set_cookie("access_token",
+                        access_token,
+                        expires=datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN),
+                        secure=True,
+                        httponly=True,
+                        samesite="Lax")
+
+    response.set_cookie("refresh_token",
+                        refresh_token,
+                        expires=datetime.utcnow() + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN),
+                        secure=True,
+                        httponly=True,
+                        samesite="Lax")
+
+    return new_user
+
+
+async def login_user(data: Login, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
+    user = db.query(User).filter(
+        User.phone_number == data.phone_number).first()
 
     if not user:
         raise HTTPException(
