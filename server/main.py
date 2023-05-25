@@ -1,9 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth_router
+
+from config.database import engine
+from models import user
+from routes import (
+    auth_routes
+)
 
 
 app = FastAPI()
+
+
+user.Base.metadata.create_all(bind=engine)
 
 
 origins = [
@@ -18,6 +26,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
 
 
 @app.get("/")
