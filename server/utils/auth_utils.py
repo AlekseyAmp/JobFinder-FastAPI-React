@@ -1,4 +1,5 @@
 from passlib.context import CryptContext
+import re
 from datetime import timedelta
 
 from config.jwt_config import AuthJWT
@@ -14,6 +15,13 @@ def hash_password(password: str):
 
 def verify_password(password: str, hashed_password: str):
     return pwd_context.verify(password, hashed_password)
+
+
+def is_valid_email(email: str):
+    email_syntax = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\\.[a-z]{1,3}$"
+    if re.match(email_syntax, email):
+        return True
+    return False
 
 
 async def create_access_token(authorize: AuthJWT, user_id: str):
