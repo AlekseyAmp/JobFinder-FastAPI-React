@@ -1,0 +1,22 @@
+@import '../../../assets/variables.scss';
+
+.greenButton {
+    button {
+        text-align: center;
+        cursor: pointer;
+        background-color: $green;
+        border-style: none;
+        outline: none;
+        border-radius: 15px;
+        padding: 9px 40px;
+        color: $white;
+        font-family: 'Lato';
+        font-size: 15px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+}
+
+.greenButton button:hover{
+    background: $blue;
+}

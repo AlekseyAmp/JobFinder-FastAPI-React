@@ -1,0 +1,13 @@
+.registration {
+    margin-top: 150px;
+
+    .title {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    &Form {
+        display: flex;
+        justify-content: center;
+    }
+}

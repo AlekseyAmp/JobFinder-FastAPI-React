@@ -1,0 +1,31 @@
+@import '../../../assets/variables.scss';
+
+.authInput {
+    margin-top: 30px;
+
+    input {
+        font-family: 'Lato';
+        font-weight: 400;
+        font-size: 16px;
+        color: $dark;
+        border: 2px solid $gray;
+        background-color: $white;
+        outline: none;
+        border-radius: 20px;
+        width: 215px;
+        height: 32px;
+        padding-left: 15px;
+        transition: 0.2s;
+    }
+
+    input:focus {
+        border: 2px solid $blue
+    }
+
+    label {
+        margin-bottom: 10px;
+    }
+
+    display: flex;
+    flex-direction: column;
+}

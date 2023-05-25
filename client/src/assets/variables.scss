@@ -1,0 +1,26 @@
+@import './fonts.scss';
+
+$white: #FFFFFF;
+$blue: #458DFD;
+$green: #15966E;
+$dark: rgba(34, 32, 32, 0.97);
+$light_dark: rgba(58, 54, 54, 0.89);
+$gray: RGB(183, 186, 207);
+$light_gray: #c7c8ce;
+
+
+.dark-text {
+    text-decoration: none;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-weight: 500;
+    color: $dark;
+}
+
+.title {
+    font-family: 'Montserrat';
+    font-size: 18px;
+    font-weight: bold;
+    color: $dark;
+    text-decoration: none;
+}
