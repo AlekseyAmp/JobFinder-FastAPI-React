@@ -84,7 +84,8 @@ async def create_new_user(data: Register, response: Response, db: Session, autho
 
 async def login_user(data: Login, response: Response, db: Session, authorize: AuthJWT):
     user = db.query(User).filter(
-        User.phone_number == data.phone_number).first()
+        User.phone_number == data.phone_number
+    ).first()
 
     if not user:
         raise HTTPException(
