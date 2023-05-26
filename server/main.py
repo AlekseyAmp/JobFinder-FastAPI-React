@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.database import engine
 from models import user
 from routes import (
-    auth_routes
+    auth_routes,
+    user_routes
 )
 
 
@@ -28,6 +29,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
+app.include_router(user_routes.router, tags=['users'], prefix='/api')
 
 
 @app.get("/")
