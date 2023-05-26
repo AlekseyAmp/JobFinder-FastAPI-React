@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import axios from '../../utils/axios';
+import Cookies from 'js-cookie';
 
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
@@ -22,14 +23,17 @@ function Register() {
         e.preventDefault();
         const name = e.target.name.value
         const surname = e.target.surname.value;
-        const phone = e.target.phone.value;
+        const phone_number = e.target.phone.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
 
         try {
-            const response = await axios.post('/auth/register', { name, surname, phone, email, password });
+            const response = await axios.post('/auth/register', { name, surname, phone_number, email, password });
             if (response.data) {
-                navigate('/')
+                Cookies.set('access_token', response.data.access_token);
+                Cookies.set('refresh_token', response.data.refresh_token);
+                navigate('/');
+                window.location.reload();
             }
         } catch (error) {
             console.log(error.response.data.detail);
@@ -45,9 +49,10 @@ function Register() {
                     buttonTitle='Зарегестрироваться'
                     authHelpText='Есть аккаунт?'
                     onSubmit={handleSubmit}
-                    authHelpLink='Вход'
-                    link='/login'
+                    authHelpPage='Вход'
+                    authHelpLink='/login'
                 />
+                <img src="img/job.jpg" alt="job-finder" />
             </div>
         </div>
     )
