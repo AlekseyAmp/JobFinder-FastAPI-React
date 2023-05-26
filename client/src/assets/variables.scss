@@ -1,24 +1,51 @@
-@import './fonts.scss';
-
-$white: #FFFFFF;
+$body_background: #f8f8f8;
+$white: #f7f7f7;
 $blue: #458DFD;
 $green: #15966E;
 $dark: rgba(34, 32, 32, 0.97);
 $light_dark: rgba(58, 54, 54, 0.89);
-$gray: RGB(183, 186, 207);
-$light_gray: #c7c8ce;
+$gray: rgb(216, 214, 214);
+$light_gray: #f3f3f7;
 
 
 .dark-text {
     text-decoration: none;
-    font-family: 'Montserrat';
+    font-family: 'Segoe UI';
     font-size: 16px;
     font-weight: 500;
     color: $dark;
 }
 
+.link-text {
+    text-decoration: none;
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    font-weight: 500;
+    color: $light_dark;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.link-text:hover {
+    color: $green;
+}
+
+.link-text-blue {
+    text-decoration: none;
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    font-weight: 500;
+    color: $blue;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.link-text-blue:hover {
+    color: $green;
+}
+
 .title {
-    font-family: 'Montserrat';
+    font-family: 'Segoe UI';
     font-size: 18px;
     font-weight: bold;
     color: $dark;
