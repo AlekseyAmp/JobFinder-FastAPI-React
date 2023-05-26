@@ -1,17 +1,11 @@
 @import '../../../assets/variables.scss';
 
 .authForm{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    border: 2px solid $gray;
-    padding: 30px 40px 70px 40px;
-    border-radius: 35px;
+    
     .authHelp{
-        margin-top: 50px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         text-align: center;
-        p{
-            margin-bottom: 5px;
-        }
     }
 }
