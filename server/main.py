@@ -2,10 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config.database import engine
-from models import user
+from models import (
+    user,
+    employer
+)
 from routes import (
     auth_routes,
-    user_routes
+    user_routes,
+    employer_routes
 )
 
 
@@ -13,6 +17,7 @@ app = FastAPI()
 
 
 user.Base.metadata.create_all(bind=engine)
+employer.Base.metadata.create_all(bind=engine)
 
 
 origins = [
@@ -30,6 +35,7 @@ app.add_middleware(
 
 app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
 app.include_router(user_routes.router, tags=['users'], prefix='/api')
+app.include_router(employer_routes.router, tags=['employers'], prefix='/api')
 
 
 @app.get("/")
