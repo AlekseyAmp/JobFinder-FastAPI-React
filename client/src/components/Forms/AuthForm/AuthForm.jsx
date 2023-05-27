@@ -1,11 +1,11 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import styles from './AuthForm.module.scss'
-import '../../../assets/variables.scss'
+import styles from './AuthForm.module.scss';
+import '../../../assets/variables.scss';
 
-import AuthInput from '../../Inputs/AuthInput/AuthInput'
-import GreenButton from '../../Buttons/GreenButton/GreenButton'
+import AuthInput from '../../Inputs/AuthInput/AuthInput';
+import GreenButton from '../../Buttons/GreenButton/GreenButton';
 
 function AuthForm({ inputConfigs, buttonTitle, authHelpText, authHelpLink, authHelpPage, onSubmit }) {
   return (
