@@ -23,6 +23,7 @@ function Login() {
 
         try {
             const response = await axios.post('/auth/login', { phone_number, password });
+            
             if (response.data) {
                 Cookies.set('access_token', response.data.access_token);
                 Cookies.set('refresh_token', response.data.refresh_token);

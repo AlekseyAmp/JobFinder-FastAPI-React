@@ -29,6 +29,7 @@ function Register() {
 
         try {
             const response = await axios.post('/auth/register', { name, surname, phone_number, email, password });
+            
             if (response.data) {
                 Cookies.set('access_token', response.data.access_token);
                 Cookies.set('refresh_token', response.data.refresh_token);

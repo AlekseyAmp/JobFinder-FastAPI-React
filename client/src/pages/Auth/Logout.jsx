@@ -11,7 +11,7 @@ function Logout() {
     try {
       const response = await axios.get('/auth/logout');
 
-      if (response.data.status === 'success') {
+      if (response.data) {
         Cookie.remove('access_token');
         Cookie.remove('refresh_token');
         navigate('/login');
