@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-import styles from './AuthInput.module.scss'
+import styles from './AuthInput.module.scss';
 
 function AuthInput({ title, type, name, value }) {
     return (
