@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from config.database import Base
@@ -15,3 +16,5 @@ class User(Base):
     password = Column(String)
     role = Column(String(10), default='applicant')
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    employer = relationship("Employer", uselist=False, back_populates="user")
