@@ -22,7 +22,8 @@ async def get_user_info(db: Session, user_id: str):
         "name": user.name,
         "surname": user.surname,
         "phone_number": user.phone_number,
-        "email": user.email
+        "email": user.email,
+        "role": user.role
     }
 
 
