@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("/auth/register")
 async def register(data: Register, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
-    return await a_s.create_new_user(data, response, db, authorize)
+    return await a_s.create_user(data, response, db, authorize)
 
 
 @router.post("/auth/login")
