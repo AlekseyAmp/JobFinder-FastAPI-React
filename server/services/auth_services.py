@@ -14,7 +14,7 @@ from utils.auth_utils import (
 )
 
 
-async def create_new_user(data: Register, response: Response, db: Session, authorize: AuthJWT):
+async def create_user(data: Register, response: Response, db: Session, authorize: AuthJWT):
     if not is_valid_email(data.email):
         raise HTTPException(
             status_code=400,
