@@ -77,6 +77,7 @@ async def create_user(data: Register, response: Response, db: Session, authorize
         "surname": new_user.surname,
         "phone_number": new_user.phone_number,
         "email": new_user. email,
+        "role": new_user.role,
         "access_token": access_token,
         "refresh_token": refresh_token
     }
@@ -130,6 +131,7 @@ async def login_user(data: Login, response: Response, db: Session, authorize: Au
         "surname": user.surname,
         "phone_number": user.phone_number,
         "email": user.email,
+        "role": user.role,
         "access_token": access_token,
         "refresh_token": refresh_token
     }
