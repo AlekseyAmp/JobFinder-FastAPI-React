@@ -14,7 +14,7 @@ async def get_user_info(db: Session, user_id: str):
     if not user:
         raise HTTPException(
             status_code=404,
-            detail="Аккаунт не найден"
+            detail="User not found"
         )
 
     return {
@@ -35,5 +35,5 @@ async def get_user_id(authorize: AuthJWT = Depends()):
     except (MissingTokenError):
         raise HTTPException(
             status_code=401,
-            detail="Не авторизован"
+            detail="Not authorized"
         )

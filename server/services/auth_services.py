@@ -18,7 +18,7 @@ async def create_user(data: Register, response: Response, db: Session, authorize
     if not is_valid_email(data.email):
         raise HTTPException(
             status_code=400,
-            detail="Неверный адрес электронной почты"
+            detail="Incorrect email address"
         )
 
     phone_exists = db.query(User).filter(
@@ -32,7 +32,7 @@ async def create_user(data: Register, response: Response, db: Session, authorize
     if phone_exists or email_exists:
         raise HTTPException(
             status_code=409,
-            detail="Аккаунт уже существует"
+            detail="The user already exists"
         )
 
     new_user = User(
@@ -76,7 +76,8 @@ async def create_user(data: Register, response: Response, db: Session, authorize
         "name": new_user.name,
         "surname": new_user.surname,
         "phone_number": new_user.phone_number,
-        "email": new_user. email,
+        "email": new_user.email,
+        "role": new_user.role,
         "access_token": access_token,
         "refresh_token": refresh_token
     }
@@ -90,13 +91,13 @@ async def login_user(data: Login, response: Response, db: Session, authorize: Au
     if not user:
         raise HTTPException(
             status_code=404,
-            detail="Аккаунт не найден"
+            detail="User not found"
         )
 
     if not verify_password(data.password, user.password):
         raise HTTPException(
             status_code=400,
-            detail="Неверная почта или пароль"
+            detail="Wrong email or password"
         )
 
     access_token = await create_access_token(authorize, str(user.id))
@@ -130,6 +131,7 @@ async def login_user(data: Login, response: Response, db: Session, authorize: Au
         "surname": user.surname,
         "phone_number": user.phone_number,
         "email": user.email,
+        "role": user.role,
         "access_token": access_token,
         "refresh_token": refresh_token
     }
@@ -155,4 +157,6 @@ async def logout_user(response: Response, authorize: AuthJWT):
     authorize.unset_jwt_cookies()
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")
-    return {"status": "success"}
+    return {
+        "status": "success"
+        }
