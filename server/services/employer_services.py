@@ -1,9 +1,9 @@
-from fastapi import Response, HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from schemas.employer_schema import EmployerData
 from models.employer import Employer
-from models.user import User
+from utils.admin_utils import is_admin
 
 
 async def create_employer(data: EmployerData, db: Session, user_id: str):
@@ -34,29 +34,21 @@ async def create_employer(data: EmployerData, db: Session, user_id: str):
 
 
 async def get_all_employers(db: Session, user_id: str):
-    employers = db.query(Employer).all()
-    return employers
+    if is_admin(user_id, db):
+        employers = db.query(Employer).all()
+        return employers
 
 
 async def confirm_employer(employer_id, db: Session, user_id: str):
-    admin = db.query(User).filter(
-        User.id == user_id
-    ).first()
+    if is_admin(user_id, db):
+        employer = db.query(Employer).filter(
+            Employer.id == employer_id
+        ).first()
 
-    if admin.role != "admin":
-        raise HTTPException(
-            status_code=403,
-            detail="No access rights"
-        )
+        employer.isConfirmed = True
 
-    employer = db.query(Employer).filter(
-        Employer.id == employer_id
-    ).first()
+        db.commit()
 
-    employer.isConfirmed = True
-
-    db.commit()
-
-    return {
-        "isConfirmed": employer.isConfirmed
-    }
+        return {
+            "isConfirmed": employer.isConfirmed
+        }
