@@ -46,8 +46,8 @@ async def create_user(data: Register, response: Response, db: Session, authorize
     db.add(new_user)
     db.commit()
 
-    access_token = await create_access_token(authorize, str(new_user.id))
-    refresh_token = await create_refresh_token(authorize, str(new_user.id))
+    access_token = create_access_token(authorize, str(new_user.id))
+    refresh_token = create_refresh_token(authorize, str(new_user.id))
 
     response.set_cookie("access_token",
                         access_token,
@@ -100,8 +100,8 @@ async def login_user(data: Login, response: Response, db: Session, authorize: Au
             detail="Wrong email or password"
         )
 
-    access_token = await create_access_token(authorize, str(user.id))
-    refresh_token = await create_refresh_token(authorize, str(user.id))
+    access_token = create_access_token(authorize, str(user.id))
+    refresh_token = create_refresh_token(authorize, str(user.id))
 
     response.set_cookie("access_token",
                         access_token,
