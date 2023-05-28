@@ -17,7 +17,7 @@ async def create_employer(data: EmployerData, db: Session = Depends(get_db), use
 
 @router.get("/employers")
 async def get_all_employers(db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
-    return await e_s.get_employers(db, user_id)
+    return await e_s.get_all_employers(db, user_id)
 
 
 @router.patch("/employers/{employer_id}")
