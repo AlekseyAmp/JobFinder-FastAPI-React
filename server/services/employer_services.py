@@ -14,7 +14,7 @@ async def create_employer(data: EmployerData, db: Session, user_id: str):
     if employer_exists:
         raise HTTPException(
             status_code=409,
-            detail="You are already an employer"
+            detail='Вы уже работодатель'
         )
 
     new_employer = Employer(
@@ -46,7 +46,7 @@ async def confirm_employer(employer_id, db: Session, user_id: str):
     if admin.role != "admin":
         raise HTTPException(
             status_code=403,
-            detail="No access rights"
+            detail="Нет прав доступа"
         )
 
     employer = db.query(Employer).filter(
