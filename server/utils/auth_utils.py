@@ -24,7 +24,7 @@ def is_valid_email(email: str):
     return False
 
 
-async def create_access_token(authorize: AuthJWT, user_id: str):
+def create_access_token(authorize: AuthJWT, user_id: str):
     access_token = authorize.create_access_token(
         subject=user_id,
         expires_time=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)
@@ -32,7 +32,7 @@ async def create_access_token(authorize: AuthJWT, user_id: str):
     return access_token
 
 
-async def create_refresh_token(authorize: AuthJWT, user_id: str):
+def create_refresh_token(authorize: AuthJWT, user_id: str):
     refresh_token = authorize.create_refresh_token(
         subject=user_id,
         expires_time=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN)
