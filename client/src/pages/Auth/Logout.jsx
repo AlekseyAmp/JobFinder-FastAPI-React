@@ -7,7 +7,7 @@ import Cookie from 'js-cookie';
 function Logout() {
   const navigate = useNavigate();
 
-  async function handleSubmit() {
+  async function handleLogoutSubmit() {
     try {
       const response = await axios.get('/auth/logout');
 
@@ -23,7 +23,7 @@ function Logout() {
   };
 
   return (
-    <a onClick={handleSubmit} className={"link-text"}>Выйти</a>
+    <a onClick={handleLogoutSubmit} className={"link-text"}>Выйти</a>
   );
 }
 

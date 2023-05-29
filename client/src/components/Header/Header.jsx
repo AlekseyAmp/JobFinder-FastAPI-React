@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { access_token } from '../../constants/token';
-import axios from '../../utils/axios';
 
 import styles from './Header.module.scss';
 import '../../assets/variables.scss';
+import { getUserNameSurname } from '../../services/user';
 
 import Logout from '../../pages/Auth/Logout';
 
@@ -15,23 +15,15 @@ function Header() {
   const [surname, setSurname] = useState('');
 
   useEffect(() => {
-    async function getNameSurname() {
-      try {
-        const response = await axios.get(`/users/me`);
-
-        if (response.data) {
-          setName(response.data.name);
-          setSurname(response.data.surname);
-        }
-      } catch (error) {
-        console.log(error.response.data.detail);
-      }
-    }
     if (isAuthorized) {
-      getNameSurname();
+      getUserNameSurname()
+        .then((data) => {
+          setName(data.name);
+          setSurname(data.surname);
+        })
+        .catch((error) => console.log(error));
     }
   }, [isAuthorized]);
-
   return (
     <div className={styles.header}>
       <Link to='/' className={styles.logo}>

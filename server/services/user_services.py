@@ -28,11 +28,12 @@ async def get_user_info(db: Session, user_id: str):
 
 
 async def get_user_id(authorize: AuthJWT = Depends()):
-    if MissingTokenError:
+    try:
+        authorize.jwt_required()
+        user_id = authorize.get_jwt_subject()
+        return user_id
+    except MissingTokenError:
         raise HTTPException(
             status_code=401,
             detail="Not authorized"
         )
-    authorize.jwt_required()
-    user_id = authorize.get_jwt_subject()
-    return user_id

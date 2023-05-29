@@ -15,6 +15,6 @@ class User(Base):
     email = Column(String(255), unique=True)
     password = Column(String)
     role = Column(String(10), default='applicant')
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
 
     employer = relationship("Employer", uselist=False, back_populates="user")

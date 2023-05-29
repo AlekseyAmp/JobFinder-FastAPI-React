@@ -1,10 +1,10 @@
 import React from 'react';
 
-import styles from './AuthInput.module.scss';
+import styles from './DefaultInput.module.scss';
 
-function AuthInput({ title, type, name, value }) {
+function DefaultInput({ title, type, name, value }) {
     return (
-        <div className={styles.authInput}>
+        <div className={styles.defaultInput}>
             <label htmlFor={name} className={`dark-text`}>{title}</label>
 
             <input
@@ -17,4 +17,4 @@ function AuthInput({ title, type, name, value }) {
     )
 }
 
-export default AuthInput;
+export default DefaultInput;

@@ -1,9 +1,9 @@
 @import '../../../assets/variables.scss';
 
-.authInput {
+.textarea {
     margin-top: 30px;
 
-    input {
+    textarea {
         font-family: 'Segoe UI';
         font-weight: 400;
         font-size: 16px;
@@ -11,13 +11,15 @@
         border: 2px solid $gray;
         outline: none;
         border-radius: 10px;
-        width: 280px;
-        height: 34px;
+        width: 550px;
+        height: 300px;
         padding-left: 15px;
+        padding-top: 10px;
         transition: 0.2s;
+        resize: none;
     }
 
-    input:focus {
+    textarea:focus {
         border: 2px solid $green
     }
 

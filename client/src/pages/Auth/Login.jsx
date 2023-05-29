@@ -10,13 +10,13 @@ import styles from './Auth.module.scss';
 function Login() {
 
     const inputConfigs = [
-        { title: "Номер телефона", type: 'phone', name: 'phone' },
-        { title: "Придумайте пароль", type: 'password', name: 'password' },
+        { title: "Номер телефона", type: 'text', name: 'phone' },
+        { title: "Введите пароль", type: 'password', name: 'password' },
     ]
 
     const navigate = useNavigate()
 
-    async function handleSubmit(e) {
+    async function handleLoginSubmit(e) {
         e.preventDefault();
         const phone_number = e.target.phone.value;
         const password = e.target.password.value;
@@ -43,7 +43,7 @@ function Login() {
                     inputConfigs={inputConfigs}
                     buttonTitle='Войти'
                     authHelpText='Нет аккаунта?'
-                    onSubmit={handleSubmit}
+                    onSubmit={handleLoginSubmit}
                     authHelpPage='Регистрация'
                     authHelpLink='/register'
                 />

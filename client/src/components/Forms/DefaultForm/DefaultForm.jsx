@@ -1,19 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import styles from './AuthForm.module.scss';
+import styles from './DefaultForm.module.scss';
 import '../../../assets/variables.scss';
 
 import DefaultInput from '../../Inputs/DefaultInput/DefaultInput';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';
 
-function AuthForm({ inputConfigs, buttonTitle, authHelpText, authHelpLink, authHelpPage, onSubmit }) {
+function DefaultForm({ inputConfigs, buttonTitle, onSubmit }) {
   return (
-    <form className={styles.authForm} onSubmit={onSubmit}>
-      <div className={styles.authHelp}>
-        <p className={`dark-text`}>{authHelpText}</p>
-        <Link to={authHelpLink} className={`link-text-blue`}>{authHelpPage}</Link>
-      </div>
+    <form className={styles.defaultForm} onSubmit={onSubmit}>
       {inputConfigs.map((inputConfig, index) => (
         <DefaultInput
           key={index}
@@ -27,4 +22,4 @@ function AuthForm({ inputConfigs, buttonTitle, authHelpText, authHelpLink, authH
   );
 };
 
-export default AuthForm;
+export default DefaultForm;

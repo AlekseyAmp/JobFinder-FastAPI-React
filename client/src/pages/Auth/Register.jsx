@@ -10,16 +10,16 @@ import styles from './Auth.module.scss';
 function Register() {
 
     const inputConfigs = [
-        { title: "Имя", type: 'name', name: 'name' },
-        { title: "Фамилия", type: 'surname', name: 'surname' },
-        { title: "Номер телефона", type: 'phone', name: 'phone' },
+        { title: "Имя", type: 'text', name: 'name' },
+        { title: "Фамилия", type: 'text', name: 'surname' },
+        { title: "Номер телефона", type: 'text', name: 'phone' },
         { title: "Адрес электронной почты", type: 'email', name: 'email' },
         { title: "Придумайте пароль", type: 'password', name: 'password' },
     ]
 
     const navigate = useNavigate()
 
-    async function handleSubmit(e) {
+    async function handleRegisterSubmit(e) {
         e.preventDefault();
         const name = e.target.name.value
         const surname = e.target.surname.value;
@@ -49,7 +49,7 @@ function Register() {
                     inputConfigs={inputConfigs}
                     buttonTitle='Зарегестрироваться'
                     authHelpText='Есть аккаунт?'
-                    onSubmit={handleSubmit}
+                    onSubmit={handleRegisterSubmit}
                     authHelpPage='Вход'
                     authHelpLink='/login'
                 />
