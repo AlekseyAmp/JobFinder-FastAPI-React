@@ -44,6 +44,16 @@ $light_gray: #f3f3f7;
     color: $green;
 }
 
+.small-text {
+    text-decoration: none;
+    font-family: 'Segoe UI';
+    font-size: 14px;
+    font-weight: 500;
+    color: $light_dark;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
 .title {
     font-family: 'Segoe UI';
     font-size: 18px;

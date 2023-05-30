@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 import axios from '../../utils/axios';
 import Cookies from 'js-cookie';
+import { access_token } from '../../constants/token';
 
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Register() {
+    const navigate = useNavigate()
+    if (!!access_token) {
+        navigate('/');     
+    }
 
     const inputConfigs = [
         { title: "Имя", type: 'text', name: 'name' },
@@ -16,8 +21,6 @@ function Register() {
         { title: "Адрес электронной почты", type: 'email', name: 'email' },
         { title: "Придумайте пароль", type: 'password', name: 'password' },
     ]
-
-    const navigate = useNavigate()
 
     async function handleRegisterSubmit(e) {
         e.preventDefault();

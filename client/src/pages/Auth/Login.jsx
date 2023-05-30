@@ -3,18 +3,21 @@ import { useNavigate } from 'react-router-dom';
 
 import axios from '../../utils/axios';
 import Cookies from 'js-cookie';
+import { access_token } from '../../constants/token'
 
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Login() {
-
+    const navigate = useNavigate()
+    if (!!access_token) {
+        navigate('/');     
+    } 
+    
     const inputConfigs = [
         { title: "Номер телефона", type: 'text', name: 'phone' },
         { title: "Введите пароль", type: 'password', name: 'password' },
     ]
-
-    const navigate = useNavigate()
 
     async function handleLoginSubmit(e) {
         e.preventDefault();

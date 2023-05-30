@@ -5,7 +5,7 @@ import { access_token } from '../../constants/token';
 
 import styles from './Header.module.scss';
 import '../../assets/variables.scss';
-import { getUserNameSurname } from '../../services/user';
+import { getUserInfo } from '../../services/user';
 
 import Logout from '../../pages/Auth/Logout';
 
@@ -13,13 +13,15 @@ function Header() {
   const isAuthorized = !!access_token;
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     if (isAuthorized) {
-      getUserNameSurname()
+      getUserInfo()
         .then((data) => {
           setName(data.name);
           setSurname(data.surname);
+          setRole(data.role);
         })
         .catch((error) => console.log(error));
     }
@@ -46,6 +48,12 @@ function Header() {
         <ul>
           {isAuthorized ? (
             <>
+              {role === 'admin' ? (
+                <li>
+                  <Link to='/admin' className={`link-text`}>Админ панель</Link>
+                </li>
+              ) : null
+              }
               <li>
                 <Link to='/' className={`link-text`}>{name} {surname}</Link>
               </li>

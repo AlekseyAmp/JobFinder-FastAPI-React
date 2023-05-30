@@ -10,6 +10,15 @@
                 justify-content: center;
             }
         }
+        .createEmployerForm{
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            img {
+                width: 550px;
+                height: 550px;
+            }
+        }
     }
     button {
         margin-top: 30px;
