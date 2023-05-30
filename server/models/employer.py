@@ -11,7 +11,7 @@ class Employer(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     company_name = Column(String(255))
     company_description = Column(String)
-    isConfirmed = Column(Boolean, default=False)
+    is_confirmed = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
 
     user_id = Column(Integer, ForeignKey('users.id'))
