@@ -2,6 +2,9 @@ $body_background: #f8f8f8;
 $white: #f7f7f7;
 $blue: #458DFD;
 $green: #15966E;
+$light_green: #1ede5182;
+$red: #ce332ae6;
+$dark_red: #940c05e8;
 $dark: rgba(34, 32, 32, 0.97);
 $light_dark: rgba(58, 54, 54, 0.89);
 $gray: rgb(216, 214, 214);
@@ -50,7 +53,6 @@ $light_gray: #f3f3f7;
     font-size: 14px;
     font-weight: 500;
     color: $light_dark;
-    cursor: pointer;
     transition: 0.2s;
 }
 
