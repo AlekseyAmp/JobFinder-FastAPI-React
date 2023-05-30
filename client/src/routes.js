@@ -10,8 +10,20 @@ const routes = [
         component: Main,
     },
     {
+        path: '/register',
+        component: Register,
+    },
+    {
+        path: '/login',
+        component: Login,
+    },
+    {
         path: '/employer',
         component: Employer,
     },
+    {
+        path: '/admin',
+        component: Admin
+    }
 ]
 export default routes;
