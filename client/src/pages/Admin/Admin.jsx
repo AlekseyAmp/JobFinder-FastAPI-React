@@ -6,29 +6,38 @@ import { getUserInfo } from '../../services/user';
 import styles from './Admin.module.scss';
 import '../../assets/variables.scss';
 
-import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import Employer from '../../components/Cards/Employer/Employer';
+import { access_token } from '../../constants/token';
 
 function Admin() {
-  
-
-  const [employers, setEmployers] = useState([]);
-  useEffect(() => {
-    getAllEmployers()
-      .then((data) => {
-        setEmployers(data)
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
+  const isAuthorize = access_token
   const [role, setRole] = useState(null);
-  useEffect(() => {
-    getUserInfo()
-      .then((data) => setRole(data.role))
-      .catch((error) => console.log(error));
-  }, []);
+  const [name, setName] = useState(null)
+  const [employers, setEmployers] = useState([]);
+  const [activeTab, setActiveTab] = useState('unconfirmedEmployers');
 
-  const [activeTab, setActiveTab] = useState('confirmedEmployers');
+  useEffect(() => {
+    if (isAuthorize) {
+      getUserInfo()
+        .then((data) => {
+          setRole(data.role);
+          setName(data.name);
+        })
+
+        .catch((error) => console.log(error));
+    }
+  }, [isAuthorize]);
+
+  useEffect(() => {
+    if (role === 'admin') {
+      getAllEmployers()
+        .then((data) => {
+          setEmployers(data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [role]);
+  
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -39,17 +48,21 @@ function Admin() {
         return (
           <div className={styles.confirmedEmployers}>
             {employers.map((employer) => {
-              if (employer.isConfirmed) {
+              if (employer.is_confirmed) {
                 return (
                   <Employer
                     key={employer.id}
+                    employer_id={employer.id}
                     created_at={employer.created_at}
                     company_name={employer.company_name}
                     company_description={employer.company_description}
-                    isConfirmed={true}
+                    is_confirmed={true}
+                    employers={employers}
+                    setEmployers={setEmployers}
                   />
                 );
               }
+              return null;
             })}
           </div>
         );
@@ -57,7 +70,7 @@ function Admin() {
         return (
           <div className={styles.unconfirmedEmployers}>
             {employers.map((employer) => {
-              if (!employer.isConfirmed) {
+              if (!employer.is_confirmed) {
                 return (
                   <Employer
                     key={employer.id}
@@ -65,48 +78,55 @@ function Admin() {
                     company_name={employer.company_name}
                     company_description={employer.company_description}
                     created_at={employer.created_at}
-                    isConfirmed={false}
+                    is_confirmed={false}
+                    employers={employers}
+                    setEmployers={setEmployers}
                   />
                 );
               }
+              return null;
             })}
           </div>
         );
-      case 'vacancies':
-        return <div>Content for vacancies</div>;
       default:
         return null;
     }
   };
 
   return (
-    <div className={styles.employer}>
+    <div className={styles.admin}>
       {role === 'admin' ? (
-        <div className={styles.admin}>
-          <div className={`title`}>Здравствуйте</div>
-          <div className={styles.menu}>
+        <div className={styles.adminContent}>
+          <div className={`title`}>Добро пожаловать, {name}!</div>
+
+          <div className={styles.adminEmployersMenu}>
+
             <button
               className={activeTab === 'confirmedEmployers' ? 'active' : ''}
-              onClick={() => handleTabClick('confirmedEmployers')}
-            >
-              Подтвержденные работодатели
-            </button>
+              onClick={() => handleTabClick('confirmedEmployers')}>
+              Подтвержденные работодатели</button>
+
             <button
               className={activeTab === 'unconfirmedEmployers' ? 'active' : ''}
-              onClick={() => handleTabClick('unconfirmedEmployers')}
-            >
-              Неподтвержденные работодатели
-            </button>
+              onClick={() => handleTabClick('unconfirmedEmployers')}>
+              Неподтвержденные работодатели</button>
+
             <button
-              className={activeTab === 'vacancies' ? 'active' : ''}
-              onClick={() => handleTabClick('vacancies')}
-            >
-              Вакансии
-            </button>
+              className={activeTab === 'confirmedVacancies' ? 'active' : ''}
+              onClick={() => handleTabClick('confirmedVacancies')}>
+              Подтвержденные вакансии</button>
+
+            <button
+              className={activeTab === 'unconfirmedVacancies' ? 'active' : ''}
+              onClick={() => handleTabClick('unconfirmedVacancies')}>
+              Неподтвержденные вакансии</button>
+
           </div>
-          <div className={styles.adminContent}>{renderContent()}</div>
+
+          <div className={styles.adminCards}>{renderContent()}</div>
         </div>
-      ) : ""}
+      ) : "Нет прав доступа"
+      }
     </div>
   );
 }
