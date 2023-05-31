@@ -52,11 +52,10 @@ function Employer() {
   const handleCreateEmployerSubmit = (e) => {
     e.preventDefault();
     createNewEmployer(e.target.company_name.value, e.target.company_description.value);
-    window.location.reload();
   };
 
   const renderContent = () => {
-    if (role === 'applicant') {
+    if (role === 'user') {
       return showEmployerCreateForm ? (
         <TextareaForm
           inputConfigs={inputConfigs}
