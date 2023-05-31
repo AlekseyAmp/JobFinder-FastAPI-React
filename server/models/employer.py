@@ -16,3 +16,5 @@ class Employer(Base):
 
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="employer")
+
+    vacancy = relationship("Vacancy", uselist=False, back_populates="employer")
