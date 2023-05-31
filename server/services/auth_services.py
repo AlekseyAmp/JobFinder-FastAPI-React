@@ -3,18 +3,32 @@ from sqlalchemy.orm import Session
 
 from config.jwt_config import AuthJWT
 from config.settings import settings
-from schemas.auth_schema import Register, Login
+from schemas.auth_schema import RegisterForm, LoginForm
 from models.user import User
 from utils.auth_utils import (
     hash_password,
     verify_password,
     is_valid_email,
+    is_valid_name_surname,
     create_access_token,
     create_refresh_token
 )
+from utils.schema_utils import check_form_on_empty
 
 
-async def create_user(data: Register, response: Response, db: Session, authorize: AuthJWT):
+async def create_user(data: RegisterForm, response: Response, db: Session, authorize: AuthJWT):
+    if not check_form_on_empty(data):
+        raise HTTPException(
+            status_code=400,
+            detail="One or more field(s) is empty"
+        )
+
+    if not is_valid_name_surname(data.name, data.surname):
+        raise HTTPException(
+            status_code=400,
+            detail="Name or surname can only contain letters"
+        )
+
     if not is_valid_email(data.email):
         raise HTTPException(
             status_code=400,
@@ -36,10 +50,10 @@ async def create_user(data: Register, response: Response, db: Session, authorize
         )
 
     new_user = User(
-        name=data.name,
-        surname=data.surname,
-        email=data.email.lower(),
-        phone_number=data.phone_number,
+        name=data.name.strip(),
+        surname=data.surname.strip(),
+        email=data.email.lower().strip(),
+        phone_number=data.phone_number.strip(),
         password=hash_password(data.password),
     )
 
@@ -83,7 +97,7 @@ async def create_user(data: Register, response: Response, db: Session, authorize
     }
 
 
-async def login_user(data: Login, response: Response, db: Session, authorize: AuthJWT):
+async def login_user(data: LoginForm, response: Response, db: Session, authorize: AuthJWT):
     user = db.query(User).filter(
         User.phone_number == data.phone_number
     ).first()

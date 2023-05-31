@@ -1,13 +1,20 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from schemas.employer_schema import EmployerData
+from schemas.employer_schema import EmployerForm
 from models.employer import Employer
 from models.user import User
 from utils.admin_utils import is_admin
+from utils.schema_utils import check_form_on_empty
 
 
-async def create_employer(data: EmployerData, db: Session, user_id: str):
+async def create_employer(data: EmployerForm, db: Session, user_id: str):
+    if not check_form_on_empty(data):
+        raise HTTPException(
+            status_code=400,
+            detail="One or more field(s) is empty"
+        )
+
     user = db.query(User).filter(
         User.id == user_id
     ).first()
@@ -49,41 +56,51 @@ async def get_all_employers(db: Session):
 
 
 async def confirm_employer(employer_id, db: Session, user_id: str):
-    if is_admin(user_id, db):
-        employer = db.query(Employer).filter(
-            Employer.id == employer_id
-        ).first()
+    if not is_admin(user_id, db):
+        raise HTTPException(
+            status_code=403,
+            detail="No access rights"
+        )
 
-        user = db.query(User).filter(
-            User.id == Employer.user_id
-        ).first()
+    employer = db.query(Employer).filter(
+        Employer.id == employer_id
+    ).first()
 
-        employer.is_confirmed = True
+    user = db.query(User).filter(
+        User.id == Employer.user_id
+    ).first()
 
-        user.role = "employer"
+    employer.is_confirmed = True
 
-        db.commit()
+    user.role = "employer"
 
-        return {
-            "message": "Employer is confirmed"
-        }
+    db.commit()
+
+    return {
+        "message": "Employer is confirmed"
+    }
 
 
 async def delete_employer(employer_id, db: Session, user_id: str):
-    if is_admin(user_id, db):
-        employer = db.query(Employer).filter(
-            Employer.id == employer_id
-        ).first()
+    if not is_admin(user_id, db):
+        raise HTTPException(
+            status_code=403,
+            detail="No access rights"
+        )
 
-        user = db.query(User).filter(
-            User.id == Employer.user_id
-        ).first()
+    employer = db.query(Employer).filter(
+        Employer.id == employer_id
+    ).first()
 
-        user.role = "applicant"
+    user = db.query(User).filter(
+        User.id == Employer.user_id
+    ).first()
 
-        db.delete(employer)
-        db.commit()
+    user.role = "user"
 
-        return {
-            "message": "Employer is deleted"
-        }
+    db.delete(employer)
+    db.commit()
+
+    return {
+        "message": "Employer is deleted"
+    }
