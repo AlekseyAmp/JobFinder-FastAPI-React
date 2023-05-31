@@ -4,12 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.database import engine
 from models import (
     user,
-    employer
+    employer,
+    vacancy,
 )
 from routes import (
     auth_routes,
     user_routes,
-    employer_routes
+    employer_routes,
+    vacancy_routes,
 )
 
 
@@ -18,6 +20,7 @@ app = FastAPI()
 
 user.Base.metadata.create_all(bind=engine)
 employer.Base.metadata.create_all(bind=engine)
+vacancy.Base.metadata.create_all(bind=engine)
 
 
 origins = [
@@ -36,6 +39,7 @@ app.add_middleware(
 app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
 app.include_router(user_routes.router, tags=['users'], prefix='/api')
 app.include_router(employer_routes.router, tags=['employers'], prefix='/api')
+app.include_router(vacancy_routes.router, tags=['vacancies'], prefix='/api')
 
 
 @app.get("/")
