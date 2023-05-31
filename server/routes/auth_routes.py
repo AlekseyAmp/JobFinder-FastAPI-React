@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from config.database import get_db
 from config.jwt_config import AuthJWT
-from schemas.auth_schema import Register, Login
+from schemas.auth_schema import RegisterForm, LoginForm
 from services.user_services import get_user_id
 from services import auth_services as a_s
 
@@ -12,12 +12,12 @@ router = APIRouter()
 
 
 @router.post("/auth/register")
-async def register(data: Register, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
+async def register(data: RegisterForm, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
     return await a_s.create_user(data, response, db, authorize)
 
 
 @router.post("/auth/login")
-async def login(data: Login, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
+async def login(data: LoginForm, response: Response, db: Session = Depends(get_db), authorize: AuthJWT = Depends()):
     return await a_s.login_user(data, response, db, authorize)
 
 
