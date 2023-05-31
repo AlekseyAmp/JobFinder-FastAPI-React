@@ -24,6 +24,12 @@ def is_valid_email(email: str):
     return False
 
 
+def is_valid_name_surname(name: str, surname: str):
+    if name.isalpha() or surname.isalpha():
+        return True
+    return False
+
+
 def create_access_token(authorize: AuthJWT, user_id: str):
     access_token = authorize.create_access_token(
         subject=user_id,
