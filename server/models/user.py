@@ -14,7 +14,7 @@ class User(Base):
     phone_number = Column(String(50))
     email = Column(String(255), unique=True)
     password = Column(String)
-    role = Column(String(30), default='applicant')
+    role = Column(String(30), default='user')
     created_at = Column(DateTime, default=datetime.now)
 
     employer = relationship("Employer", uselist=False, back_populates="user")
