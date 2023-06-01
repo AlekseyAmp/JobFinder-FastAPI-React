@@ -19,13 +19,6 @@ function Employer() {
   const [role, setRole] = useState(null);
   const [showEmployerCreateForm, setShowEmployerCreateForm] = useState(false);
 
-  const inputConfigs = [
-    { title: 'Название компании', type: 'text', name: 'company_name' },
-  ];
-  const textareaConfigs = [
-    { title: 'Описание компании', type: 'text', name: 'company_description' },
-  ];
-
   useEffect(() => {
     if (isAuthorized) {
       getUserInfo()
@@ -56,6 +49,12 @@ function Employer() {
 
   const renderContent = () => {
     if (role === 'user') {
+      const inputConfigs = [
+        { title: 'Название компании', type: 'text', name: 'company_name' },
+      ];
+      const textareaConfigs = [
+        { title: 'Описание компании', type: 'text', name: 'company_description' },
+      ];
       return showEmployerCreateForm ? (
         <TextareaForm
           inputConfigs={inputConfigs}

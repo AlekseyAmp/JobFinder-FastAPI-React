@@ -5,7 +5,22 @@ from schemas.employer_schema import EmployerForm
 from models.employer import Employer
 from models.user import User
 from utils.admin_utils import is_admin
+from utils.employer_utils import is_employer
 from utils.schema_utils import check_form_on_empty
+
+
+def get_employer(user_id: str, db: Session):
+    employer = db.query(Employer).filter(
+        Employer.user_id == user_id
+    ).first()
+
+    if not employer:
+        raise HTTPException(
+            status_code=404,
+            detail="Employer not found"
+        )
+
+    return employer
 
 
 async def create_employer(data: EmployerForm, db: Session, user_id: str):
@@ -67,12 +82,11 @@ async def confirm_employer(employer_id, db: Session, user_id: str):
     ).first()
 
     user = db.query(User).filter(
-        User.id == Employer.user_id
+        User.id == employer.user_id
     ).first()
 
-    employer.is_confirmed = True
-
     user.role = "employer"
+    employer.is_confirmed = True
 
     db.commit()
 
@@ -82,7 +96,7 @@ async def confirm_employer(employer_id, db: Session, user_id: str):
 
 
 async def delete_employer(employer_id, db: Session, user_id: str):
-    if not is_admin(user_id, db):
+    if not is_admin(user_id, db) and not is_employer:
         raise HTTPException(
             status_code=403,
             detail="No access rights"
@@ -93,7 +107,7 @@ async def delete_employer(employer_id, db: Session, user_id: str):
     ).first()
 
     user = db.query(User).filter(
-        User.id == Employer.user_id
+        User.id == employer.user_id
     ).first()
 
     user.role = "user"

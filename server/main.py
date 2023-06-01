@@ -5,7 +5,9 @@ from config.database import engine
 from models import (
     user,
     employer,
+    applicant,
     vacancy,
+    feedback,
 )
 from routes import (
     auth_routes,
@@ -20,8 +22,9 @@ app = FastAPI()
 
 user.Base.metadata.create_all(bind=engine)
 employer.Base.metadata.create_all(bind=engine)
+applicant.Base.metadata.create_all(bind=engine)
 vacancy.Base.metadata.create_all(bind=engine)
-
+feedback.Base.metadata.create_all(bind=engine)
 
 origins = [
     "http://localhost",

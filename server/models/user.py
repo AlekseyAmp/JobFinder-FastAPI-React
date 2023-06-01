@@ -17,4 +17,5 @@ class User(Base):
     role = Column(String(30), default='user')
     created_at = Column(DateTime, default=datetime.now)
 
-    employer = relationship("Employer", uselist=False, back_populates="user")
+    employer = relationship("Employer", back_populates="user")
+    applicant = relationship("Applicant", back_populates="user")

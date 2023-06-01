@@ -7,23 +7,23 @@ import Admin from './pages/Admin/Admin';
 const routes = [
     {
         path: '/',
-        component: Main,
+        page: Main,
     },
     {
         path: '/register',
-        component: Register,
+        page: Register,
     },
     {
         path: '/login',
-        component: Login,
+        page: Login,
     },
     {
         path: '/employer',
-        component: Employer,
+        page: Employer,
     },
     {
         path: '/admin',
-        component: Admin
+        page: Admin
     }
 ]
 export default routes;
