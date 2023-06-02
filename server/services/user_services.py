@@ -6,7 +6,7 @@ from config.jwt_config import AuthJWT
 from models.user import User
 
 
-async def get_user_info(db: Session, user_id: str):
+def get_user_info(db: Session, user_id: str):
     user = db.query(User).filter(
         User.id == user_id
     ).first()
@@ -27,7 +27,7 @@ async def get_user_info(db: Session, user_id: str):
     }
 
 
-async def get_user_id(authorize: AuthJWT = Depends()):
+def get_user_id(authorize: AuthJWT = Depends()):
     try:
         authorize.jwt_required()
         user_id = authorize.get_jwt_subject()

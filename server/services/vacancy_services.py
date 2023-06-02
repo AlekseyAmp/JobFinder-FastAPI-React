@@ -23,7 +23,7 @@ def get_vacancy(vacancy_id: str, db: Session):
     return vacancy
 
 
-async def create_vacancy(data: VacancyForm, db: Session, user_id: str):
+def create_vacancy(data: VacancyForm, db: Session, user_id: str):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -61,12 +61,12 @@ async def create_vacancy(data: VacancyForm, db: Session, user_id: str):
     }
 
 
-async def get_all_vacancies(db: Session):
+ def get_all_vacancies(db: Session):
     vacancies = db.query(Vacancy).all()
     return vacancies[::-1]
 
 
-async def confirm_vacancy(vacancy_id, db: Session, user_id: str):
+def confirm_vacancy(vacancy_id, db: Session, user_id: str):
     if not is_admin(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -84,7 +84,7 @@ async def confirm_vacancy(vacancy_id, db: Session, user_id: str):
     }
 
 
-async def delete_vacancy(vacancy_id, db: Session, user_id: str):
+def delete_vacancy(vacancy_id, db: Session, user_id: str):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,

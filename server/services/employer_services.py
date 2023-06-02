@@ -37,7 +37,7 @@ def get_employer_by_employer_id(employer_id: str, db: Session):
     return employer
 
 
-async def create_employer(data: EmployerForm, db: Session, user_id: str):
+def create_employer(data: EmployerForm, db: Session, user_id: str):
     if not check_form_on_empty(data):
         raise HTTPException(
             status_code=400,
@@ -79,12 +79,12 @@ async def create_employer(data: EmployerForm, db: Session, user_id: str):
     }
 
 
-async def get_all_employers(db: Session):
+def get_all_employers(db: Session):
     employers = db.query(Employer).all()
     return employers[::-1]
 
 
-async def confirm_employer(employer_id, db: Session, user_id: str):
+def confirm_employer(employer_id, db: Session, user_id: str):
     if not is_admin(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -107,7 +107,7 @@ async def confirm_employer(employer_id, db: Session, user_id: str):
     }
 
 
-async def delete_employer(employer_id, db: Session, user_id: str):
+def delete_employer(employer_id, db: Session, user_id: str):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,

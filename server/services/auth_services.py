@@ -16,7 +16,7 @@ from utils.auth_utils import (
 from utils.schema_utils import check_form_on_empty
 
 
-async def create_user(data: RegisterForm, response: Response, db: Session, authorize: AuthJWT):
+def create_user(data: RegisterForm, response: Response, db: Session, authorize: AuthJWT):
     if not check_form_on_empty(data):
         raise HTTPException(
             status_code=400,
@@ -97,7 +97,7 @@ async def create_user(data: RegisterForm, response: Response, db: Session, autho
     }
 
 
-async def login_user(data: LoginForm, response: Response, db: Session, authorize: AuthJWT):
+def login_user(data: LoginForm, response: Response, db: Session, authorize: AuthJWT):
     user = db.query(User).filter(
         User.phone_number == data.phone_number
     ).first()
@@ -151,7 +151,7 @@ async def login_user(data: LoginForm, response: Response, db: Session, authorize
     }
 
 
-async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
+def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
     access_token = await create_access_token(authorize, user_id)
 
     response.set_cookie("access_token",
@@ -167,7 +167,7 @@ async def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
     return access_token
 
 
-async def logout_user(response: Response, authorize: AuthJWT):
+def logout_user(response: Response, authorize: AuthJWT):
     authorize.unset_jwt_cookies()
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")
