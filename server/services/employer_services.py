@@ -114,7 +114,7 @@ async def delete_employer(employer_id, db: Session, user_id: str):
             detail="No access rights"
         )
 
-    if not is_admin(user_id, db):
+    if is_employer(user_id, db):
         employer = get_employer_by_user_id(user_id, db)
 
         if str(employer.id) != employer_id:

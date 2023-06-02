@@ -93,7 +93,7 @@ async def delete_vacancy(vacancy_id, db: Session, user_id: str):
 
     vacancy = get_vacancy(vacancy_id, db)
 
-    if not is_admin(user_id, db):
+    if is_employer(user_id, db):
         employer = get_employer_by_user_id(user_id, db)
 
         if vacancy.employer_id != employer.id:
