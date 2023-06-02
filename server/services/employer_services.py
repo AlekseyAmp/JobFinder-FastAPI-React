@@ -9,9 +9,23 @@ from utils.employer_utils import is_employer
 from utils.schema_utils import check_form_on_empty
 
 
-def get_employer(user_id: str, db: Session):
+def get_employer_by_user_id(user_id: str, db: Session):
     employer = db.query(Employer).filter(
         Employer.user_id == user_id
+    ).first()
+
+    if not employer:
+        raise HTTPException(
+            status_code=404,
+            detail="Employer not found"
+        )
+
+    return employer
+
+
+def get_employer_by_employer_id(employer_id: str, db: Session):
+    employer = db.query(Employer).filter(
+        Employer.id == employer_id
     ).first()
 
     if not employer:
@@ -77,9 +91,7 @@ async def confirm_employer(employer_id, db: Session, user_id: str):
             detail="No access rights"
         )
 
-    employer = db.query(Employer).filter(
-        Employer.id == employer_id
-    ).first()
+    employer = get_employer_by_employer_id(employer_id, db)
 
     user = db.query(User).filter(
         User.id == employer.user_id
@@ -96,15 +108,20 @@ async def confirm_employer(employer_id, db: Session, user_id: str):
 
 
 async def delete_employer(employer_id, db: Session, user_id: str):
-    if not is_admin(user_id, db) and not is_employer:
+    if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,
             detail="No access rights"
         )
 
-    employer = db.query(Employer).filter(
-        Employer.id == employer_id
-    ).first()
+    if not is_admin(user_id, db):
+        employer = get_employer_by_user_id(user_id, db)
+
+        if str(employer.id) != employer_id:
+            raise HTTPException(
+                status_code=403,
+                detail="Access denied"
+            )
 
     user = db.query(User).filter(
         User.id == employer.user_id

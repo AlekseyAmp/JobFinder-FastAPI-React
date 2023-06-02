@@ -15,6 +15,11 @@ async def create_employer(data: EmployerForm, db: Session = Depends(get_db), use
     return await e_s.create_employer(data, db, user_id)
 
 
+@router.get("/employers/{user_id}")
+async def get_employer_by_user_id(user_id: str,  db: Session = Depends(get_db)):
+    return e_s.get_employer_by_user_id(user_id, db)
+
+
 @router.get("/employers")
 async def get_all_employers(db: Session = Depends(get_db)):
     return await e_s.get_all_employers(db)
