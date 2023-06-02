@@ -1,12 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from schemas.employer_schema import EmployerForm
 from models.employer import Employer
 from models.user import User
-from utils.admin_utils import is_admin
-from utils.employer_utils import is_employer
-from utils.schema_utils import check_form_on_empty
+from dto.employer import Employer as EmployerDTO
+from utils.admin import is_admin
+from utils.employer import is_employer
+from utils.dto import check_data_on_empty
 
 
 def get_employer_by_user_id(user_id: str, db: Session):
@@ -37,8 +37,8 @@ def get_employer_by_employer_id(employer_id: str, db: Session):
     return employer
 
 
-def create_employer(data: EmployerForm, db: Session, user_id: str):
-    if not check_form_on_empty(data):
+def create_employer(data: EmployerDTO, db: Session, user_id: str):
+    if not check_data_on_empty(data):
         raise HTTPException(
             status_code=400,
             detail="One or more field(s) is empty"

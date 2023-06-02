@@ -3,9 +3,13 @@ from sqlalchemy.orm import Session
 
 from config.jwt_config import AuthJWT
 from config.settings import settings
-from schemas.auth_schema import RegisterForm, LoginForm
+
 from models.user import User
-from utils.auth_utils import (
+from dto.auth import (
+    Register as RegisterDTO,
+    Login as LoginDTO
+)
+from utils.auth import (
     hash_password,
     verify_password,
     is_valid_email,
@@ -13,11 +17,11 @@ from utils.auth_utils import (
     create_access_token,
     create_refresh_token
 )
-from utils.schema_utils import check_form_on_empty
+from utils.dto import check_data_on_empty
 
 
-def create_user(data: RegisterForm, response: Response, db: Session, authorize: AuthJWT):
-    if not check_form_on_empty(data):
+def create_user(data: RegisterDTO, response: Response, db: Session, authorize: AuthJWT):
+    if not check_data_on_empty(data):
         raise HTTPException(
             status_code=400,
             detail="One or more field(s) is empty"
@@ -97,7 +101,7 @@ def create_user(data: RegisterForm, response: Response, db: Session, authorize: 
     }
 
 
-def login_user(data: LoginForm, response: Response, db: Session, authorize: AuthJWT):
+def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJWT):
     user = db.query(User).filter(
         User.phone_number == data.phone_number
     ).first()

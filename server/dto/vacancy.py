@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 
-class VacancyForm(BaseModel):
+class Vacancy(BaseModel):
     name: str
     description: str
     place: str

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class RegisterForm(BaseModel):
+class Register(BaseModel):
     name: str
     surname: str
     phone_number: str
@@ -12,7 +12,7 @@ class RegisterForm(BaseModel):
         orm_mode = True
 
 
-class LoginForm(BaseModel):
+class Login(BaseModel):
     phone_number: str
     password: str
 

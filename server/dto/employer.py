@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class EmployerForm(BaseModel):
+class Employer(BaseModel):
     company_name: str
     company_description: str
 

@@ -1,12 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from schemas.vacancy_schema import VacancyForm
 from models.vacancy import Vacancy
-from services.employer_services import get_employer_by_user_id
-from utils.admin_utils import is_admin
-from utils.employer_utils import is_employer
-from utils.schema_utils import check_form_on_empty
+from dto.vacancy import Vacancy as VacancyDTO
+from services.employer import get_employer_by_user_id
+from utils.admin import is_admin
+from utils.employer import is_employer
+from utils.dto import check_data_on_empty
 
 
 def get_vacancy(vacancy_id: str, db: Session):
@@ -23,14 +23,14 @@ def get_vacancy(vacancy_id: str, db: Session):
     return vacancy
 
 
-def create_vacancy(data: VacancyForm, db: Session, user_id: str):
+def create_vacancy(data: VacancyDTO, db: Session, user_id: str):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,
             detail="No access rights"
         )
 
-    if not check_form_on_empty(data):
+    if not check_data_on_empty(data):
         raise HTTPException(
             status_code=400,
             detail="One or more field(s) is empty"
@@ -61,7 +61,7 @@ def create_vacancy(data: VacancyForm, db: Session, user_id: str):
     }
 
 
- def get_all_vacancies(db: Session):
+def get_all_vacancies(db: Session):
     vacancies = db.query(Vacancy).all()
     return vacancies[::-1]
 
