@@ -9,20 +9,6 @@ from utils.employer import is_employer
 from utils.dto import check_data_on_empty
 
 
-def get_vacancy(vacancy_id: str, db: Session):
-    vacancy = db.query(Vacancy).filter(
-        Vacancy.id == vacancy_id
-    ).first()
-
-    if not vacancy:
-        raise HTTPException(
-            status_code=403,
-            detail="Vacancy not found"
-        )
-
-    return vacancy
-
-
 def create_vacancy(data: VacancyDTO, db: Session, user_id: str):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
@@ -59,6 +45,34 @@ def create_vacancy(data: VacancyDTO, db: Session, user_id: str):
         "tags": new_vacancy.tags,
         "is_confirmed": new_vacancy.is_confirmed
     }
+
+
+def get_vacancy(vacancy_id: str, db: Session):
+    vacancy = db.query(Vacancy).filter(
+        Vacancy.id == vacancy_id
+    ).first()
+
+    if not vacancy:
+        raise HTTPException(
+            status_code=403,
+            detail="Vacancy not found"
+        )
+
+    return vacancy
+
+
+def get_vacancies_by_employer(employer_id: str, db: Session):
+    vacancies = db.query(Vacancy).filter(
+        Vacancy.employer_id == employer_id
+    )
+
+    if not vacancies:
+        raise HTTPException(
+            status_code=404,
+            detail="Vacancies not found"
+        )
+
+    return vacancies
 
 
 def get_all_vacancies(db: Session):

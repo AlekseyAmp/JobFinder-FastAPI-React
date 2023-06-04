@@ -10,10 +10,10 @@ from models import (
     feedback,
 )
 from routes import (
-    auth_routes,
-    user_routes,
-    employer_routes,
-    vacancy_routes,
+    auth as AuthRouter,
+    user as UserRouter,
+    employer as EmployerRouter,
+    vacancy as VacancyRouter,
 )
 
 
@@ -39,10 +39,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth_routes.router, tags=['auth'], prefix='/api')
-app.include_router(user_routes.router, tags=['users'], prefix='/api')
-app.include_router(employer_routes.router, tags=['employers'], prefix='/api')
-app.include_router(vacancy_routes.router, tags=['vacancies'], prefix='/api')
+app.include_router(AuthRouter.router, tags=['auth'], prefix='/api')
+app.include_router(UserRouter.router, tags=['users'], prefix='/api')
+app.include_router(EmployerRouter.router, tags=['employers'], prefix='/api')
+app.include_router(VacancyRouter.router, tags=['vacancies'], prefix='/api')
 
 
 @app.get("/")

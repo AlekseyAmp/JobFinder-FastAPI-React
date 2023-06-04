@@ -1,26 +1,16 @@
 .employer {
+    
     margin-top: 50px;
     display: flex;
     justify-content: center;
 
-    .cantWatchPage {
+    .createEmployerContent {
         margin-top: 150px;
 
-        &Button {
+        .createEmployerButton {
             gap: 20px;
             display: flex;
             justify-content: center;
-        }
-    }
-
-    .createEmployerForm {
-        display: flex;
-        gap: 50px;
-        align-items: center;
-
-        img {
-            width: 550px;
-            height: 550px;
         }
     }
 

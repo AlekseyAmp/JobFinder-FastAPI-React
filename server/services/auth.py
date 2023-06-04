@@ -9,6 +9,7 @@ from dto.auth import (
     Register as RegisterDTO,
     Login as LoginDTO
 )
+from services.employer import get_employer_by_user_id
 from utils.auth import (
     hash_password,
     verify_password,
@@ -18,6 +19,7 @@ from utils.auth import (
     create_refresh_token
 )
 from utils.dto import check_data_on_empty
+from utils.employer import is_employer
 
 
 def create_user(data: RegisterDTO, response: Response, db: Session, authorize: AuthJWT):
@@ -118,8 +120,13 @@ def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJ
             detail="Wrong email or password"
         )
 
-    access_token = create_access_token(authorize, str(user.id))
-    refresh_token = create_refresh_token(authorize, str(user.id))
+    employer_id, applicant_id = None, None
+    if is_employer(user.id, db):
+        employer = get_employer_by_user_id(user.id, db)
+        employer_id = str(employer.id)
+
+    access_token = create_access_token(authorize, str(user.id), employer_id, applicant_id)
+    refresh_token = create_refresh_token(authorize, str(user.id), employer_id, applicant_id)
 
     response.set_cookie("access_token",
                         access_token,
@@ -156,7 +163,7 @@ def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJ
 
 
 def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
-    access_token = await create_access_token(authorize, user_id)
+    access_token = create_access_token(authorize, user_id)
 
     response.set_cookie("access_token",
                         access_token,

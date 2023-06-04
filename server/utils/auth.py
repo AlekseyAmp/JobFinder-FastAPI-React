@@ -30,17 +30,25 @@ def is_valid_name_surname(name: str, surname: str):
     return False
 
 
-def create_access_token(authorize: AuthJWT, user_id: str):
+def create_access_token(authorize: AuthJWT, user_id: str, employer_id: str, applicant_id: str):
     access_token = authorize.create_access_token(
         subject=user_id,
-        expires_time=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)
+        expires_time=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN),
+        user_claims={
+            'employer_id': employer_id,
+            'applicant_id': applicant_id
+        }
     )
     return access_token
 
 
-def create_refresh_token(authorize: AuthJWT, user_id: str):
+def create_refresh_token(authorize: AuthJWT, user_id: str, employer_id: str, applicant_id: str):
     refresh_token = authorize.create_refresh_token(
         subject=user_id,
-        expires_time=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN)
+        expires_time=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN),
+        user_claims={
+            'employer_id': employer_id,
+            'applicant_id': applicant_id
+        }
     )
     return refresh_token

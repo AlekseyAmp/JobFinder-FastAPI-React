@@ -16,6 +16,16 @@ async def create_employer(data: VacancyDTO, db: Session = Depends(get_db), user_
     return VacancyService.create_vacancy(data, db, user_id)
 
 
+@router.get("/vacancies/{vacancy_id}")
+async def get_vacancy(vacancy_id: str, db: Session = Depends(get_db)):
+    return VacancyService.get_vacancy(vacancy_id, db)
+
+
+@router.get("/vacancies/{employer_id}")
+async def get_vacancies_by_employer(employer_id: str, db: Session = Depends(get_db)):
+    return VacancyService.get_vacancies_by_employer(employer_id, db)
+
+
 @router.get("/vacancies")
 async def get_all_vacancies(db: Session = Depends(get_db)):
     return VacancyService.get_all_vacancies(db)

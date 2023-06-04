@@ -9,34 +9,6 @@ from utils.employer import is_employer
 from utils.dto import check_data_on_empty
 
 
-def get_employer_by_user_id(user_id: str, db: Session):
-    employer = db.query(Employer).filter(
-        Employer.user_id == user_id
-    ).first()
-
-    if not employer:
-        raise HTTPException(
-            status_code=404,
-            detail="Employer not found"
-        )
-
-    return employer
-
-
-def get_employer_by_employer_id(employer_id: str, db: Session):
-    employer = db.query(Employer).filter(
-        Employer.id == employer_id
-    ).first()
-
-    if not employer:
-        raise HTTPException(
-            status_code=404,
-            detail="Employer not found"
-        )
-
-    return employer
-
-
 def create_employer(data: EmployerDTO, db: Session, user_id: str):
     if not check_data_on_empty(data):
         raise HTTPException(
@@ -79,6 +51,34 @@ def create_employer(data: EmployerDTO, db: Session, user_id: str):
     }
 
 
+def get_employer_by_user_id(user_id: str, db: Session):
+    employer = db.query(Employer).filter(
+        Employer.user_id == user_id
+    ).first()
+
+    if not employer:
+        raise HTTPException(
+            status_code=404,
+            detail="Employer not found"
+        )
+
+    return employer
+
+
+def get_employer_by_employer_id(employer_id: str, db: Session):
+    employer = db.query(Employer).filter(
+        Employer.id == employer_id
+    ).first()
+
+    if not employer:
+        raise HTTPException(
+            status_code=404,
+            detail="Employer not found"
+        )
+
+    return employer
+
+
 def get_all_employers(db: Session):
     employers = db.query(Employer).all()
     return employers[::-1]
@@ -115,13 +115,14 @@ def delete_employer(employer_id, db: Session, user_id: str):
         )
 
     if is_employer(user_id, db):
-        employer = get_employer_by_user_id(user_id, db)
-
+        employer = get_employer_by_user_id(employer_id, db)
         if str(employer.id) != employer_id:
             raise HTTPException(
                 status_code=403,
                 detail="Access denied"
             )
+
+    employer = get_employer_by_employer_id(employer_id, db)
 
     user = db.query(User).filter(
         User.id == employer.user_id

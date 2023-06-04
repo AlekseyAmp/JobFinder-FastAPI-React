@@ -55,6 +55,6 @@ export async function deleteEmployer(employer_id, employers, setEmployers) {
     } catch (error) {
       console.log(error.response.data.detail);
     }
-  }
+}
   
 
