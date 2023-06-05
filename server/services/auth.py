@@ -66,8 +66,9 @@ def create_user(data: RegisterDTO, response: Response, db: Session, authorize: A
     db.add(new_user)
     db.commit()
 
-    access_token = create_access_token(authorize, str(new_user.id))
-    refresh_token = create_refresh_token(authorize, str(new_user.id))
+    employer_id, applicant_id = None, None
+    access_token = create_access_token(authorize, str(new_user.id), employer_id, applicant_id)
+    refresh_token = create_refresh_token(authorize, str(new_user.id), employer_id, applicant_id)
 
     response.set_cookie("access_token",
                         access_token,

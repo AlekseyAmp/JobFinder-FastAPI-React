@@ -1,0 +1,35 @@
+@import '../../../assets/variables.scss';
+
+.vacancyCard {
+    margin-top: 20px;
+    width: 600px;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: 2px solid $gray;
+    &Title{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    &UnderTitle {
+        margin-top: 5px;
+    }
+    &Description {
+        margin-top: 10px;
+    }
+    &Tags {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        li {
+            background: $gray;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+    }
+    &Buttons{
+        display: flex;
+        margin-top: 30px;
+        gap: 10px;
+    }
+}

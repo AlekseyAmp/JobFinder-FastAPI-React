@@ -15,6 +15,7 @@ class Vacancy(Base):
     salary = Column(String(50))
     tags = Column(ARRAY(String(50)))
     is_confirmed = Column(Boolean, default=False)
+    is_archived = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.now)
 
     employer_id = Column(Integer, ForeignKey('employers.id'))

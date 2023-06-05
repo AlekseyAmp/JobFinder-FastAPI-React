@@ -10,6 +10,7 @@ import { createNewVacancy, getVacanciesByEmployer } from '../../services/vacancy
 import styles from './Employer.module.scss';
 import '../../assets/variables.scss';
 
+import Vacancy from '../../components/Cards/Vacancy/Vacancy';
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
@@ -21,11 +22,8 @@ function Employer() {
   const [role, setRole] = useState(null);
   const [showEmployerCreateForm, setShowEmployerCreateForm] = useState(false);
   const [showVacancyCreateForm, setShowVacancyCreateForm] = useState(false);
-
-  const [myVacancies, setMyVacancies] = useState([])
-
-  const decoded_token = jwt_decode(access_token);
-  const employer_id = decoded_token.employer_id;
+  const [activeTab, setActiveTab] = useState('activeVacancies');
+  const [vacancies, setVacancies] = useState([])
 
   useEffect(() => {
     if (isAuthorized) {
@@ -40,14 +38,17 @@ function Employer() {
 
   useEffect(() => {
     if (role === 'employer' || role === 'admin') {
+      const decoded_token = jwt_decode(access_token);
+      const employer_id = decoded_token.employer_id;
       getVacanciesByEmployer(employer_id)
         .then((data) => {
-          setMyVacancies(data);
+          setVacancies(data);
         })
         .catch((error) => console.log(error));
     }
   }, [role]);
-  
+
+
   const handleLoginClick = () => {
     navigate('/login');
   };
@@ -143,6 +144,95 @@ function Employer() {
           name: 'tags'
         }
       ];
+      const handleTabClick = (tab) => {
+        setActiveTab(tab);
+      };
+      const renderContent = () => {
+        switch (activeTab) {
+          case 'activeVacancies':
+            return (
+              <div className={styles.activeVacancies}>
+                {vacancies.map((myVacancy) => {
+                  if (myVacancy.is_confirmed && !myVacancy.is_archived) {
+                    return (
+                      <Vacancy
+                        key={myVacancy.id}
+                        vacancy_id={myVacancy.id}
+                        name={myVacancy.name}
+                        created_at={myVacancy.created_at}
+                        description={myVacancy.description}
+                        place={myVacancy.place}
+                        salary={myVacancy.salary}
+                        tags={myVacancy.tags}
+                        role={role}
+                        is_confirmed={true}
+                        is_archived={false}
+                        vacancies={vacancies}
+                        setVacancies={setVacancies}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            );
+          case 'archiveVacancies':
+            return (
+              <div className={styles.archiveVacancies}>
+                {vacancies.map((myVacancy) => {
+                  if (myVacancy.is_confirmed && myVacancy.is_archived) {
+                    return (
+                      <Vacancy
+                        key={myVacancy.id}
+                        vacancy_id={myVacancy.id}
+                        name={myVacancy.name}
+                        created_at={myVacancy.created_at}
+                        description={myVacancy.description}
+                        place={myVacancy.place}
+                        salary={myVacancy.salary}
+                        tags={myVacancy.tags}
+                        role={role}
+                        is_confirmed={true}
+                        is_archived={true}
+                        vacancies={vacancies}
+                        setVacancies={setVacancies}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            );
+          case 'unconfirmedVacancies':
+            return (
+              <div className={styles.unconfirmedVacancies}>
+                {vacancies.map((myVacancy) => {
+                  if (!myVacancy.is_confirmed) {
+                    return (
+                      <Vacancy
+                        key={myVacancy.id}
+                        vacancy_id={myVacancy.id}
+                        name={myVacancy.name}
+                        created_at={myVacancy.created_at}
+                        description={myVacancy.description}
+                        place={myVacancy.place}
+                        salary={myVacancy.salary}
+                        tags={myVacancy.tags}
+                        role={role}
+                        is_confirmed={false}
+                        vacancies={vacancies}
+                        setVacancies={setVacancies}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            );
+          default:
+            return null;
+        }
+      };
 
       return (
         <div className={styles.confirmedEmployer}>
@@ -156,7 +246,29 @@ function Employer() {
           ) : (
             <div className={styles.confirmedEmployerContent}>
               <div className={`title`}>Добро пожаловать!</div>
-              <BlueButton title={'Разместить вакансию'} onClick={handleCreateVacancyClick} />
+              <div className={styles.confirmedEmployerContentMain}>
+                <BlueButton title={'Разместить вакансию'} onClick={handleCreateVacancyClick} />
+              </div>
+              <div className={styles.confirmedEmployerMenu}>
+
+                <button
+                  className={activeTab === 'activeVacancies' ? 'active' : ''}
+                  onClick={() => handleTabClick('activeVacancies')}>
+                  Активные вакансии</button>
+
+                <button
+                  className={activeTab === 'archiveVacancies' ? 'active' : ''}
+                  onClick={() => handleTabClick('archiveVacancies')}>
+                  Неактивные вакансии</button>
+
+                <button
+                  className={activeTab === 'unconfirmedVacancies' ? 'active' : ''}
+                  onClick={() => handleTabClick('unconfirmedVacancies')}>
+                  Неподтвержденные вакансии</button>
+
+              </div>
+
+              <div className={styles.employerCards}>{renderContent()}</div>
             </div>
           )}
         </div>
@@ -175,9 +287,9 @@ function Employer() {
           renderContent()
         )
       ) : (
-        <div className={styles.cantWatchPage}>
+        <div className={styles.notAuthorized}>
           <p className={`dark-text`}>Войдите или зарегистрируйтесь</p>
-          <div className={styles.cantWatchPageButton}>
+          <div className={styles.notAuthorizedButtons}>
             <GreenButton title={'Вход'} onClick={handleLoginClick} />
             <GreenButton title={'Регистрация'} onClick={handleRegisterClick} />
           </div>

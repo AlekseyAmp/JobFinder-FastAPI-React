@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
 import { getAllEmployers } from '../../services/employer';
+import { getAllVacancies } from '../../services/vacancy';
 import { getUserInfo } from '../../services/user';
+import { access_token } from '../../constants/token';
 
 import styles from './Admin.module.scss';
 import '../../assets/variables.scss';
 
+import Vacancy from '../../components/Cards/Vacancy/Vacancy';
 import Employer from '../../components/Cards/Employer/Employer';
-import { access_token } from '../../constants/token';
 
 function Admin() {
   const isAuthorize = access_token
   const [role, setRole] = useState(null);
   const [name, setName] = useState(null)
   const [employers, setEmployers] = useState([]);
+  const [vacancies, setVacancies] = useState([]);
   const [activeTab, setActiveTab] = useState('unconfirmedEmployers');
 
   useEffect(() => {
@@ -37,7 +40,17 @@ function Admin() {
         .catch((error) => console.log(error));
     }
   }, [role]);
-  
+
+  useEffect(() => {
+    if (role === 'admin') {
+      getAllVacancies()
+        .then((data) => {
+          setVacancies(data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [role]);
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -81,6 +94,58 @@ function Admin() {
                     is_confirmed={false}
                     employers={employers}
                     setEmployers={setEmployers}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
+        );
+      case 'confirmedVacancies':
+        return (
+          <div className={styles.confirmedVacancies}>
+            {vacancies.map((myVacancy) => {
+              if (myVacancy.is_confirmed) {
+                return (
+                  <Vacancy
+                    key={myVacancy.id}
+                    vacancy_id={myVacancy.id}
+                    name={myVacancy.name}
+                    created_at={myVacancy.created_at}
+                    description={myVacancy.description}
+                    place={myVacancy.place}
+                    salary={myVacancy.salary}
+                    tags={myVacancy.tags}
+                    role={role}
+                    is_confirmed={false}
+                    vacancies={vacancies}
+                    setVacancies={setVacancies}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
+        );
+      case 'unconfirmedVacancies':
+        return (
+          <div className={styles.unconfirmedVacancies}>
+            {vacancies.map((myVacancy) => {
+              if (!myVacancy.is_confirmed) {
+                return (
+                  <Vacancy
+                    key={myVacancy.id}
+                    vacancy_id={myVacancy.id}
+                    name={myVacancy.name}
+                    created_at={myVacancy.created_at}
+                    description={myVacancy.description}
+                    place={myVacancy.place}
+                    salary={myVacancy.salary}
+                    tags={myVacancy.tags}
+                    role={role}
+                    is_confirmed={false}
+                    vacancies={vacancies}
+                    setVacancies={setVacancies}
                   />
                 );
               }

@@ -64,15 +64,9 @@ def get_vacancy(vacancy_id: str, db: Session):
 def get_vacancies_by_employer(employer_id: str, db: Session):
     vacancies = db.query(Vacancy).filter(
         Vacancy.employer_id == employer_id
-    )
+    ).all()
 
-    if not vacancies:
-        raise HTTPException(
-            status_code=404,
-            detail="Vacancies not found"
-        )
-
-    return vacancies
+    return vacancies[::-1]
 
 
 def get_all_vacancies(db: Session):
@@ -90,11 +84,45 @@ def confirm_vacancy(vacancy_id, db: Session, user_id: str):
     vacancy = get_vacancy(vacancy_id, db)
 
     vacancy.is_confirmed = True
+    vacancy.is_archived = False
 
     db.commit()
 
     return {
         "message": "Vacancy is confirmed"
+    }
+
+
+def in_archive_vacancy(vacancy_id, db: Session, user_id: str):
+    if not is_admin(user_id, db) and not is_employer(user_id, db):
+        raise HTTPException(
+            status_code=403,
+            detail="No access rights"
+        )
+
+    vacancy = get_vacancy(vacancy_id, db)
+
+    if is_employer(user_id, db):
+        employer = get_employer_by_user_id(user_id, db)
+
+        if vacancy.employer_id != employer.id:
+            raise HTTPException(
+                status_code=403,
+                detail="Access denied"
+            )
+
+    if vacancy.is_archived:
+        raise HTTPException(
+            status_code=403,
+            detail="The vacancy is already in archive"
+        )
+
+    vacancy.is_archived = True
+
+    db.commit()
+
+    return {
+        "message": "Vacancy moved in archive"
     }
 
 

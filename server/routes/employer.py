@@ -11,7 +11,7 @@ from services import employer as EmployerService
 router = APIRouter()
 
 
-@router.post("/employers")
+@router.post("/employers/create")
 async def create_employer(data: EmployerDTO, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
     return EmployerService.create_employer(data, db, user_id)
 
@@ -26,11 +26,11 @@ async def get_all_employers(db: Session = Depends(get_db)):
     return EmployerService.get_all_employers(db)
 
 
-@router.patch("/employers/{employer_id}")
+@router.patch("/employers/confirm/{employer_id}")
 async def confirm_employer(employer_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
     return EmployerService.confirm_employer(employer_id, db, user_id)
 
 
-@router.delete("/employers/{employer_id}")
+@router.delete("/employers/delete/{employer_id}")
 async def delete_employer(employer_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
     return EmployerService.delete_employer(employer_id, db, user_id)
