@@ -1,25 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import axios from '../../utils/axios';
-import Cookie from 'js-cookie';
+import { logout } from '../../services/auth';
 
 function Logout() {
-  const navigate = useNavigate();
-
-  async function handleLogoutSubmit() {
-    try {
-      const response = await axios.get('/auth/logout');
-
-      if (response.data) {
-        Cookie.remove('access_token');
-        Cookie.remove('refresh_token');
-        navigate('/login');
-        window.location.reload();
-      }
-    } catch (error) {
-      console.log(error.response.data.detail);
-    }
+  handleLogoutSubmit = (e) => {
+    e.preventDefault();
+    logout();
   };
 
   return (

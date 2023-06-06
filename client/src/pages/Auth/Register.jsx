@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import axios from '../../utils/axios';
-import Cookies from 'js-cookie';
+import { register } from '../../services/auth';
 import { access_token } from '../../constants/token';
 
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
@@ -22,7 +21,7 @@ function Register() {
         { title: "Придумайте пароль", type: 'password', name: 'password' },
     ]
 
-    async function handleRegisterSubmit(e) {
+    handleRegisterSubmit = (e) => {
         e.preventDefault();
         const name = e.target.name.value
         const surname = e.target.surname.value;
@@ -30,18 +29,7 @@ function Register() {
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        try {
-            const response = await axios.post('/auth/register', { name, surname, phone_number, email, password });
-            
-            if (response.data) {
-                Cookies.set('access_token', response.data.access_token);
-                Cookies.set('refresh_token', response.data.refresh_token);
-                navigate('/');
-                window.location.reload();
-            }
-        } catch (error) {
-            console.log(error.response.data.detail);
-        }
+        register(name, surname, phone_number, email, password);
     };
 
     return (

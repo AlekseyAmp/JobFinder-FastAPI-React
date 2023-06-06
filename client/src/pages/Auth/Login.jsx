@@ -1,8 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import axios from '../../utils/axios';
-import Cookies from 'js-cookie';
+import { login } from '../../services/auth'
 import { access_token } from '../../constants/token'
 
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
@@ -19,23 +18,11 @@ function Login() {
         { title: "Введите пароль", type: 'password', name: 'password' },
     ]
 
-    async function handleLoginSubmit(e) {
+    handleLoginSubmit = (e) => {
         e.preventDefault();
         const phone_number = e.target.phone.value;
         const password = e.target.password.value;
-
-        try {
-            const response = await axios.post('/auth/login', { phone_number, password });
-
-            if (response.data) {
-                Cookies.set('access_token', response.data.access_token);
-                Cookies.set('refresh_token', response.data.refresh_token);
-                navigate('/');
-                window.location.reload();
-            }
-        } catch (error) {
-            console.log(error.response.data.detail);
-        }
+        login(phone_number, password)
     };
 
     return (
