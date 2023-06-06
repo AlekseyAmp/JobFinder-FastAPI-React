@@ -1,7 +1,6 @@
 import React from 'react';
 
 import styles from './DefaultForm.module.scss';
-import '../../../assets/variables.scss';
 
 import DefaultInput from '../../Inputs/DefaultInput/DefaultInput';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';

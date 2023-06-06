@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -13,8 +13,9 @@ class Applicant(Base):
     experience = Column(String(255))
     salary = Column(String(255))
     resume_text = Column(String)
+    is_archived = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
-
+    
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="applicant")
 

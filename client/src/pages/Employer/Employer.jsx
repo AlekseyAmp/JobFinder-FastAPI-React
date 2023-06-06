@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
-import { createNewEmployer } from '../../services/employer';
+import { createNewEmployer, getPaginatedEmployers } from '../../services/employer';
 import { createNewVacancy, getVacanciesByEmployer } from '../../services/vacancy';
 
 import styles from './Employer.module.scss';
-import '../../assets/variables.scss';
 
-import Vacancy from '../../components/Cards/Vacancy/Vacancy';
+import EmployerCard from '../../components/Cards/EmployerCard/EmployerCard';
+import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard'
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
@@ -24,6 +24,9 @@ function Employer() {
   const [showVacancyCreateForm, setShowVacancyCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState('activeVacancies');
   const [vacancies, setVacancies] = useState([])
+  const [employers, setEmployers] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+
 
   useEffect(() => {
     if (isAuthorized) {
@@ -48,6 +51,15 @@ function Employer() {
     }
   }, [role]);
 
+  useEffect(() => {
+    if (role === 'applicant') {
+      getPaginatedEmployers(1, true)
+        .then((data) => {
+          setEmployers(data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [role]);
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -57,32 +69,32 @@ function Employer() {
     navigate('/register');
   };
 
-  const handleBecomeEmployerClick = () => {
-    setShowEmployerCreateForm(true);
-  };
-
-  const handleCreateEmployerSubmit = (e) => {
-    e.preventDefault();
-    createNewEmployer(e.target.company_name.value, e.target.company_description.value);
-  };
-
-  const handleCreateVacancyClick = () => {
-    setShowVacancyCreateForm(true);
-  };
-
-  const handleCreateVacancySubmit = (e) => {
-    e.preventDefault();
-    createNewVacancy(e.target.name.value, e.target.description.value,
-      e.target.place.value, e.target.salary.value, e.target.tags.value.trim().split(','));
-  };
-
   const renderContent = () => {
     if (role === 'user') {
+      const handleBecomeEmployerClick = () => {
+        setShowEmployerCreateForm(true);
+      };
+
+      const handleCreateEmployerSubmit = (e) => {
+        e.preventDefault();
+        createNewEmployer(e.target.company_name.value, e.target.company_description.value, e.target.contact.value, e.target.website.value);
+      };
+
       const inputConfigs = [
         {
           title: 'Название компании',
           type: 'text',
           name: 'company_name'
+        },
+        {
+          title: 'Контактный адрес (почта или телефон)',
+          type: 'text',
+          name: 'contact'
+        },
+        {
+          title: 'Веб-сайт компании (если нет, то ссылку на местоположение в Яндекс Картах)',
+          type: 'text',
+          name: 'website'
         }
       ];
       const textareaConfigs = [
@@ -94,7 +106,7 @@ function Employer() {
       ];
 
       return (
-        <div className={styles.createEmployer}>
+        <div className={`section`}>
           {showEmployerCreateForm ? (
             <TextareaForm
               inputConfigs={inputConfigs}
@@ -103,18 +115,30 @@ function Employer() {
               onSubmit={handleCreateEmployerSubmit}
             />
           ) : (
-            <div className={styles.createEmployerContent}>
-              <p className={`dark-text`}>Для того, чтобы просматривать эту страницу, нужно стать работодателем</p>
-              <div className={styles.createEmployerButton}>
+            <div className={`content`}>
+              <p className={`dark-text center`}>Для того, чтобы просматривать эту страницу, нужно стать работодателем</p>
+              <div className={`center`}>
                 <BlueButton title={'Стать работодателем'} onClick={handleBecomeEmployerClick} />
               </div>
             </div>
           )}
         </div>
       );
-    } else if (role === 'notConfirmedEmployer') {
-      return <p className={`dark-text`}>Ваша заявка на рассмотрении</p>;
-    } else if (role === 'employer' || role === 'admin') {
+    }
+    else if (role === 'notConfirmedEmployer') {
+      return <p className={`dark-text center`}>Ваша заявка на рассмотрении</p>;
+    }
+    else if (role === 'employer' || role === 'admin') {
+      const handleCreateVacancyClick = () => {
+        setShowVacancyCreateForm(true);
+      };
+
+      const handleCreateVacancySubmit = (e) => {
+        e.preventDefault();
+        createNewVacancy(e.target.name.value, e.target.description.value,
+          e.target.place.value, e.target.salary.value, e.target.tags.value.trim().split(','));
+      };
+
       const inputConfigs = [
         {
           title: 'Название вакансии',
@@ -144,89 +168,98 @@ function Employer() {
           name: 'tags'
         }
       ];
+
       const handleTabClick = (tab) => {
         setActiveTab(tab);
       };
+
       const renderContent = () => {
         switch (activeTab) {
           case 'activeVacancies':
             return (
-              <div className={styles.activeVacancies}>
-                {vacancies.map((myVacancy) => {
-                  if (myVacancy.is_confirmed && !myVacancy.is_archived) {
-                    return (
-                      <Vacancy
-                        key={myVacancy.id}
-                        vacancy_id={myVacancy.id}
-                        name={myVacancy.name}
-                        created_at={myVacancy.created_at}
-                        description={myVacancy.description}
-                        place={myVacancy.place}
-                        salary={myVacancy.salary}
-                        tags={myVacancy.tags}
-                        role={role}
-                        is_confirmed={true}
-                        is_archived={false}
-                        vacancies={vacancies}
-                        setVacancies={setVacancies}
-                      />
-                    );
-                  }
-                  return null;
-                })}
+              <div className={`grid-cards`}>
+                <div className={`grid-cards-content`}>
+                  {vacancies.map((vacancy) => {
+                    if (vacancy.is_confirmed && !vacancy.is_archived) {
+                      return (
+                        <VacancyCard
+                          key={vacancy.id}
+                          vacancy_id={vacancy.id}
+                          name={vacancy.name}
+                          created_at={vacancy.created_at}
+                          description={vacancy.description}
+                          place={vacancy.place}
+                          salary={vacancy.salary}
+                          tags={vacancy.tags}
+                          role={role}
+                          is_confirmed={true}
+                          is_archived={false}
+                          vacancies={vacancies}
+                          setVacancies={setVacancies}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
               </div>
             );
           case 'archiveVacancies':
             return (
-              <div className={styles.archiveVacancies}>
-                {vacancies.map((myVacancy) => {
-                  if (myVacancy.is_confirmed && myVacancy.is_archived) {
-                    return (
-                      <Vacancy
-                        key={myVacancy.id}
-                        vacancy_id={myVacancy.id}
-                        name={myVacancy.name}
-                        created_at={myVacancy.created_at}
-                        description={myVacancy.description}
-                        place={myVacancy.place}
-                        salary={myVacancy.salary}
-                        tags={myVacancy.tags}
-                        role={role}
-                        is_confirmed={true}
-                        is_archived={true}
-                        vacancies={vacancies}
-                        setVacancies={setVacancies}
-                      />
-                    );
-                  }
-                  return null;
-                })}
+              <div className={`grid-cards`}>
+                <div className={`grid-cards-content`}>
+                  {vacancies.map((vacancy) => {
+                    if (vacancy.is_confirmed && !vacancy.is_archived) {
+                      return (
+                        <VacancyCard
+                          key={vacancy.id}
+                          vacancy_id={vacancy.id}
+                          name={vacancy.name}
+                          created_at={vacancy.created_at}
+                          description={vacancy.description}
+                          place={vacancy.place}
+                          salary={vacancy.salary}
+                          tags={vacancy.tags}
+                          role={role}
+                          is_confirmed={true}
+                          is_archived={true}
+                          vacancies={vacancies}
+                          setVacancies={setVacancies}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
               </div>
             );
           case 'unconfirmedVacancies':
             return (
-              <div className={styles.unconfirmedVacancies}>
-                {vacancies.map((myVacancy) => {
-                  if (!myVacancy.is_confirmed) {
-                    return (
-                      <Vacancy
-                        key={myVacancy.id}
-                        vacancy_id={myVacancy.id}
-                        name={myVacancy.name}
-                        created_at={myVacancy.created_at}
-                        description={myVacancy.description}
-                        place={myVacancy.place}
-                        salary={myVacancy.salary}
-                        tags={myVacancy.tags}
-                        role={role}
-                        is_confirmed={false}
-                        vacancies={vacancies}
-                        setVacancies={setVacancies}
-                      />
-                    );
-                  }
-                  return null;
-                })}
+              <div className={`grid-cards`}>
+                <div className={`grid-cards-content`}>
+                  {vacancies.map((vacancy) => {
+                    if (vacancy.is_confirmed && !vacancy.is_archived) {
+                      return (
+                        <VacancyCard
+                          key={vacancy.id}
+                          vacancy_id={vacancy.id}
+                          name={vacancy.name}
+                          created_at={vacancy.created_at}
+                          description={vacancy.description}
+                          place={vacancy.place}
+                          salary={vacancy.salary}
+                          tags={vacancy.tags}
+                          role={role}
+                          is_confirmed={false}
+                          is_archived={true}
+                          vacancies={vacancies}
+                          setVacancies={setVacancies}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
               </div>
             );
           default:
@@ -235,7 +268,7 @@ function Employer() {
       };
 
       return (
-        <div className={styles.confirmedEmployer}>
+        <div className={`section`}>
           {showVacancyCreateForm ? (
             <TextareaForm
               inputConfigs={inputConfigs}
@@ -244,12 +277,12 @@ function Employer() {
               onSubmit={handleCreateVacancySubmit}
             />
           ) : (
-            <div className={styles.confirmedEmployerContent}>
+            <div className={`content`}>
               <div className={`title`}>Добро пожаловать!</div>
-              <div className={styles.confirmedEmployerContentMain}>
+              <div className={`buttons`}>
                 <BlueButton title={'Разместить вакансию'} onClick={handleCreateVacancyClick} />
               </div>
-              <div className={styles.confirmedEmployerMenu}>
+              <div className={`tab-menu`}> 
 
                 <button
                   className={activeTab === 'activeVacancies' ? 'active' : ''}
@@ -273,8 +306,63 @@ function Employer() {
           )}
         </div>
       );
-    } else {
-      return null;
+    }
+    else {
+      const goToNextPage = (currentPage) => {
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        getPaginatedEmployers(nextPage, true)
+          .then((data) => {
+            setEmployers(data);
+          })
+          .catch((error) => console.log(error));
+      };
+
+      const goToPreviousPage = (currentPage) => {
+        const previousPage = currentPage - 1;
+        setCurrentPage(previousPage);
+        getPaginatedEmployers(previousPage, true)
+          .then((data) => {
+            setEmployers(data);
+          })
+          .catch((error) => console.log(error));
+
+      };
+
+      return (
+        <div className={`grid-cards`}>
+          <div className={`grid-cards-content`}>
+            {employers.map((employer) => {
+              return (
+                <EmployerCard
+                  key={employer.id}
+                  employer_id={employer.id}
+                  created_at={employer.created_at}
+                  company_name={employer.company_name}
+                  contact={employer.contact}
+                  website={employer.website}
+                  company_description={employer.company_description}
+                  role={role}
+                />
+              );
+            })}
+          </div>
+          <div className={`pagination`}>
+
+            <button
+              disabled={currentPage === 1}
+              onClick={() => goToPreviousPage(currentPage)}>
+              Предыдущая страница</button>
+
+            <span>Текущая страница: {currentPage}</span>
+
+            <button onClick={() => goToNextPage(currentPage)}>
+              Следующая страница</button>
+
+
+          </div>
+        </div>
+      )
     }
   };
 
@@ -287,9 +375,9 @@ function Employer() {
           renderContent()
         )
       ) : (
-        <div className={styles.notAuthorized}>
-          <p className={`dark-text`}>Войдите или зарегистрируйтесь</p>
-          <div className={styles.notAuthorizedButtons}>
+        <div className={`content`}>
+          <p className={`dark-text center`}>Войдите или зарегистрируйтесь</p>
+          <div className={`buttons center`}>
             <GreenButton title={'Вход'} onClick={handleLoginClick} />
             <GreenButton title={'Регистрация'} onClick={handleRegisterClick} />
           </div>

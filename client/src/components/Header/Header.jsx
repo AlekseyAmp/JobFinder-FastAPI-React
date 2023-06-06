@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { access_token } from '../../constants/token';
+import { getUserInfo } from '../../services/user';
 
 import styles from './Header.module.scss';
-import '../../assets/variables.scss';
-import { getUserInfo } from '../../services/user';
 
 import Logout from '../../pages/Auth/Logout';
 

@@ -1,15 +1,14 @@
 import React from 'react';
 
-import '../../../assets/variables.scss';
-import styles from './Vacancy.module.scss';
+import styles from './VacancyCard.module.scss';
 
-import { confirmVacancy, deleteVacancy, inArchiveVacancy } from '../../../services/vacancy';
+import { confirmVacancy, deleteVacancy, fromArchiveVacancy, inArchiveVacancy } from '../../../services/vacancy';
 
 import RedButton from '../../Buttons/RedButton/RedButton';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';
 import BlueButton from '../../Buttons/BlueButton/BlueButton';
 
-function Vacancy({ vacancy_id, name, created_at, description, place, salary, tags, role, is_confirmed, is_archived, vacancies, setVacancies }) {
+function VacancyCard({ vacancy_id, name, created_at, description, place, salary, tags, role, is_confirmed, is_archived, vacancies, setVacancies }) {
   return (
     <div className={styles.vacancyCard}>
       <div className={styles.vacancyCardTitle}>
@@ -38,29 +37,38 @@ function Vacancy({ vacancy_id, name, created_at, description, place, salary, tag
               title={"В архив"}
               onClick={() => inArchiveVacancy(vacancy_id, vacancies, setVacancies)}
             />
-          ) : <BlueButton
-            title={"Убрать из архива"}
-          />}
+          ) : (
+            <BlueButton
+              title={"Убрать из архива"}
+              onClick={() => fromArchiveVacancy(vacancy_id, vacancies, setVacancies)}
+            />
+          )}
         </div>
       ) : (
         role === 'admin' && (
           <div className={styles.vacancyCardButtons}>
-            <GreenButton
-              title={"Подтвердить"}
-              onClick={() => confirmVacancy(vacancy_id, vacancies, setVacancies)}
-            />
-            <RedButton
-              title={"Удалить"}
-              onClick={() => deleteVacancy(vacancy_id, vacancies, setVacancies)}
-            />
+            {is_confirmed === false ? (
+              <GreenButton
+                title={"Подтвердить"}
+                onClick={() => confirmVacancy(vacancy_id, vacancies, setVacancies)}
+              />
+            ) : (
+                <RedButton
+                  title={"Удалить"}
+                  onClick={() => deleteVacancy(vacancy_id, vacancies, setVacancies)}
+                />
+            )}
             {is_archived === false ? (
               <BlueButton
                 title={"В архив"}
                 onClick={() => inArchiveVacancy(vacancy_id, vacancies, setVacancies)}
               />
-            ) : <BlueButton
-              title={"Убрать из архива"}
-            />}
+            ) : (
+              <BlueButton
+                title={"Убрать из архива"}
+                onClick={() => fromArchiveVacancy(vacancy_id, vacancies, setVacancies)}
+              />
+            )}
           </div>
         )
       )}
@@ -68,4 +76,4 @@ function Vacancy({ vacancy_id, name, created_at, description, place, salary, tag
   );
 }
 
-export default Vacancy;
+export default VacancyCard;

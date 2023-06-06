@@ -11,6 +11,8 @@ class Employer(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     company_name = Column(String(255))
     company_description = Column(String)
+    contact = Column(String(255))
+    website = Column(String(255))
     is_confirmed = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)
 

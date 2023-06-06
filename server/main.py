@@ -14,6 +14,7 @@ from routes import (
     user as UserRouter,
     employer as EmployerRouter,
     vacancy as VacancyRouter,
+    applicant as ApplicantRouter,
 )
 
 
@@ -25,6 +26,7 @@ employer.Base.metadata.create_all(bind=engine)
 applicant.Base.metadata.create_all(bind=engine)
 vacancy.Base.metadata.create_all(bind=engine)
 feedback.Base.metadata.create_all(bind=engine)
+
 
 origins = [
     "http://localhost",
@@ -43,6 +45,7 @@ app.include_router(AuthRouter.router, tags=['auth'], prefix='/api')
 app.include_router(UserRouter.router, tags=['users'], prefix='/api')
 app.include_router(EmployerRouter.router, tags=['employers'], prefix='/api')
 app.include_router(VacancyRouter.router, tags=['vacancies'], prefix='/api')
+app.include_router(ApplicantRouter.router, tags=['applicants'], prefix='/api')
 
 
 @app.get("/")

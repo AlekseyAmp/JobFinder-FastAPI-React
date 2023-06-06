@@ -25,7 +25,7 @@ def is_valid_email(email: str):
 
 
 def is_valid_name_surname(name: str, surname: str):
-    if name.isalpha() or surname.isalpha():
+    if name.isalpha() and surname.isalpha():
         return True
     return False
 

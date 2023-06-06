@@ -46,8 +46,8 @@ function Register() {
 
     return (
         <div className={styles.registration}>
-            <div className={`title ${styles.title}`}>Регистрация</div>
-            <div className={styles.registrationForm}>
+            <div className={`title center`}>Регистрация</div>
+            <div className={`center mt50px`}>
                 <AuthForm
                     inputConfigs={inputConfigs}
                     buttonTitle='Зарегестрироваться'

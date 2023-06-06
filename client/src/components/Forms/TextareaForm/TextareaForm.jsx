@@ -1,7 +1,6 @@
 import React from 'react';
 
 import styles from './TextareaForm.module.scss';
-import '../../../assets/variables.scss';
 
 import DefaultInput from '../../Inputs/DefaultInput/DefaultInput';
 import Textarea from '../../Inputs/Textarea/Textarea';

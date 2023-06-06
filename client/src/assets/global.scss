@@ -9,7 +9,58 @@ body{
     margin: 0 auto;
 }
 
-.content {
-    box-shadow: 0px 3px 4px 0px rgb(0 0 0 / 20%) inset;
-    width: 950px;
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    gap: 30px;
+}
+
+.mt50px {
+    margin-top: 50px;
+}
+
+.grid-cards-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
+.tab-menu {
+    margin-top: 30px;
+
+    button {
+        cursor: pointer;
+        padding: 9px 10px;
+        outline: none;
+        border-bottom: 2px solid $blue;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        color: $dark;
+        font-family: 'Segoe UI';
+        font-size: 15px;
+        font-weight: 500;
+        transition: 0.2s;
+        background: none;
+    }
+
+    button:not(:first-child) {
+        margin-left: 10px;
+    }
+
+    button:hover {
+        background: $light_green;
+    }
+
+    button:focus {
+        background: $light_green;
+    }
+}
+
+button {
+    margin-top: 30px;
 }

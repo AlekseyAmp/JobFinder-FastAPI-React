@@ -16,14 +16,14 @@ async def create_employer(data: EmployerDTO, db: Session = Depends(get_db), user
     return EmployerService.create_employer(data, db, user_id)
 
 
-@router.get("/employers/{employer}")
+@router.get("/employers/{employer_id}")
 async def get_employer(employer_id: str, db: Session = Depends(get_db)):
     return EmployerService.get_employer_by_employer_id(employer_id, db)
 
 
 @router.get("/employers")
-async def get_all_employers(db: Session = Depends(get_db)):
-    return EmployerService.get_all_employers(db)
+async def get_paginated_employers(page: int, confirmed: bool,  db: Session = Depends(get_db)):
+    return EmployerService.get_paginated_employers(page, confirmed, db)
 
 
 @router.patch("/employers/confirm/{employer_id}")

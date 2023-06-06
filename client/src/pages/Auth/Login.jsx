@@ -11,9 +11,9 @@ import styles from './Auth.module.scss';
 function Login() {
     const navigate = useNavigate()
     if (!!access_token) {
-        navigate('/');     
-    } 
-    
+        navigate('/');
+    }
+
     const inputConfigs = [
         { title: "Номер телефона", type: 'text', name: 'phone' },
         { title: "Введите пароль", type: 'password', name: 'password' },
@@ -26,7 +26,7 @@ function Login() {
 
         try {
             const response = await axios.post('/auth/login', { phone_number, password });
-            
+
             if (response.data) {
                 Cookies.set('access_token', response.data.access_token);
                 Cookies.set('refresh_token', response.data.refresh_token);
@@ -40,8 +40,8 @@ function Login() {
 
     return (
         <div className={styles.login}>
-            <div className={`title ${styles.title}`}>Вход</div>
-            <div className={styles.loginForm}>
+            <div className={`title center`}>Вход</div>
+            <div className={`center mt50px`}>
                 <AuthForm
                     inputConfigs={inputConfigs}
                     buttonTitle='Войти'

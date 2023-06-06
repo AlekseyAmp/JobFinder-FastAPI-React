@@ -23,18 +23,26 @@ def create_employer(data: EmployerDTO, db: Session, user_id: str):
     if user.role == "notConfirmedEmployer":
         raise HTTPException(
             status_code=409,
-            detail='You have already applied for an employer'
+            detail="You have already applied for an employer"
         )
 
     if user.role == "employer":
         raise HTTPException(
             status_code=409,
-            detail='You are already an employer'
+            detail="You are already an employer"
+        )
+
+    if user.role == "applicant":
+        raise HTTPException(
+            status_code=409,
+            detail="You are a applicant"
         )
 
     new_employer = Employer(
         company_name=data.company_name.strip(),
         company_description=data.company_description.strip(),
+        contact=data.contact.strip(),
+        website=data.website.strip(),
         user_id=user_id
     )
 
@@ -79,9 +87,16 @@ def get_employer_by_employer_id(employer_id: str, db: Session):
     return employer
 
 
-def get_all_employers(db: Session):
-    employers = db.query(Employer).all()
-    return employers[::-1]
+def get_paginated_employers(page: int, confirmed: bool, db: Session):
+    # Кол-во элементов на странице
+    items_on_page = 20
+    # Смещение, от 0-20, от 20-40 и т.д
+    offset = (page - 1) * items_on_page
+    # Выборка из БД, с помощью смещение + ограничение 20
+    employers = db.query(Employer).filter(
+        Employer.is_confirmed == confirmed,
+    ).offset(offset).limit(items_on_page).all()
+    return employers
 
 
 def confirm_employer(employer_id, db: Session, user_id: str):

@@ -6,28 +6,37 @@
     border-radius: 10px;
     padding: 10px 20px;
     border: 2px solid $gray;
-    &Title{
+    width: fit-content;
+    height: fit-content;
+    box-shadow: 0px 0px 9px 2px rgba(34, 60, 80, 0.2);
+
+    &Title {
         display: flex;
         align-items: center;
         gap: 20px;
     }
+
     &UnderTitle {
         margin-top: 5px;
     }
+
     &Description {
         margin-top: 10px;
     }
+
     &Tags {
         display: flex;
         gap: 10px;
         margin-top: 20px;
+
         li {
             background: $gray;
             border-radius: 10px;
             padding: 5px 10px;
         }
     }
-    &Buttons{
+
+    &Buttons {
         display: flex;
         margin-top: 30px;
         gap: 10px;
