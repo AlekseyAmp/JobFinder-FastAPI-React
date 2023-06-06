@@ -21,7 +21,7 @@ function AuthForm({ inputConfigs, buttonTitle, authHelpText, authHelpLink, authH
           name={inputConfig.name}
         />
       ))}
-      <GreenButton type='submit' title={buttonTitle}/>
+      <GreenButton title={buttonTitle}/>
     </form>
   );
 };
