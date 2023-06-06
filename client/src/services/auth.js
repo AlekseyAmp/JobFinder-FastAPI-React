@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
 import Cookies from 'js-cookie';
 
-const navigate = useNavigate();
 
 export async function register(name, surname, phone_number, email, password) {
     try {
@@ -12,7 +11,6 @@ export async function register(name, surname, phone_number, email, password) {
         if (response.data) {
             Cookies.set('access_token', response.data.access_token);
             Cookies.set('refresh_token', response.data.refresh_token);
-            navigate('/');
             window.location.reload();
         }
     } catch (error) {
@@ -28,7 +26,6 @@ export async function login(phone_number, password) {
         if (response.data) {
             Cookies.set('access_token', response.data.access_token);
             Cookies.set('refresh_token', response.data.refresh_token);
-            navigate('/');
             window.location.reload();
         }
     } catch (error) {
@@ -44,7 +41,6 @@ export async function logout() {
         if (response.data) {
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
-            navigate('/login');
             window.location.reload();
         }
     } catch (error) {

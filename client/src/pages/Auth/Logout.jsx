@@ -3,7 +3,7 @@ import React from 'react';
 import { logout } from '../../services/auth';
 
 function Logout() {
-  handleLogoutSubmit = (e) => {
+  const handleLogoutSubmit = (e) => {
     e.preventDefault();
     logout();
   };
