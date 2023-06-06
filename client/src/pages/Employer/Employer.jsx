@@ -27,7 +27,6 @@ function Employer() {
   const [employers, setEmployers] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
 
-
   useEffect(() => {
     if (isAuthorized) {
       getUserInfo()
