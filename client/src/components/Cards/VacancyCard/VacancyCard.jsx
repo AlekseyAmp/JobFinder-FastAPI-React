@@ -8,7 +8,7 @@ import RedButton from '../../Buttons/RedButton/RedButton';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';
 import BlueButton from '../../Buttons/BlueButton/BlueButton';
 
-function VacancyCard({ vacancy_id, name, created_at, description, place, salary, tags, role, is_confirmed, is_archived, vacancies, setVacancies }) {
+function VacancyCard({ vacancy_id, name, created_at, description, place, salary, tags, is_confirmed, is_archived, role, vacancies, setVacancies }) {
   return (
     <div className={styles.vacancyCard}>
       <div className={styles.vacancyCardTitle}>

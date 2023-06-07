@@ -35,10 +35,10 @@ function Header() {
       <div className={styles.menu}>
         <ul>
           <li>
-            <Link to='/applicant' className={`link-text`}>Соискателям</Link>
+            <Link to='/applicants' className={`link-text`}>Соискателям</Link>
           </li>
           <li>
-            <Link to='/employer' className={`link-text`}>Работодателям</Link>
+            <Link to='/employers' className={`link-text`}>Работодателям</Link>
           </li>
         </ul>
       </div>

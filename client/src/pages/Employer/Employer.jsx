@@ -39,7 +39,7 @@ function Employer() {
   }, [isAuthorized]);
 
   useEffect(() => {
-    if (role === 'employer' || role === 'admin') {
+    if (role === 'employer') {
       const decoded_token = jwt_decode(access_token);
       const employer_id = decoded_token.employer_id;
       getVacanciesByEmployer(employer_id)
@@ -51,7 +51,7 @@ function Employer() {
   }, [role]);
 
   useEffect(() => {
-    if (role === 'applicant') {
+    if (role === 'applicant' || role === 'admin') {
       getPaginatedEmployers(1, true)
         .then((data) => {
           setEmployers(data);
@@ -127,7 +127,7 @@ function Employer() {
     else if (role === 'notConfirmedEmployer') {
       return <p className={`dark-text center`}>Ваша заявка на рассмотрении</p>;
     }
-    else if (role === 'employer' || role === 'admin') {
+    else if (role === 'employer') {
       const handleCreateVacancyClick = () => {
         setShowVacancyCreateForm(true);
       };
@@ -190,9 +190,9 @@ function Employer() {
                           place={vacancy.place}
                           salary={vacancy.salary}
                           tags={vacancy.tags}
-                          role={role}
                           is_confirmed={true}
                           is_archived={false}
+                          role={role}
                           vacancies={vacancies}
                           setVacancies={setVacancies}
                         />
@@ -219,9 +219,9 @@ function Employer() {
                           place={vacancy.place}
                           salary={vacancy.salary}
                           tags={vacancy.tags}
-                          role={role}
                           is_confirmed={true}
                           is_archived={true}
+                          role={role}
                           vacancies={vacancies}
                           setVacancies={setVacancies}
                         />
@@ -248,9 +248,9 @@ function Employer() {
                           place={vacancy.place}
                           salary={vacancy.salary}
                           tags={vacancy.tags}
-                          role={role}
                           is_confirmed={false}
                           is_archived={true}
+                          role={role}
                           vacancies={vacancies}
                           setVacancies={setVacancies}
                         />
@@ -325,7 +325,6 @@ function Employer() {
             setEmployers(data);
           })
           .catch((error) => console.log(error));
-
       };
 
       return (
@@ -336,12 +335,15 @@ function Employer() {
                 <EmployerCard
                   key={employer.id}
                   employer_id={employer.id}
-                  created_at={employer.created_at}
                   company_name={employer.company_name}
+                  company_description={employer.company_description}
                   contact={employer.contact}
                   website={employer.website}
-                  company_description={employer.company_description}
+                  created_at={employer.created_at}
+                  is_confirmed={true}
                   role={role}
+                  employers={employers}
+                  setEmployers={setEmployers}
                 />
               );
             })}
@@ -357,14 +359,12 @@ function Employer() {
 
             <button onClick={() => goToNextPage(currentPage)}>
               Следующая страница</button>
-
-
           </div>
         </div>
       )
     }
   };
-
+  
   return (
     <div className={styles.employer}>
       {isAuthorized ? (

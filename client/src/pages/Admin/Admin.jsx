@@ -33,7 +33,7 @@ function Admin() {
 
   const handleTabClick = (tab, service, state) => {
     setActiveTab(tab);
-
+    setCurrentPage(1);
     service()
       .then((data) => {
         state(data);
@@ -75,11 +75,13 @@ function Admin() {
                     employer_id={employer.id}
                     company_name={employer.company_name}
                     company_description={employer.company_description}
+                    contact={employer.contact}
+                    website={employer.website}
                     created_at={employer.created_at}
                     is_confirmed={true}
+                    role={role}
                     employers={employers}
                     setEmployers={setEmployers}
-                    role={role}
                   />
                 );
               })}
@@ -88,13 +90,13 @@ function Admin() {
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage - 1, true), currentPage, setEmployers)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
               <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage + 1, true), currentPage, setEmployers)}>
                 Следующая страница</button>
 
             </div>
@@ -111,11 +113,13 @@ function Admin() {
                     employer_id={employer.id}
                     company_name={employer.company_name}
                     company_description={employer.company_description}
+                    contact={employer.contact}
+                    website={employer.website}
                     created_at={employer.created_at}
                     is_confirmed={false}
+                    role={role}
                     employers={employers}
                     setEmployers={setEmployers}
-                    role={role}
                   />
                 );
               })}
@@ -124,13 +128,13 @@ function Admin() {
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage - 1, false), currentPage, setEmployers)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
               <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage + 1, false), currentPage, setEmployers)}>
                 Следующая страница</button>
 
             </div>
@@ -151,9 +155,9 @@ function Admin() {
                     place={vacancy.place}
                     salary={vacancy.salary}
                     tags={vacancy.tags}
-                    role={role}
                     is_confirmed={true}
                     is_archived={false}
+                    role={role}
                     vacancies={vacancies}
                     setVacancies={setVacancies}
                   />
@@ -164,13 +168,13 @@ function Admin() {
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, true, false), currentPage, setVacancies)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
               <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, true, false), currentPage, setVacancies)}>
                 Следующая страница</button>
 
             </div>
@@ -191,9 +195,9 @@ function Admin() {
                     place={vacancy.place}
                     salary={vacancy.salary}
                     tags={vacancy.tags}
-                    role={role}
                     is_confirmed={true}
-                    is_archived={false}
+                    is_archived={true}
+                    role={role}
                     vacancies={vacancies}
                     setVacancies={setVacancies}
                   />
@@ -204,13 +208,13 @@ function Admin() {
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, true, true), currentPage, setVacancies)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
               <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, true, true), currentPage, setVacancies)}>
                 Следующая страница</button>
 
             </div>
@@ -231,9 +235,9 @@ function Admin() {
                     place={vacancy.place}
                     salary={vacancy.salary}
                     tags={vacancy.tags}
-                    role={role}
                     is_confirmed={false}
                     is_archived={true}
+                    role={role}
                     vacancies={vacancies}
                     setVacancies={setVacancies}
                   />
@@ -272,6 +276,7 @@ function Admin() {
             <button
               className={activeTab === 'confirmedEmployers' ? 'active' : ''}
               onClick={() => handleTabClick('confirmedEmployers', () => getPaginatedEmployers(1, true), setEmployers)}>
+
               Подтвержденные работодатели</button>
 
             <button
@@ -280,12 +285,12 @@ function Admin() {
               Неподтвержденные работодатели</button>
 
             <button
-              className={activeTab === 'confirmedVacancies' ? 'active' : ''}
+              className={activeTab === 'confirmedVacanciesNotInArchive' ? 'active' : ''}
               onClick={() => handleTabClick('confirmedVacanciesNotInArchive', () => getPaginatedVacancies(1, true, false), setVacancies)}>
               Подтвержденные вакансии (активные)</button>
 
             <button
-              className={activeTab === 'confirmedVacancies' ? 'active' : ''}
+              className={activeTab === 'confirmedVacanciesInArchive' ? 'active' : ''}
               onClick={() => handleTabClick('confirmedVacanciesInArchive', () => getPaginatedVacancies(1, true, true), setVacancies)}>
               Подтвержденные вакансии (неактивные)</button>
 
