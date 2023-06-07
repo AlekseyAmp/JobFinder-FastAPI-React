@@ -5,13 +5,14 @@ import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
 import { getPaginatedVacancies } from '../../services/vacancy';
+import { createNewApplicant } from '../../services/applicant';
 
 import styles from './Applicant.module.scss';
 
+import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard';
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
-import { createNewApplicant } from '../../services/applicant';
 
 function Applicant() {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +21,7 @@ function Applicant() {
   const [role, setRole] = useState(null);
   const [vacancies, setVacancies] = useState([]);
   const [showApplicantCreateForm, setShowApplicantCreateForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (isAuthorized) {
@@ -108,6 +110,71 @@ function Applicant() {
         </div>
       );
     }
+    else if (role == 'applicant') {
+      const goToNextPage = (currentPage) => {
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        getPaginatedVacancies(nextPage, true, false)
+          .then((data) => {
+            setVacancies(data);
+          })
+          .catch((error) => console.log(error));
+      };
+
+      const goToPreviousPage = (currentPage) => {
+        const previousPage = currentPage - 1;
+        setCurrentPage(previousPage);
+        getPaginatedVacancies(previousPage, true, false)
+          .then((data) => {
+            setVacancies(data);
+          })
+          .catch((error) => console.log(error));
+      };
+
+      return (
+        <div className={`content`}>
+          <div className={`cards`}>
+            <div className={`cards-content`}>
+              {vacancies.map((vacancy) => {
+                return (
+                  <VacancyCard
+                    key={vacancy.id}
+                    vacancy_id={vacancy.id}
+                    name={vacancy.name}
+                    created_at={vacancy.created_at}
+                    description={vacancy.description}
+                    place={vacancy.place}
+                    salary={vacancy.salary}
+                    tags={vacancy.tags}
+                    is_confirmed={true}
+                    is_archived={false}
+                    role={role}
+                    vacancies={vacancies}
+                    setVacancies={setVacancies}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className={`pagination`}>
+            <div className={`pagination-content`}>
+
+              <button
+                disabled={currentPage === 1}
+                onClick={() => goToPreviousPage(currentPage)}>
+                Предыдущая страница</button>
+
+              <span>Текущая страница: {currentPage}</span>
+
+              <button onClick={() => goToNextPage(currentPage)}>
+                Следующая страница</button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+
   }
 
   return (

@@ -66,198 +66,208 @@ function Admin() {
     switch (activeTab) {
       case 'confirmedEmployers':
         return (
-          <div className={`grid-cards`}>
-            <div className={`grid-cards-content`}>
-              {employers.map((employer) => {
-                return (
-                  <EmployerCard
-                    key={employer.id}
-                    employer_id={employer.id}
-                    company_name={employer.company_name}
-                    company_description={employer.company_description}
-                    contact={employer.contact}
-                    website={employer.website}
-                    created_at={employer.created_at}
-                    is_confirmed={true}
-                    role={role}
-                    employers={employers}
-                    setEmployers={setEmployers}
-                  />
-                );
-              })}
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {employers.map((employer) => {
+                  return (
+                    <EmployerCard
+                      key={employer.id}
+                      employer_id={employer.id}
+                      company_name={employer.company_name}
+                      company_description={employer.company_description}
+                      contact={employer.contact}
+                      website={employer.website}
+                      created_at={employer.created_at}
+                      is_confirmed={true}
+                      role={role}
+                      employers={employers}
+                      setEmployers={setEmployers}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <div className={`pagination`}>
+            <div className={`pagination-content`}>
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage - 1, true), currentPage, setEmployers)}>
+                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage-1, true), currentPage, setEmployers)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
-              <button
-                onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage + 1, true), currentPage, setEmployers)}>
+              <button onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage+1, true), currentPage, setEmployers)}>
                 Следующая страница</button>
-
             </div>
+          </div>
           </div>
         );
       case 'unconfirmedEmployers':
         return (
-          <div className={`grid-cards`}>
-            <div className={`grid-cards-content`}>
-              {employers.map((employer) => {
-                return (
-                  <EmployerCard
-                    key={employer.id}
-                    employer_id={employer.id}
-                    company_name={employer.company_name}
-                    company_description={employer.company_description}
-                    contact={employer.contact}
-                    website={employer.website}
-                    created_at={employer.created_at}
-                    is_confirmed={false}
-                    role={role}
-                    employers={employers}
-                    setEmployers={setEmployers}
-                  />
-                );
-              })}
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {employers.map((employer) => {
+                  return (
+                    <EmployerCard
+                      key={employer.id}
+                      employer_id={employer.id}
+                      company_name={employer.company_name}
+                      company_description={employer.company_description}
+                      contact={employer.contact}
+                      website={employer.website}
+                      created_at={employer.created_at}
+                      is_confirmed={false}
+                      role={role}
+                      employers={employers}
+                      setEmployers={setEmployers}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <div className={`pagination`}>
+            <div className={`pagination-content`}>
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage - 1, false), currentPage, setEmployers)}>
+                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage-1, false), currentPage, setEmployers)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
-              <button
-                onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage + 1, false), currentPage, setEmployers)}>
+              <button onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage+1, false) ,currentPage, setEmployers)}>
                 Следующая страница</button>
-
             </div>
+          </div>
           </div>
         );
       case 'confirmedVacanciesNotInArchive':
         return (
-          <div className={`grid-cards`}>
-            <div className={`grid-cards-content`}>
-              {vacancies.map((vacancy) => {
-                return (
-                  <VacancyCard
-                    key={vacancy.id}
-                    vacancy_id={vacancy.id}
-                    name={vacancy.name}
-                    created_at={vacancy.created_at}
-                    description={vacancy.description}
-                    place={vacancy.place}
-                    salary={vacancy.salary}
-                    tags={vacancy.tags}
-                    is_confirmed={true}
-                    is_archived={false}
-                    role={role}
-                    vacancies={vacancies}
-                    setVacancies={setVacancies}
-                  />
-                );
-              })}
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {vacancies.map((vacancy) => {
+                  return (
+                    <VacancyCard
+                      key={vacancy.id}
+                      vacancy_id={vacancy.id}
+                      name={vacancy.name}
+                      created_at={vacancy.created_at}
+                      description={vacancy.description}
+                      place={vacancy.place}
+                      salary={vacancy.salary}
+                      tags={vacancy.tags}
+                      is_confirmed={true}
+                      is_archived={false}
+                      role={role}
+                      vacancies={vacancies}
+                      setVacancies={setVacancies}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <div className={`pagination`}>
+            <div className={`pagination-content`}>
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, true, false), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage-1, true, false), currentPage, setVacancies)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
-              <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, true, false), currentPage, setVacancies)}>
+              <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage+1, true, false), currentPage, setVacancies)}>
                 Следующая страница</button>
-
             </div>
+          </div>
           </div>
         );
       case 'confirmedVacanciesInArchive':
         return (
-          <div className={`grid-cards`}>
-            <div className={`grid-cards-content`}>
-              {vacancies.map((vacancy) => {
-                return (
-                  <VacancyCard
-                    key={vacancy.id}
-                    vacancy_id={vacancy.id}
-                    name={vacancy.name}
-                    created_at={vacancy.created_at}
-                    description={vacancy.description}
-                    place={vacancy.place}
-                    salary={vacancy.salary}
-                    tags={vacancy.tags}
-                    is_confirmed={true}
-                    is_archived={true}
-                    role={role}
-                    vacancies={vacancies}
-                    setVacancies={setVacancies}
-                  />
-                );
-              })}
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {vacancies.map((vacancy) => {
+                  return (
+                    <VacancyCard
+                      key={vacancy.id}
+                      vacancy_id={vacancy.id}
+                      name={vacancy.name}
+                      created_at={vacancy.created_at}
+                      description={vacancy.description}
+                      place={vacancy.place}
+                      salary={vacancy.salary}
+                      tags={vacancy.tags}
+                      is_confirmed={true}
+                      is_archived={true}
+                      role={role}
+                      vacancies={vacancies}
+                      setVacancies={setVacancies}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <div className={`pagination`}>
+            <div className={`pagination-content`}>
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, true, true), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage-1, true, true), currentPage, setVacancies)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
-              <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, true, true), currentPage, setVacancies)}>
+              <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage+1, true, true), currentPage, setVacancies)}>
                 Следующая страница</button>
-
             </div>
+          </div>
           </div>
         );
       case 'unconfirmedVacancies':
         return (
-          <div className={`grid-cards`}>
-            <div className={`grid-cards-content`}>
-              {vacancies.map((vacancy) => {
-                return (
-                  <VacancyCard
-                    key={vacancy.id}
-                    vacancy_id={vacancy.id}
-                    name={vacancy.name}
-                    created_at={vacancy.created_at}
-                    description={vacancy.description}
-                    place={vacancy.place}
-                    salary={vacancy.salary}
-                    tags={vacancy.tags}
-                    is_confirmed={false}
-                    is_archived={true}
-                    role={role}
-                    vacancies={vacancies}
-                    setVacancies={setVacancies}
-                  />
-                );
-              })}
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {vacancies.map((vacancy) => {
+                  return (
+                    <VacancyCard
+                      key={vacancy.id}
+                      vacancy_id={vacancy.id}
+                      name={vacancy.name}
+                      created_at={vacancy.created_at}
+                      description={vacancy.description}
+                      place={vacancy.place}
+                      salary={vacancy.salary}
+                      tags={vacancy.tags}
+                      is_confirmed={false}
+                      is_archived={true}
+                      role={role}
+                      vacancies={vacancies}
+                      setVacancies={setVacancies}
+                    />
+                  );
+                })}
+              </div>
             </div>
             <div className={`pagination`}>
+            <div className={`pagination-content`}>
 
               <button
                 disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, false, true), currentPage, setVacancies)}>
+                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage-1, false, true), currentPage, setVacancies)}>
                 Предыдущая страница</button>
 
               <span>Текущая страница: {currentPage}</span>
 
-              <button
-                onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, false, true), currentPage, setVacancies)}>
+              <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage+1, false, true), currentPage, setVacancies)}>
                 Следующая страница</button>
-
             </div>
+          </div>
           </div>
         );
       default:

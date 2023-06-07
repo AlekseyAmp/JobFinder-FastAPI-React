@@ -281,7 +281,7 @@ function Employer() {
               <div className={`buttons`}>
                 <BlueButton title={'Разместить вакансию'} onClick={handleCreateVacancyClick} />
               </div>
-              <div className={`tab-menu`}> 
+              <div className={`tab-menu`}>
 
                 <button
                   className={activeTab === 'activeVacancies' ? 'active' : ''}
@@ -349,22 +349,24 @@ function Employer() {
             })}
           </div>
           <div className={`pagination`}>
+            <div className={`pagination-content`}>
 
-            <button
-              disabled={currentPage === 1}
-              onClick={() => goToPreviousPage(currentPage)}>
-              Предыдущая страница</button>
+              <button
+                disabled={currentPage === 1}
+                onClick={() => goToPreviousPage(currentPage)}>
+                Предыдущая страница</button>
 
-            <span>Текущая страница: {currentPage}</span>
+              <span>Текущая страница: {currentPage}</span>
 
-            <button onClick={() => goToNextPage(currentPage)}>
-              Следующая страница</button>
+              <button onClick={() => goToNextPage(currentPage)}>
+                Следующая страница</button>
+            </div>
           </div>
         </div>
       )
     }
   };
-  
+
   return (
     <div className={styles.employer}>
       {isAuthorized ? (

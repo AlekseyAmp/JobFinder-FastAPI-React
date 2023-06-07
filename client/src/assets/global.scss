@@ -29,6 +29,20 @@ body{
     grid-gap: 10px;
 }
 
+.cards {
+    display: flex;
+    justify-content: center;
+}
+.cards-content {
+    
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
 .tab-menu {
     margin-top: 30px;
 
