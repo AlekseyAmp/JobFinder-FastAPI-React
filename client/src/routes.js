@@ -4,6 +4,7 @@ import Login from './pages/Auth/Login'
 import Employer from './pages/Employer/Employer';
 import Applicant from './pages/Applicant/Applicant';
 import Admin from './pages/Admin/Admin';
+import Vacancies from './pages/Vacancies/Vacancies';
 
 const routes = [
     {
@@ -25,6 +26,10 @@ const routes = [
     {
         path: '/applicants',
         page: Applicant,
+    },
+    {
+        path: '/vacancies',
+        page: Vacancies,
     },
     {
         path: '/admin',

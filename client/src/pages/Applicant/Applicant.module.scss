@@ -1,7 +1,11 @@
 .applicant {
     margin-top: 50px;
     &Section {
-        display: flex;
         gap: 100px;
+        &Content {
+            display: flex;
+            gap: 100px;
+            margin-top: 50px;
+        }
     }
 }

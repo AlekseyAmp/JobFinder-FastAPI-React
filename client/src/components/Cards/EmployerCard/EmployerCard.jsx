@@ -10,12 +10,12 @@ function EmployerCard({ employer_id, company_name, company_description, contact,
   return (
     <div className={styles.employerCard}>
       <div className={styles.employerCardDate}>
-        <span className='small-text'>Номер: <p className={`small-text`}>{employer_id}</p></span>
-        <span className='small-text'>Дата публикации: <p className={`small-text`}>{created_at.split('T')[0]}</p></span>
+        <span className='small-text'>Номер: {employer_id}</span>
+        <span className='small-text'>Дата размещения: {created_at.split('T')[0]}</span>
       </div>
 
       <div className={styles.employerCardMain}>
-          <span className='dark-text'>Компания: <h3 className={`title`}>{company_name}</h3></span>
+          <span className='dark-text' >Компания: <h3 className={`title`}>{company_name}</h3></span>
         <div className={styles.employerCardContact}>
           <span className='dark-text'>Контакт: <p className={`gray-text`}>{contact}</p></span>
           <span className='dark-text'>Веб-сайт компании: <a href={website} className={`link-text-blue`}>{website}</a></span>

@@ -6,7 +6,32 @@ export async function createNewApplicant(speciality, experience, salary, resume_
 
         if (response.data) {
             console.log(response.data);
-            window.location.reload();
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function getPaginatedApplicants(current_page, archived) {
+    try {
+        const response = await axios.get(`/applicants/?page=${current_page}&archived=${archived}`);
+
+        if (response.data) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function getApplicant(applicant_id) {
+    try {
+        const response = await axios.get(`/applicants/${applicant_id}`);
+
+        if (response.data) {
+            return response.data;
         }
     } catch (error) {
         console.log(error.response.data.detail);

@@ -10,6 +10,7 @@ from dto.auth import (
     Login as LoginDTO
 )
 from services.employer import get_employer_by_user_id
+from services.applicant import get_applicant_by_user_id
 from utils.auth import (
     hash_password,
     verify_password,
@@ -20,6 +21,7 @@ from utils.auth import (
 )
 from utils.dto import check_data_on_empty
 from utils.employer import is_employer
+from utils.applicant import is_applicant
 
 
 def create_user(data: RegisterDTO, response: Response, db: Session, authorize: AuthJWT):
@@ -125,6 +127,10 @@ def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJ
     if is_employer(user.id, db):
         employer = get_employer_by_user_id(user.id, db)
         employer_id = str(employer.id)
+
+    if is_applicant(user.id, db):
+        applicant = get_applicant_by_user_id(user.id, db)
+        applicant_id = str(applicant.id)
 
     access_token = create_access_token(authorize, str(user.id), employer_id, applicant_id)
     refresh_token = create_refresh_token(authorize, str(user.id), employer_id, applicant_id)

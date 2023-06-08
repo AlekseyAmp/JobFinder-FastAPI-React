@@ -39,10 +39,16 @@ function Employer() {
     }
   }, [isAuthorized]);
 
+  const getEmployerId = () => {
+    const decoded_token = jwt_decode(access_token);
+    const employer_id = decoded_token.employer_id;
+
+    return employer_id;
+  }
+
   useEffect(() => {
     if (role === 'employer') {
-      const decoded_token = jwt_decode(access_token);
-      const employer_id = decoded_token.employer_id;
+      const employer_id = getEmployerId()
       getVacanciesByEmployer(employer_id)
         .then((data) => {
           setVacancies(data);
@@ -133,6 +139,10 @@ function Employer() {
         setShowVacancyCreateForm(true);
       };
 
+      const handleLinkOn = (link) => {
+        navigate(link);
+      };
+
       const handleCreateVacancySubmit = (e) => {
         e.preventDefault();
         createNewVacancy(e.target.name.value, e.target.description.value,
@@ -171,11 +181,17 @@ function Employer() {
 
       const handleTabClick = (tab) => {
         setActiveTab(tab);
+        const employer_id = getEmployerId()
+        getVacanciesByEmployer(employer_id)
+        .then((data) => {
+          setVacancies(data);
+        })
+        .catch((error) => console.log(error));
       };
 
       const renderContent = () => {
         switch (activeTab) {
-          case 'activeVacancies':
+          case 'activedVacancies':
             return (
               <div className={`grid-cards`}>
                 <div className={`grid-cards-content`}>
@@ -204,12 +220,12 @@ function Employer() {
                 </div>
               </div>
             );
-          case 'archiveVacancies':
+          case 'archivedVacancies':
             return (
               <div className={`grid-cards`}>
                 <div className={`grid-cards-content`}>
                   {vacancies.map((vacancy) => {
-                    if (vacancy.is_confirmed && !vacancy.is_archived) {
+                    if (vacancy.is_confirmed && vacancy.is_archived) {
                       return (
                         <VacancyCard
                           key={vacancy.id}
@@ -238,7 +254,7 @@ function Employer() {
               <div className={`grid-cards`}>
                 <div className={`grid-cards-content`}>
                   {vacancies.map((vacancy) => {
-                    if (vacancy.is_confirmed && !vacancy.is_archived) {
+                    if (!vacancy.is_confirmed && vacancy.is_archived) {
                       return (
                         <VacancyCard
                           key={vacancy.id}
@@ -280,24 +296,26 @@ function Employer() {
             <div className={`content`}>
               <div className={`title`}>Добро пожаловать!</div>
               <div className={`buttons`}>
-                <BlueButton title={'Разместить вакансию'} onClick={handleCreateVacancyClick} />
+                <GreenButton title={'Разместить вакансию'} onClick={handleCreateVacancyClick} />
+                <BlueButton title={'Просмотреть соискателей'} onClick={() => handleLinkOn('/applicants')} />
+                <BlueButton title={'Просмотреть размещенные вакансии'} onClick={() => handleLinkOn('/vacancies')} />
               </div>
               <div className={`tab-menu`}>
 
                 <button
-                  className={activeTab === 'activeVacancies' ? 'active' : ''}
-                  onClick={() => handleTabClick('activeVacancies')}>
-                  Активные вакансии</button>
+                  className={activeTab === 'activedVacancies' ? 'active' : ''}
+                  onClick={() => handleTabClick('activedVacancies')}>
+                  Мои активные вакансии</button>
 
                 <button
-                  className={activeTab === 'archiveVacancies' ? 'active' : ''}
-                  onClick={() => handleTabClick('archiveVacancies')}>
-                  Неактивные вакансии</button>
+                  className={activeTab === 'archivedVacancies' ? 'active' : ''}
+                  onClick={() => handleTabClick('archivedVacancies')}>
+                  Мои неактивные вакансии</button>
 
                 <button
                   className={activeTab === 'unconfirmedVacancies' ? 'active' : ''}
                   onClick={() => handleTabClick('unconfirmedVacancies')}>
-                  Неподтвержденные вакансии</button>
+                  Мои неподтвержденные вакансии</button>
 
               </div>
 
@@ -330,7 +348,7 @@ function Employer() {
 
       return (
         <div className={styles.employerSection}>
-          <FilterBar/>
+          <FilterBar />
           <div className={`content`}>
             <h3 className={`title`}>Работодатели</h3>
             <div className={`cards`}>

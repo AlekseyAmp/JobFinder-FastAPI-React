@@ -3,6 +3,8 @@ $white: #f7f7f7;
 $blue: #458DFD;
 $green: #15966E;
 $light_green: #1ede5182;
+$light_blue: RGB(212, 234, 255);
+$light_orange: RGB(253, 229, 166);
 $red: #ce332ae6;
 $dark_red: #940c05e8;
 $dark: rgba(34, 32, 32, 0.97);
@@ -14,7 +16,7 @@ $light_gray: #f3f3f7;
 .dark-text {
     text-decoration: none;
     font-family: 'Segoe UI';
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 500;
     color: $dark;
 }
@@ -22,15 +24,31 @@ $light_gray: #f3f3f7;
 .gray-text {
     text-decoration: none;
     font-family: 'Segoe UI';
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 500;
     color: $light_dark;
+}
+
+.blue-text {
+    text-decoration: none;
+    font-family: 'Segoe UI';
+    font-size: 17px;
+    font-weight: bold;
+    color: $blue;
+}
+
+.green-text {
+    text-decoration: none;
+    font-family: 'Segoe UI';
+    font-size: 17px;
+    font-weight: bold;
+    color: $green;
 }
 
 .link-text {
     text-decoration: none;
     font-family: 'Segoe UI';
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     color: $light_dark;
     cursor: pointer;
@@ -44,7 +62,7 @@ $light_gray: #f3f3f7;
 .link-text-blue {
     text-decoration: none;
     font-family: 'Segoe UI';
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 500;
     color: $blue;
     cursor: pointer;
@@ -58,7 +76,7 @@ $light_gray: #f3f3f7;
 .small-text {
     text-decoration: none;
     font-family: 'Segoe UI';
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     color: $light_dark;
     transition: 0.2s;
@@ -66,7 +84,7 @@ $light_gray: #f3f3f7;
 
 .title {
     font-family: 'Segoe UI';
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
     color: $dark;
     text-decoration: none;

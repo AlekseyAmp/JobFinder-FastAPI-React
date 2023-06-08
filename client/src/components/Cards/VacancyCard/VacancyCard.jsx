@@ -8,15 +8,17 @@ import RedButton from '../../Buttons/RedButton/RedButton';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';
 import BlueButton from '../../Buttons/BlueButton/BlueButton';
 
-function VacancyCard({ vacancy_id, name, created_at, description, place, salary, tags, is_confirmed, is_archived, role, vacancies, setVacancies }) {
+function VacancyCard({ vacancy_id, name, created_at, description, place, salary, tags, is_confirmed, is_archived, role, vacancies, setVacancies, showButtons = true }) {
   return (
     <div className={styles.vacancyCard}>
       <div className={styles.vacancyCardTitle}>
         <h3 className={`title`}>{name}</h3>
-        <p className={`gray-text`}>от {created_at.split('T')[0]}</p>
+        <p className={`small-text`}>Дата размещения: {created_at.split('T')[0]}</p>
       </div>
       <div className={styles.vacancyCardUnderTitle}>
-        <p className={`gray-text`}>{salary} руб. - г. {place}</p>
+        <p className={`dark-text`}>
+          {salary} <span className={`small-text`}>руб.</span> - <span className={`small-text`}>г.</span> {place}
+        </p>
       </div>
       <div className={styles.vacancyCardDescription}>
         <p className={`dark-text`}>{description}</p>
@@ -26,7 +28,7 @@ function VacancyCard({ vacancy_id, name, created_at, description, place, salary,
         {tags.map((tag) => <li className={styles.vacancyCardTag}><p className={`dark-text`}>{tag}</p></li>)}
       </ul>
 
-      {role === 'employer' ? (
+      {role === 'employer' && showButtons ? (
         <div className={styles.vacancyCardButtons}>
           <RedButton
             title={"Удалить"}
@@ -53,10 +55,10 @@ function VacancyCard({ vacancy_id, name, created_at, description, place, salary,
                 onClick={() => confirmVacancy(vacancy_id, vacancies, setVacancies)}
               />
             ) : (
-                <RedButton
-                  title={"Удалить"}
-                  onClick={() => deleteVacancy(vacancy_id, vacancies, setVacancies)}
-                />
+              <RedButton
+                title={"Удалить"}
+                onClick={() => deleteVacancy(vacancy_id, vacancies, setVacancies)}
+              />
             )}
             {is_archived === false ? (
               <BlueButton

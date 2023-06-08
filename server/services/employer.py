@@ -122,7 +122,7 @@ def confirm_employer(employer_id, db: Session, user_id: str):
     }
 
 
-def delete_employer(employer_id, db: Session, user_id: str):
+def delete_employer(employer_id: str, db: Session, user_id: str):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -130,7 +130,7 @@ def delete_employer(employer_id, db: Session, user_id: str):
         )
 
     if is_employer(user_id, db):
-        employer = get_employer_by_user_id(employer_id, db)
+        employer = get_employer_by_user_id(user_id, db)
         if str(employer.id) != employer_id:
             raise HTTPException(
                 status_code=403,

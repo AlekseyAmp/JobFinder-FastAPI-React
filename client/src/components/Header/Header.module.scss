@@ -22,10 +22,10 @@
     .menu {
         ul {
             display: flex;
+            li {
+                margin-left: 30px;
+            }
         }
 
-        a {
-            margin-left: 30px;
-        }
     }
 }

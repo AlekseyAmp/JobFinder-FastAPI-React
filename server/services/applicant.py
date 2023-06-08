@@ -77,13 +77,15 @@ def get_applicant_by_user_id(user_id: str, db: Session):
     return applicant
 
 
-def get_paginated_applicants(page: int, db: Session):
+def get_paginated_applicants(page: int, archived: bool, db: Session):
     # Кол-во элементов на странице
     items_on_page = 20
     # Смещение, от 0-20, от 20-40 и т.д
     offset = (page - 1) * items_on_page
     # Выборка из БД, с помощью смещение + ограничение 20
-    applicants = db.query(Applicant).offset(offset).limit(items_on_page).all()
+    applicants = db.query(Applicant).filter(
+        Applicant.is_archived == archived,
+    ).offset(offset).limit(items_on_page).all()
     return applicants[::-1]
 
 
@@ -148,4 +150,35 @@ def from_archive_applicant(applicant_id: str, db: Session, user_id: str):
 
     return {
         "message": "Summary removed from the archive"
+    }
+
+
+def delete_applicant(applicant_id: str, db: Session, user_id: str):
+    if not is_admin(user_id, db) and not is_applicant(user_id, db):
+        raise HTTPException(
+            status_code=403,
+            detail="No access rights"
+        )
+
+    if is_applicant(user_id, db):
+        applicant = get_applicant_by_user_id(user_id, db)
+        if str(applicant.id) != applicant_id:
+            raise HTTPException(
+                status_code=403,
+                detail="Access denied"
+            )
+
+    applicant = get_applicant_by_applicant_id(applicant_id, db)
+
+    user = db.query(User).filter(
+        User.id == applicant.user_id
+    ).first()
+
+    user.role = "user"
+
+    db.delete(applicant)
+    db.commit()
+
+    return {
+        "message": "Employer is deleted"
     }

@@ -25,6 +25,29 @@ function Header() {
         .catch((error) => console.log(error));
     }
   }, [isAuthorized]);
+
+  const makeRoleOnRussian = (role) => {
+      switch(role) {
+        case 'employer':
+          role = 'работодатель'; 
+          break;
+        case 'applicant':
+          role = 'соискатель';
+          break;
+        case 'notConfirmedEmployer':
+          role = 'неподтвержденный работодатель';
+          break;
+        case 'admin':
+            role = 'админ';
+            break;
+        default:
+          role = 'пользователь';
+      }
+      return role;
+  }
+
+  const translatedRole = makeRoleOnRussian(role)
+
   return (
     <div className={styles.header}>
       <Link to='/' className={styles.logo}>
@@ -35,10 +58,13 @@ function Header() {
       <div className={styles.menu}>
         <ul>
           <li>
-            <Link to='/applicants' className={`link-text`}>Соискателям</Link>
+            <Link to='/vacancies' className={`link-text`}>Вакансии</Link>
           </li>
           <li>
-            <Link to='/employers' className={`link-text`}>Работодателям</Link>
+            <Link to='/applicants' className={`link-text`}>Соискатели</Link>
+          </li>
+          <li>
+            <Link to='/employers' className={`link-text`}>Работодатели</Link>
           </li>
         </ul>
       </div>
@@ -54,7 +80,10 @@ function Header() {
               ) : null
               }
               <li>
-                <Link to='/' className={`link-text`}>{name} {surname}</Link>
+                <p className={`green-text`}>Вы - {translatedRole}</p>
+              </li>
+              <li>
+                <p className={`gray-text`}>{name} {surname}</p>
               </li>
               <li>
                 <Logout />

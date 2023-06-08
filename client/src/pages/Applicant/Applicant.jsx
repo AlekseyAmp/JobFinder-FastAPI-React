@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
-import { getPaginatedVacancies } from '../../services/vacancy';
-import { createNewApplicant } from '../../services/applicant';
+import { createNewApplicant, getApplicant, getPaginatedApplicants } from '../../services/applicant';
 
 import styles from './Applicant.module.scss';
 
@@ -13,13 +13,15 @@ import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
 import FilterBar from '../../components/FilterBar/FilterBar';
+import ApplicantCard from '../../components/Cards/ApplicantCard/ApplicantCard';
 
 function Applicant() {
   const [isLoading, setIsLoading] = useState(true);
   const isAuthorized = access_token;
   const navigate = useNavigate();
   const [role, setRole] = useState(null);
-  const [vacancies, setVacancies] = useState([]);
+  const [applicants, setApplicants] = useState([]);
+  const [mySummary, setMySummary] = useState({});
   const [showApplicantCreateForm, setShowApplicantCreateForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -36,13 +38,26 @@ function Applicant() {
 
   useEffect(() => {
     if (role) {
-      getPaginatedVacancies(1, true, false)
+      getPaginatedApplicants(1, false)
         .then((data) => {
-          setVacancies(data);
+          setApplicants(data);
         })
         .catch((error) => console.log(error));
     }
   }, [role]);
+
+  useEffect(() => {
+    if (role === 'applicant') {
+      const decoded_token = jwt_decode(access_token);
+      const applicant_id = decoded_token.applicant_id;
+      getApplicant(applicant_id)
+        .then((data) => {
+          setMySummary(data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [role]);
+
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -61,6 +76,7 @@ function Applicant() {
       const handleCreateApplicantSubmit = (e) => {
         e.preventDefault();
         createNewApplicant(e.target.speciality.value, e.target.experience.value, e.target.salary.value, e.target.resume_text.value);
+        navigate('/vacancies')
       };
 
       const inputConfigs = [
@@ -108,13 +124,14 @@ function Applicant() {
         </div>
       );
     }
-    else {
+    else if (role === 'applicant') {
+
       const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
-        getPaginatedVacancies(nextPage, true, false)
+        getPaginatedApplicants(nextPage, false)
           .then((data) => {
-            setVacancies(data);
+            setApplicants(data);
           })
           .catch((error) => console.log(error));
       };
@@ -122,36 +139,116 @@ function Applicant() {
       const goToPreviousPage = (currentPage) => {
         const previousPage = currentPage - 1;
         setCurrentPage(previousPage);
-        getPaginatedVacancies(previousPage, true, false)
+        getPaginatedApplicants(previousPage, false)
           .then((data) => {
-            setVacancies(data);
+            setApplicants(data);
           })
           .catch((error) => console.log(error));
       };
 
       return (
         <div className={styles.applicantSection}>
-          <FilterBar/>
+          <div className={styles.applicationSummary}>
+            <h3 className={`title`}>Моё резюме</h3>
+            {mySummary.id && (
+              <ApplicantCard
+                key={mySummary.id}
+                applicant_id={mySummary.id}
+                created_at={mySummary.created_at}
+                speciality={mySummary.speciality}
+                experience={mySummary.experience}
+                salary={mySummary.salary}
+                resume_text={mySummary.resume_text}
+                role={role}
+                applicants={applicants}
+                setApplicants={setApplicants}
+              />
+            )}
+          </div>
+          <div className={styles.applicantSectionContent}>
+            <FilterBar />
+            <div className={`content`}>
+              <h3 className={`title`}>Все активные резюме на сервисе</h3>
+              <div className={`cards`}>
+                <div className={`cards-content`}>
+                  {applicants.map((applicant) => {
+                    return (
+                      <ApplicantCard
+                        key={applicant.id}
+                        applicant_id={applicant.id}
+                        created_at={applicant.created_at}
+                        speciality={applicant.speciality}
+                        experience={applicant.experience}
+                        salary={applicant.salary}
+                        resume_text={applicant.resume_text}
+                        role={role}
+                        applicants={applicants}
+                        setApplicants={setApplicants}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              <div className={`pagination`}>
+                <div className={`pagination-content`}>
+
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => goToPreviousPage(currentPage)}>
+                    Предыдущая страница</button>
+
+                  <span>Текущая страница: {currentPage}</span>
+
+                  <button onClick={() => goToNextPage(currentPage)}>
+                    Следующая страница</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    else {
+      const goToNextPage = (currentPage) => {
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        getPaginatedApplicants(nextPage)
+          .then((data) => {
+            setApplicants(data);
+          })
+          .catch((error) => console.log(error));
+      };
+
+      const goToPreviousPage = (currentPage) => {
+        const previousPage = currentPage - 1;
+        setCurrentPage(previousPage);
+        getPaginatedApplicants(previousPage)
+          .then((data) => {
+            setApplicants(data);
+          })
+          .catch((error) => console.log(error));
+      };
+
+      return (
+        <div className={`${styles.applicantSection} df`}>
+          <FilterBar />
           <div className={`content`}>
-            <h3 className={`title`}>Вакансии</h3>
+            <h3 className={`title`}>Соискатели</h3>
             <div className={`cards`}>
               <div className={`cards-content`}>
-                {vacancies.map((vacancy) => {
+                {applicants.map((applicant) => {
                   return (
-                    <VacancyCard
-                      key={vacancy.id}
-                      vacancy_id={vacancy.id}
-                      name={vacancy.name}
-                      created_at={vacancy.created_at}
-                      description={vacancy.description}
-                      place={vacancy.place}
-                      salary={vacancy.salary}
-                      tags={vacancy.tags}
-                      is_confirmed={true}
-                      is_archived={false}
+                    <ApplicantCard
+                      key={applicant.id}
+                      applicant_id={applicant.id}
+                      created_at={applicant.created_at}
+                      speciality={applicant.speciality}
+                      experience={applicant.experience}
+                      salary={applicant.salary}
+                      resume_text={applicant.resume_text}
                       role={role}
-                      vacancies={vacancies}
-                      setVacancies={setVacancies}
+                      applicants={applicants}
+                      setApplicants={setApplicants}
                     />
                   );
                 })}
@@ -175,8 +272,6 @@ function Applicant() {
         </div>
       )
     }
-
-
   }
 
   return (
