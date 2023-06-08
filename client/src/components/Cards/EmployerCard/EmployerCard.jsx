@@ -15,14 +15,14 @@ function EmployerCard({ employer_id, company_name, company_description, contact,
       </div>
 
       <div className={styles.employerCardMain}>
-          <span className='gray-text'>Компания: <h3 className={`title`}>{company_name}</h3></span>
+          <span className='dark-text'>Компания: <h3 className={`title`}>{company_name}</h3></span>
         <div className={styles.employerCardContact}>
-          <span className='gray-text'>Контакт: <p className={`dark-text`}>{contact}</p></span>
-          <span className='gray-text'>Веб-сайт компании: <a href={website} className={`link-text-blue`}>{website}</a></span>
+          <span className='dark-text'>Контакт: <p className={`gray-text`}>{contact}</p></span>
+          <span className='dark-text'>Веб-сайт компании: <a href={website} className={`link-text-blue`}>{website}</a></span>
         </div>
       </div>
 
-      <span className='gray-text'>Описание: <p className={`dark-text`}>{company_description}</p></span>
+      <span className='dark-text'>Описание: <p className={`gray-text`}>{company_description}</p></span>
 
       {role === 'admin' ? (
         is_confirmed ? (

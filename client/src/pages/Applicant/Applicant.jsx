@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
 import { getPaginatedVacancies } from '../../services/vacancy';
@@ -13,6 +12,7 @@ import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard';
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
+import FilterBar from '../../components/FilterBar/FilterBar';
 
 function Applicant() {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,9 +35,7 @@ function Applicant() {
   }, [isAuthorized]);
 
   useEffect(() => {
-    if (role === 'applicant') {
-      const decoded_token = jwt_decode(access_token);
-      const applicant_id = decoded_token.applicant_id;
+    if (role) {
       getPaginatedVacancies(1, true, false)
         .then((data) => {
           setVacancies(data);
@@ -110,7 +108,7 @@ function Applicant() {
         </div>
       );
     }
-    else if (role == 'applicant') {
+    else {
       const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
@@ -132,42 +130,46 @@ function Applicant() {
       };
 
       return (
-        <div className={`content`}>
-          <div className={`cards`}>
-            <div className={`cards-content`}>
-              {vacancies.map((vacancy) => {
-                return (
-                  <VacancyCard
-                    key={vacancy.id}
-                    vacancy_id={vacancy.id}
-                    name={vacancy.name}
-                    created_at={vacancy.created_at}
-                    description={vacancy.description}
-                    place={vacancy.place}
-                    salary={vacancy.salary}
-                    tags={vacancy.tags}
-                    is_confirmed={true}
-                    is_archived={false}
-                    role={role}
-                    vacancies={vacancies}
-                    setVacancies={setVacancies}
-                  />
-                );
-              })}
+        <div className={styles.applicantSection}>
+          <FilterBar/>
+          <div className={`content`}>
+            <h3 className={`title`}>Вакансии</h3>
+            <div className={`cards`}>
+              <div className={`cards-content`}>
+                {vacancies.map((vacancy) => {
+                  return (
+                    <VacancyCard
+                      key={vacancy.id}
+                      vacancy_id={vacancy.id}
+                      name={vacancy.name}
+                      created_at={vacancy.created_at}
+                      description={vacancy.description}
+                      place={vacancy.place}
+                      salary={vacancy.salary}
+                      tags={vacancy.tags}
+                      is_confirmed={true}
+                      is_archived={false}
+                      role={role}
+                      vacancies={vacancies}
+                      setVacancies={setVacancies}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <div className={`pagination`}>
-            <div className={`pagination-content`}>
+            <div className={`pagination`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(currentPage)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(currentPage)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(currentPage)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(currentPage)}>
+                  Следующая страница</button>
+              </div>
             </div>
           </div>
         </div>

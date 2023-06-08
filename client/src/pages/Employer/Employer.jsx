@@ -14,6 +14,7 @@ import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard'
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
+import FilterBar from '../../components/FilterBar/FilterBar';
 
 function Employer() {
   const [isLoading, setIsLoading] = useState(true);
@@ -328,38 +329,44 @@ function Employer() {
       };
 
       return (
-        <div className={`grid-cards`}>
-          <div className={`grid-cards-content`}>
-            {employers.map((employer) => {
-              return (
-                <EmployerCard
-                  key={employer.id}
-                  employer_id={employer.id}
-                  company_name={employer.company_name}
-                  company_description={employer.company_description}
-                  contact={employer.contact}
-                  website={employer.website}
-                  created_at={employer.created_at}
-                  is_confirmed={true}
-                  role={role}
-                  employers={employers}
-                  setEmployers={setEmployers}
-                />
-              );
-            })}
-          </div>
-          <div className={`pagination`}>
-            <div className={`pagination-content`}>
+        <div className={styles.employerSection}>
+          <FilterBar/>
+          <div className={`content`}>
+            <h3 className={`title`}>Работодатели</h3>
+            <div className={`cards`}>
+              <div className={`cards-content`}>
+                {employers.map((employer) => {
+                  return (
+                    <EmployerCard
+                      key={employer.id}
+                      employer_id={employer.id}
+                      company_name={employer.company_name}
+                      company_description={employer.company_description}
+                      contact={employer.contact}
+                      website={employer.website}
+                      created_at={employer.created_at}
+                      is_confirmed={true}
+                      role={role}
+                      employers={employers}
+                      setEmployers={setEmployers}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className={`pagination`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(currentPage)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(currentPage)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(currentPage)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(currentPage)}>
+                  Следующая страница</button>
+              </div>
             </div>
           </div>
         </div>

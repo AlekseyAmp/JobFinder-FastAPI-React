@@ -1,3 +1,7 @@
 .employer {
     margin-top: 50px;
+    &Section {
+        display: flex;
+        gap: 100px;
+    }
 }
