@@ -25,7 +25,7 @@ function VacancyCard({ vacancy_id, name, created_at, description, place, salary,
       </div>
 
       <ul className={styles.vacancyCardTags}>
-        {tags.map((tag) => <li className={styles.vacancyCardTag}><p className={`dark-text`}>{tag}</p></li>)}
+        {tags.map((tag) => <li className={styles.vacancyCardTag}><p className={`small-text`}>{tag}</p></li>)}
       </ul>
 
       {role === 'employer' && showButtons ? (

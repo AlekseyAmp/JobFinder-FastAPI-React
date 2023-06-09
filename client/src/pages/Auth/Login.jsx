@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { login } from '../../services/auth'
 import { access_token } from '../../constants/token'
@@ -7,6 +8,7 @@ import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Login() {
+    const navigate = useNavigate();
     const isAuthorize = access_token
 
     const inputConfigs = [
@@ -19,6 +21,7 @@ function Login() {
         const phone_number = e.target.phone.value;
         const password = e.target.password.value;
         login(phone_number, password)
+        navigate('/')
     };
 
     return (

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { getPaginatedEmployers } from '../../services/employer';
 import { getPaginatedVacancies } from '../../services/vacancy';
+import { getPaginatedApplicants } from '../../services/applicant';
 import { getUserInfo } from '../../services/user';
 import { access_token } from '../../constants/token';
 
@@ -9,6 +10,7 @@ import styles from './Admin.module.scss';
 
 import EmployerCard from '../../components/Cards/EmployerCard/EmployerCard';
 import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard';
+import ApplicantCard from '../../components/Cards/ApplicantCard/ApplicantCard';
 
 function Admin() {
   const isAuthorize = access_token
@@ -17,6 +19,7 @@ function Admin() {
   const [activeTab, setActiveTab] = useState('unconfirmedEmployers');
   const [employers, setEmployers] = useState([]);
   const [vacancies, setVacancies] = useState([]);
+  const [applicants, setApplicants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -89,19 +92,19 @@ function Admin() {
               </div>
             </div>
             <div className={`pagination`}>
-            <div className={`pagination-content`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage-1, true), currentPage, setEmployers)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage - 1, true), currentPage, setEmployers)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage+1, true), currentPage, setEmployers)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage + 1, true), currentPage, setEmployers)}>
+                  Следующая страница</button>
+              </div>
             </div>
-          </div>
           </div>
         );
       case 'unconfirmedEmployers':
@@ -129,63 +132,102 @@ function Admin() {
               </div>
             </div>
             <div className={`pagination`}>
-            <div className={`pagination-content`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage-1, false), currentPage, setEmployers)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedEmployers(currentPage - 1, false), currentPage, setEmployers)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage+1, false) ,currentPage, setEmployers)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(() => getPaginatedEmployers(currentPage + 1, false), currentPage, setEmployers)}>
+                  Следующая страница</button>
+              </div>
             </div>
           </div>
-          </div>
         );
-      case 'confirmedVacanciesNotInArchive':
+      case 'notArchivedApplicants':
         return (
           <div className={`content`}>
             <div className={`grid-cards`}>
               <div className={`grid-cards-content`}>
-                {vacancies.map((vacancy) => {
+                {applicants.map((applicant) => {
                   return (
-                    <VacancyCard
-                      key={vacancy.id}
-                      vacancy_id={vacancy.id}
-                      name={vacancy.name}
-                      created_at={vacancy.created_at}
-                      description={vacancy.description}
-                      place={vacancy.place}
-                      salary={vacancy.salary}
-                      tags={vacancy.tags}
-                      is_confirmed={true}
+                    <ApplicantCard
+                      key={applicant.id}
+                      applicant_id={applicant.id}
+                      created_at={applicant.created_at}
+                      speciality={applicant.speciality}
+                      experience={applicant.experience}
+                      salary={applicant.salary}
+                      resume_text={applicant.resume_text}
                       is_archived={false}
                       role={role}
-                      vacancies={vacancies}
-                      setVacancies={setVacancies}
+                      applicants={applicants}
+                      setApplicants={setApplicants}
                     />
                   );
                 })}
               </div>
             </div>
             <div className={`pagination`}>
-            <div className={`pagination-content`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage-1, true, false), currentPage, setVacancies)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedApplicants(currentPage - 1, false), currentPage, setApplicants)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage+1, true, false), currentPage, setVacancies)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(() => getPaginatedApplicants(currentPage + 1, false), currentPage, setApplicants)}>
+                  Следующая страница</button>
+              </div>
             </div>
           </div>
+        );
+      case 'archivedApplicants':
+        return (
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {applicants.map((applicant) => {
+                  return (
+                    <ApplicantCard
+                      key={applicant.id}
+                      applicant_id={applicant.id}
+                      created_at={applicant.created_at}
+                      speciality={applicant.speciality}
+                      experience={applicant.experience}
+                      salary={applicant.salary}
+                      resume_text={applicant.resume_text}
+                      is_archived={true}
+                      role={role}
+                      applicants={applicants}
+                      setApplicants={setApplicants}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className={`pagination`}>
+              <div className={`pagination-content`}>
+
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedApplicants(currentPage - 1, true), currentPage, setApplicants)}>
+                  Предыдущая страница</button>
+
+                <span>Текущая страница: {currentPage}</span>
+
+                <button onClick={() => goToNextPage(() => getPaginatedApplicants(currentPage + 1, true), currentPage, setApplicants)}>
+                  Следующая страница</button>
+              </div>
+            </div>
           </div>
         );
+      case 'confirmedVacanciesNotInArchive':
       case 'confirmedVacanciesInArchive':
         return (
           <div className={`content`}>
@@ -213,19 +255,19 @@ function Admin() {
               </div>
             </div>
             <div className={`pagination`}>
-            <div className={`pagination-content`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage-1, true, true), currentPage, setVacancies)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, true, true), currentPage, setVacancies)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage+1, true, true), currentPage, setVacancies)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, true, true), currentPage, setVacancies)}>
+                  Следующая страница</button>
+              </div>
             </div>
-          </div>
           </div>
         );
       case 'unconfirmedVacancies':
@@ -255,19 +297,19 @@ function Admin() {
               </div>
             </div>
             <div className={`pagination`}>
-            <div className={`pagination-content`}>
+              <div className={`pagination-content`}>
 
-              <button
-                disabled={currentPage === 1}
-                onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage-1, false, true), currentPage, setVacancies)}>
-                Предыдущая страница</button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, false, true), currentPage, setVacancies)}>
+                  Предыдущая страница</button>
 
-              <span>Текущая страница: {currentPage}</span>
+                <span>Текущая страница: {currentPage}</span>
 
-              <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage+1, false, true), currentPage, setVacancies)}>
-                Следующая страница</button>
+                <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, false, true), currentPage, setVacancies)}>
+                  Следующая страница</button>
+              </div>
             </div>
-          </div>
           </div>
         );
       default:
@@ -286,13 +328,22 @@ function Admin() {
             <button
               className={activeTab === 'confirmedEmployers' ? 'active' : ''}
               onClick={() => handleTabClick('confirmedEmployers', () => getPaginatedEmployers(1, true), setEmployers)}>
-
               Подтвержденные работодатели</button>
 
             <button
               className={activeTab === 'unconfirmedEmployers' ? 'active' : ''}
               onClick={() => handleTabClick('unconfirmedEmployers', () => getPaginatedEmployers(1, false), setEmployers)}>
               Неподтвержденные работодатели</button>
+
+            <button
+              className={activeTab === 'notArchivedApplicants' ? 'active' : ''}
+              onClick={() => handleTabClick('notArchivedApplicants', () => getPaginatedApplicants(1, false), setApplicants)}>
+              Активные соискатели</button>
+
+            <button
+              className={activeTab === 'archivedApplicants' ? 'active' : ''}
+              onClick={() => handleTabClick('archivedApplicants', () => getPaginatedApplicants(1, true), setApplicants)}>
+              Неактивные соискатели</button>
 
             <button
               className={activeTab === 'confirmedVacanciesNotInArchive' ? 'active' : ''}

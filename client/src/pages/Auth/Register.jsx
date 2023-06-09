@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate  } from 'react-router-dom';
 
 import { register } from '../../services/auth';
 import { access_token } from '../../constants/token';
@@ -7,6 +8,7 @@ import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Register() {
+    const navigate = useNavigate();
     const isAuthorize = access_token
 
     const inputConfigs = [
@@ -24,8 +26,8 @@ function Register() {
         const phone_number = e.target.phone.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
-
         register(name, surname, phone_number, email, password);
+        navigate('/')
     };
 
     return (

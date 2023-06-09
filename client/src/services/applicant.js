@@ -26,9 +26,9 @@ export async function getPaginatedApplicants(current_page, archived) {
 }
 
 
-export async function getApplicant(applicant_id) {
+export async function getApplicant(user_id) {
     try {
-        const response = await axios.get(`/applicants/${applicant_id}`);
+        const response = await axios.get(`/applicants/user/${user_id}`);
 
         if (response.data) {
             return response.data;
@@ -37,3 +37,74 @@ export async function getApplicant(applicant_id) {
         console.log(error.response.data.detail);
     }
 }
+
+
+export async function deleteApplicant(applicant_id, applicants, setApplicants) {
+    try {
+        const response = await axios.delete(`/applicants/delete/${applicant_id}`);
+
+        if (response.data) {
+            setApplicants(applicants.filter(applicant => applicant.id !== applicant_id));
+            console.log(response.data);
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function inArchiveApplicant(applicant_id, applicants, setApplicants) {
+    try {
+        const response = await axios.patch(`/applicants/in_archive/${applicant_id}`);
+
+        if (response.data) {
+            setApplicants(applicants.filter(applicant => applicant.id !== applicant_id));
+            console.log(response.data);
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function fromArchiveApplicant(applicant_id, applicants, setApplicants) {
+    try {
+        const response = await axios.patch(`/applicants/from_archive/${applicant_id}`);
+
+        if (response.data) {
+            setApplicants(applicants.filter(applicant => applicant.id !== applicant_id));
+            console.log(response.data);
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function inArchiveMySummary(applicant_id, mySummary, setMySummary) {
+    try {
+        const response = await axios.patch(`/applicants/in_archive/${applicant_id}`);
+
+        if (response.data) {
+            setMySummary({ ...mySummary, is_archived: true });
+            console.log(response.data);
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function fromArchiveMySummary(applicant_id, mySummary, setMySummary) {
+    try {
+        const response = await axios.patch(`/applicants/from_archive/${applicant_id}`);
+
+        if (response.data) {
+            setMySummary({ ...mySummary, is_archived: false });
+            console.log(response.data);
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+

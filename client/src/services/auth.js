@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 import axios from '../utils/axios';
 import Cookies from 'js-cookie';
 
