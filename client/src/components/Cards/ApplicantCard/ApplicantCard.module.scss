@@ -18,13 +18,22 @@
     }
 
     &Main {
-        margin-top: 30px;
+        margin-top: 10px;
     }
 
     &Title {
+        margin-bottom: 20px;        
         display: flex;
         gap: 50px;
-        margin-bottom: 20px;
+    }
+
+    &Contacts {
+        margin-top: 20px;
+        &Content {
+            margin-top: 5px;
+            display: flex;
+            gap: 50px;
+        }
     }
 
     &Description {

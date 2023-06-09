@@ -90,6 +90,7 @@ function Vacancies() {
                                                 description={vacancy.description}
                                                 place={vacancy.place}
                                                 salary={vacancy.salary}
+                                                experience={vacancy.experience}
                                                 tags={vacancy.tags}
                                                 is_confirmed={true}
                                                 is_archived={false}

@@ -161,6 +161,8 @@ function Admin() {
                       speciality={applicant.speciality}
                       experience={applicant.experience}
                       salary={applicant.salary}
+                      phone_number={applicant.phone_number}
+                      email={applicant.email}
                       resume_text={applicant.resume_text}
                       is_archived={false}
                       role={role}
@@ -201,6 +203,8 @@ function Admin() {
                       speciality={applicant.speciality}
                       experience={applicant.experience}
                       salary={applicant.salary}
+                      phone_number={applicant.phone_number}
+                      email={applicant.email}
                       resume_text={applicant.resume_text}
                       is_archived={true}
                       role={role}
@@ -243,6 +247,7 @@ function Admin() {
                       description={vacancy.description}
                       place={vacancy.place}
                       salary={vacancy.salary}
+                      experience={vacancy.experience}
                       tags={vacancy.tags}
                       is_confirmed={true}
                       is_archived={true}
@@ -285,6 +290,7 @@ function Admin() {
                       description={vacancy.description}
                       place={vacancy.place}
                       salary={vacancy.salary}
+                      experience={vacancy.experience}
                       tags={vacancy.tags}
                       is_confirmed={false}
                       is_archived={true}

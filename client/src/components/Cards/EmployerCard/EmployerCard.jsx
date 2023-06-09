@@ -13,7 +13,7 @@ function EmployerCard({ employer_id, company_name, company_description, contact,
         <span className='small-text'>Номер: {employer_id}</span>
         <span className='small-text'>Дата размещения: {created_at.split('T')[0]}</span>
       </div>
-
+      <div className={`line`}></div>
       <div className={styles.employerCardMain}>
           <span className='dark-text' >Компания: <h3 className={`title`}>{company_name}</h3></span>
         <div className={styles.employerCardContact}>

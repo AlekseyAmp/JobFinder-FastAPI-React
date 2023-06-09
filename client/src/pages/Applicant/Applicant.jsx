@@ -86,12 +86,12 @@
             name: 'speciality'
           },
           {
-            title: 'Опыт работы',
+            title: 'Требуемый опыт (Например: 2 года, 10 месяцев)',
             type: 'text',
             name: 'experience'
           },
           {
-            title: 'Зарплатные ожидания',
+            title: 'Зарплатные ожидания (Например: 25.000)',
             type: 'text',
             name: 'salary'
           }
@@ -158,6 +158,8 @@
                   speciality={mySummary.speciality}
                   experience={mySummary.experience}
                   salary={mySummary.salary}
+                  phone_number={mySummary.phone_number}
+                  email={mySummary.email}
                   resume_text={mySummary.resume_text}
                   is_archived={mySummary.is_archived}
                   role={role}
@@ -182,6 +184,8 @@
                           speciality={applicant.speciality}
                           experience={applicant.experience}
                           salary={applicant.salary}
+                          phone_number={applicant.phone_number}
+                          email={applicant.email}
                           resume_text={applicant.resume_text}
                           role={role}
                           showButtons={false}
@@ -246,6 +250,8 @@
                         speciality={applicant.speciality}
                         experience={applicant.experience}
                         salary={applicant.salary}
+                        phone_number={applicant.phone_number}
+                        email={applicant.email}
                         resume_text={applicant.resume_text}
                         role={role}
                         showButtons={false}

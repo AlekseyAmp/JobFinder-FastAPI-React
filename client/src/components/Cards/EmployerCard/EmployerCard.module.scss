@@ -4,7 +4,7 @@
   margin-top: 30px;
   border: 2px solid $gray;
   border-radius: 15px;
-  background-color: $light_blue;
+  background-color: $light_gray;
   padding: 20px;
   overflow-wrap: break-word;
   width: fit-content;
@@ -28,13 +28,14 @@
   }
 
   &Main {
-    margin-top: 30px;
+    margin-top: 20px;
     width: 100%;
     gap: 50px;
   }
 
   &Contact {
     margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   button {

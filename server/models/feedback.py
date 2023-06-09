@@ -14,5 +14,5 @@ class Feedback(Base):
     applicant_id = Column(Integer, ForeignKey('applicants.id'))
     applicant = relationship("Applicant", back_populates="feedback")
 
-    employer_id = Column(Integer, ForeignKey('employers.id'))
-    employer = relationship("Employer", back_populates="feedback")
+    vacancy_id = Column(Integer, ForeignKey('vacancies.id'))
+    vacancy = relationship("Vacancy", back_populates="feedback")

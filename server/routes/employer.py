@@ -21,6 +21,11 @@ async def get_employer(employer_id: str, db: Session = Depends(get_db)):
     return EmployerService.get_employer_by_employer_id(employer_id, db)
 
 
+@router.get("/employers/user/{user_id}")
+async def get_employer_by_user_id(user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return EmployerService.get_employer_by_user_id(user_id, db)
+
+
 @router.get("/employers")
 async def get_paginated_employers(page: int, confirmed: bool,  db: Session = Depends(get_db)):
     return EmployerService.get_paginated_employers(page, confirmed, db)

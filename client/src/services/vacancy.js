@@ -1,9 +1,9 @@
 import axios from '../utils/axios';
 
 
-export async function createNewVacancy(name, description, place, salary, tags) {
+export async function createNewVacancy(name, description, place, salary, experience, tags) {
     try {
-        const response = await axios.post('/vacancies/create', { name, description, place, salary, tags });
+        const response = await axios.post('/vacancies/create', { name, description, place, salary, experience, tags });
 
         if (response.data) {
             console.log(response.data);

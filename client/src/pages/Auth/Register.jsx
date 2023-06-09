@@ -37,7 +37,7 @@ function Register() {
             ) : (
                 <div className={`content`}>
                     <div className={`title center`}>Регистрация</div>
-                    <div className={`center mt50px`}>
+                    <div className={`${styles.registrationContent} center mt50px`}>
                         <AuthForm
                             inputConfigs={inputConfigs}
                             buttonTitle='Зарегестрироваться'

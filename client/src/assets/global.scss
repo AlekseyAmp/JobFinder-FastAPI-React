@@ -18,6 +18,22 @@ body{
     display: flex;
 }
 
+.line {
+    height: 1px;
+    width: 100%;
+    background: $dark;
+    opacity: 0.5;
+    margin: 15px 0px;
+}
+
+.vertical-line {
+    height: 20px;
+    width: 1px;
+    background: $dark;
+    opacity: 0.5;
+    margin: 0px 15px;
+}
+
 .buttons {
     display: flex;
     gap: 30px;

@@ -83,6 +83,14 @@ $light_gray: #f3f3f7;
     transition: 0.2s;
 }
 
+.bold-text {
+    font-family: 'Segoe UI';
+    font-size: 17px;
+    font-weight: bold;
+    color: $dark;
+    text-decoration: none;
+}
+
 .title {
     font-family: 'Segoe UI';
     font-size: 19px;

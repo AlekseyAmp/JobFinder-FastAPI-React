@@ -146,7 +146,7 @@ function Employer() {
       const handleCreateVacancySubmit = (e) => {
         e.preventDefault();
         createNewVacancy(e.target.name.value, e.target.description.value,
-          e.target.place.value, e.target.salary.value, e.target.tags.value.trim().split(','));
+          e.target.place.value, e.target.salary.value, e.target.experience.value, e.target.tags.value.trim().split(','));
       };
 
       const inputConfigs = [
@@ -156,14 +156,19 @@ function Employer() {
           name: 'name'
         },
         {
-          title: 'Местоположение',
+          title: 'Местоположение (Например: Москва)',
           type: 'text',
           name: 'place'
         },
         {
-          title: 'Заработная плата',
+          title: 'Заработная плата (Например: 35.000)',
           type: 'text',
           name: 'salary'
+        },
+        {
+          title: 'Требуемый опыт (Например: 2 года, 10 месяцев)',
+          type: 'text',
+          name: 'experience'
         },
       ];
       const textareaConfigs = [
@@ -173,7 +178,7 @@ function Employer() {
           name: 'description'
         },
         {
-          title: 'Ключевые слова (ввод через запятую)',
+          title: 'Ключевые слова (Ввод через запятую, например: Excel, Коммуникабельность)',
           type: 'text',
           name: 'tags'
         }
@@ -206,6 +211,7 @@ function Employer() {
                           description={vacancy.description}
                           place={vacancy.place}
                           salary={vacancy.salary}
+                          experience={vacancy.experience}
                           tags={vacancy.tags}
                           is_confirmed={true}
                           is_archived={false}
@@ -235,6 +241,7 @@ function Employer() {
                           description={vacancy.description}
                           place={vacancy.place}
                           salary={vacancy.salary}
+                          experience={vacancy.experience}
                           tags={vacancy.tags}
                           is_confirmed={true}
                           is_archived={true}
@@ -264,12 +271,14 @@ function Employer() {
                           description={vacancy.description}
                           place={vacancy.place}
                           salary={vacancy.salary}
+                          experience={vacancy.experience}
                           tags={vacancy.tags}
                           is_confirmed={false}
                           is_archived={true}
                           role={role}
                           vacancies={vacancies}
                           setVacancies={setVacancies}
+                          showButtons={false}
                         />
                       );
                     }

@@ -20,5 +20,3 @@ class Employer(Base):
     user = relationship("User", back_populates="employer")
 
     vacancy = relationship("Vacancy", back_populates="employer")
-
-    feedback = relationship("Feedback", back_populates="employer")

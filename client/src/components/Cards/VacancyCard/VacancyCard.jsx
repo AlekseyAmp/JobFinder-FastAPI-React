@@ -8,20 +8,31 @@ import RedButton from '../../Buttons/RedButton/RedButton';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';
 import BlueButton from '../../Buttons/BlueButton/BlueButton';
 
-function VacancyCard({ vacancy_id, name, created_at, description, place, salary, tags, is_confirmed, is_archived, role, vacancies, setVacancies, showButtons = true }) {
+function VacancyCard({ vacancy_id, name, created_at, description, place, salary, experience, tags, is_confirmed, is_archived, role, vacancies, setVacancies, showButtons = true }) {
   return (
     <div className={styles.vacancyCard}>
       <div className={styles.vacancyCardTitle}>
         <h3 className={`title`}>{name}</h3>
         <p className={`small-text`}>Дата размещения: {created_at.split('T')[0]}</p>
       </div>
+
+        <div className={`line`}></div>
       <div className={styles.vacancyCardUnderTitle}>
         <p className={`dark-text`}>
-          {salary} <span className={`small-text`}>руб.</span> - <span className={`small-text`}>г.</span> {place}
+          <span className={`bold-text`}>{salary}</span> <span className={`green-text`}>руб.</span>
         </p>
+        
+        <div className={`vertical-line`}></div>
+        
+        <p className={`dark-text`}>Требуемый опыт: <span className={`bold-text`}>{experience}</span> г.</p>
+        
+        <div className={`vertical-line`}></div>
+        
+        <p className={`dark-text`}>г. <span className={`bold-text`}>{place}</span></p>
       </div>
+
       <div className={styles.vacancyCardDescription}>
-        <p className={`dark-text`}>{description}</p>
+        <p className={`gray-text`}>Подробнее: <p className={`dark-text`}>{description}</p> </p>
       </div>
 
       <ul className={styles.vacancyCardTags}>

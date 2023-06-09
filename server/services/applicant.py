@@ -31,6 +31,8 @@ def create_applicant(data: ApplicantDTO, db: Session, user_id: str):
         experience=data.experience.strip(),
         salary=data.salary.strip(),
         resume_text=data.resume_text.strip(),
+        phone_number=user.phone_number,
+        email=user.email,
         user_id=user_id
     )
 

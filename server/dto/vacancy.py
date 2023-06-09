@@ -7,6 +7,7 @@ class Vacancy(BaseModel):
     description: str
     place: str
     salary: str
+    experience: str
     tags: List[str]
 
     class Config:

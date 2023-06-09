@@ -8,20 +8,27 @@ import GreenButton from '../../Buttons/GreenButton/GreenButton';
 import BlueButton from '../../Buttons/BlueButton/BlueButton';
 import RedButton from '../../Buttons/RedButton/RedButton';
 
-function ApplicantCard({ applicant_id, created_at, speciality, experience, salary, resume_text, is_archived, role, applicants, setApplicants, mySummary, setMySummary, showButtons = true }) {
+function ApplicantCard({ applicant_id, created_at, speciality, experience, salary, phone_number, email, resume_text, is_archived, role, applicants, setApplicants, mySummary, setMySummary, showButtons = true }) {
     return (
         <div className={styles.applicantCard}>
             <div className={styles.applicantCardDate}>
                 <span className='small-text'>Номер: {applicant_id}</span>
                 <span className='small-text'>Дата размещения резюме: {created_at.split('T')[0]}</span>
             </div>
-
+            <div className={`line`}></div>
             <div className={styles.applicantCardMain}>
                 <div className={styles.applicantCardTitle}>
                     <h3 className={`title`}>{speciality}</h3>
-                    <span className='dark-text'>Опыт работы: <span className={`title`}>{experience}</span></span>
+                    <span className='small-text'>Опыт работы: <span className={`title`}>{experience}</span></span>
                 </div>
-                <p className="green-text">{salary}</p>
+                <p className="gray-text">Зарплатные ожидания: <span className={`green-text`}>{salary}</span></p>
+                <div className={styles.applicantCardContacts}>
+                    <h3 className={`dark-text`}>Контакты</h3>
+                    <div className={styles.applicantCardContactsContent}>
+                        <p className={`small-text`}>Номер телефона: <span className={`blue-text`}>{phone_number}</span></p>
+                        <p className={`small-text`}>Почта: <span className={`blue-text`}>{email}</span></p>
+                    </div>
+                </div>
             </div>
 
             <div className={styles.applicantCardDescription}>

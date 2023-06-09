@@ -29,6 +29,7 @@ def create_vacancy(data: VacancyDTO, db: Session, user_id: str):
         description=data.description.strip(),
         place=data.place.strip(),
         salary=data.salary.strip().replace(" ", "."),
+        experience=data.experience,
         tags=data.tags,
         employer_id=employer.id
     )
@@ -42,6 +43,7 @@ def create_vacancy(data: VacancyDTO, db: Session, user_id: str):
         "description": new_vacancy.description,
         "place": new_vacancy.place,
         "salary": new_vacancy.salary,
+        "experience": new_vacancy.experience,
         "tags": new_vacancy.tags,
         "is_confirmed": new_vacancy.is_confirmed
     }

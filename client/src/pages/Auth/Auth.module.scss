@@ -1,3 +1,15 @@
 .registration, .login {
     margin-top: 50px;
 }
+
+.registration {
+    &Content {
+        align-items: center;
+        gap: 100px;
+        img {
+            width: 500px;
+            height: 550px;
+            border-radius: 15px;
+        }
+    }
+}

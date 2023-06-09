@@ -14,13 +14,14 @@
         align-items: center;
         gap: 20px;
     }
-
     &UnderTitle {
-        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        margin-top: 25px;
     }
 
     &Description {
-        margin-top: 15px;
+        margin-top: 25px;
     }
 
     &Tags {
