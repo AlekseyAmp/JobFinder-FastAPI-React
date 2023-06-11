@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.post("/vacancies/create")
-async def create_employer(data: VacancyDTO, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
+async def create_vacancy(data: VacancyDTO, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
     return VacancyService.create_vacancy(data, db, user_id)
 
 

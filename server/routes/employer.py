@@ -17,7 +17,7 @@ async def create_employer(data: EmployerDTO, db: Session = Depends(get_db), user
 
 
 @router.get("/employers/{employer_id}")
-async def get_employer(employer_id: str, db: Session = Depends(get_db)):
+async def get_employer_by_employer_id(employer_id: str, db: Session = Depends(get_db)):
     return EmployerService.get_employer_by_employer_id(employer_id, db)
 
 
