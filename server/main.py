@@ -15,6 +15,7 @@ from routes import (
     employer as EmployerRouter,
     vacancy as VacancyRouter,
     applicant as ApplicantRouter,
+    feedback as FeedbackRouter,
 )
 
 
@@ -46,6 +47,7 @@ app.include_router(UserRouter.router, tags=['users'], prefix='/api')
 app.include_router(EmployerRouter.router, tags=['employers'], prefix='/api')
 app.include_router(VacancyRouter.router, tags=['vacancies'], prefix='/api')
 app.include_router(ApplicantRouter.router, tags=['applicants'], prefix='/api')
+app.include_router(FeedbackRouter.router, tags=['feedbacks'], prefix='/api')
 
 
 @app.get("/")

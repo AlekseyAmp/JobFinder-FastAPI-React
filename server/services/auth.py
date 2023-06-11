@@ -9,8 +9,6 @@ from dto.auth import (
     Register as RegisterDTO,
     Login as LoginDTO
 )
-from services.employer import get_employer_by_user_id
-from services.applicant import get_applicant_by_user_id
 from utils.auth import (
     hash_password,
     verify_password,
@@ -20,8 +18,6 @@ from utils.auth import (
     create_refresh_token
 )
 from utils.dto import check_data_on_empty
-from utils.employer import is_employer
-from utils.applicant import is_applicant
 
 
 def create_user(data: RegisterDTO, response: Response, db: Session, authorize: AuthJWT):
@@ -68,9 +64,8 @@ def create_user(data: RegisterDTO, response: Response, db: Session, authorize: A
     db.add(new_user)
     db.commit()
 
-    employer_id, applicant_id = None, None
-    access_token = create_access_token(authorize, str(new_user.id), employer_id, applicant_id)
-    refresh_token = create_refresh_token(authorize, str(new_user.id), employer_id, applicant_id)
+    access_token = create_access_token(authorize, str(new_user.id))
+    refresh_token = create_refresh_token(authorize, str(new_user.id))
 
     response.set_cookie("access_token",
                         access_token,
@@ -123,17 +118,8 @@ def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJ
             detail="Wrong email or password"
         )
 
-    employer_id, applicant_id = None, None
-    if is_employer(user.id, db):
-        employer = get_employer_by_user_id(user.id, db)
-        employer_id = str(employer.id)
-
-    if is_applicant(user.id, db):
-        applicant = get_applicant_by_user_id(user.id, db)
-        applicant_id = str(applicant.id)
-
-    access_token = create_access_token(authorize, str(user.id), employer_id, applicant_id)
-    refresh_token = create_refresh_token(authorize, str(user.id), employer_id, applicant_id)
+    access_token = create_access_token(authorize, str(user.id))
+    refresh_token = create_refresh_token(authorize, str(user.id))
 
     response.set_cookie("access_token",
                         access_token,
@@ -169,7 +155,7 @@ def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJ
     }
 
 
-def refresh_token(authorize: AuthJWT, response: Response, user_id: str):
+def refresh_token(response: Response, authorize: AuthJWT, user_id: str):
     access_token = create_access_token(authorize, user_id)
 
     response.set_cookie("access_token",

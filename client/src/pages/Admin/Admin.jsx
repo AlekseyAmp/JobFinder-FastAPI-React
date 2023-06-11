@@ -232,6 +232,49 @@ function Admin() {
           </div>
         );
       case 'confirmedVacanciesNotInArchive':
+        return (
+          <div className={`content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
+                {vacancies.map((vacancy) => {
+                  return (
+                    <VacancyCard
+                      key={vacancy.id}
+                      vacancy_id={vacancy.id}
+                      company_name={vacancy.company}
+                      name={vacancy.name}
+                      created_at={vacancy.created_at}
+                      description={vacancy.description}
+                      place={vacancy.place}
+                      salary={vacancy.salary}
+                      experience={vacancy.experience}
+                      tags={vacancy.tags}
+                      is_confirmed={true}
+                      is_archived={false}
+                      role={role}
+                      vacancies={vacancies}
+                      setVacancies={setVacancies}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className={`pagination`}>
+              <div className={`pagination-content`}>
+
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPreviousPage(() => getPaginatedVacancies(currentPage - 1, true, false), currentPage, setVacancies)}>
+                  Предыдущая страница</button>
+
+                <span>Текущая страница: {currentPage}</span>
+
+                <button onClick={() => goToNextPage(() => getPaginatedVacancies(currentPage + 1, true, false), currentPage, setVacancies)}>
+                  Следующая страница</button>
+              </div>
+            </div>
+          </div>
+        );
       case 'confirmedVacanciesInArchive':
         return (
           <div className={`content`}>
@@ -242,6 +285,7 @@ function Admin() {
                     <VacancyCard
                       key={vacancy.id}
                       vacancy_id={vacancy.id}
+                      company_name={vacancy.company}
                       name={vacancy.name}
                       created_at={vacancy.created_at}
                       description={vacancy.description}
@@ -285,6 +329,7 @@ function Admin() {
                     <VacancyCard
                       key={vacancy.id}
                       vacancy_id={vacancy.id}
+                      company_name={vacancy.company}
                       name={vacancy.name}
                       created_at={vacancy.created_at}
                       description={vacancy.description}

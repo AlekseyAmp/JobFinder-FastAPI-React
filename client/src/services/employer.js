@@ -13,6 +13,18 @@ export async function createNewEmployer(company_name, company_description, conta
     }
 }
 
+export async function getEmployerByUserID(user_id) {
+    try {
+        const response = await axios.get(`/employers/user/${user_id}`);
+
+        if (response.data) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
 
 export async function getPaginatedEmployers(current_page, confirmed) {
     try {

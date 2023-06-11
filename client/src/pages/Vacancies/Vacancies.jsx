@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
+import { getApplicantByUserID } from '../../services/applicant';
 import { getPaginatedVacancies } from '../../services/vacancy';
 
 import styles from './Vacancies.module.scss';
@@ -18,6 +20,7 @@ function Vacancies() {
     const [role, setRole] = useState(null);
     const [vacancies, setVacancies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [applicantID, setApplicantID] = useState(null);
 
     useEffect(() => {
         if (isAuthorized) {
@@ -32,13 +35,25 @@ function Vacancies() {
 
     useEffect(() => {
         if (role) {
-            getPaginatedVacancies(1, true, false)
-                .then((data) => {
-                    setVacancies(data);
-                })
-                .catch((error) => console.log(error));
+            if (role === 'applicant') {
+              const decoded_token = jwt_decode(access_token);
+              const userID = decoded_token.sub;
+
+              getApplicantByUserID(userID)
+              .then((data) => {
+                setApplicantID(data.id);
+              })
+              .catch((error) => console.log(error));
+          }
+          getPaginatedVacancies(1, true, false)
+            .then((data) => {
+              setVacancies(data);
+            })
+            .catch((error) => console.log(error));
         }
-    }, [role]);
+      
+      }, [role]);
+      
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -85,6 +100,8 @@ function Vacancies() {
                                             <VacancyCard
                                                 key={vacancy.id}
                                                 vacancy_id={vacancy.id}
+                                                applicant_id={applicantID}
+                                                company_name={vacancy.company}
                                                 name={vacancy.name}
                                                 created_at={vacancy.created_at}
                                                 description={vacancy.description}
@@ -94,6 +111,7 @@ function Vacancies() {
                                                 tags={vacancy.tags}
                                                 is_confirmed={true}
                                                 is_archived={false}
+                                                is_feedback={vacancy.is_feedback}
                                                 role={role}
                                                 vacancies={vacancies}
                                                 setVacancies={setVacancies}

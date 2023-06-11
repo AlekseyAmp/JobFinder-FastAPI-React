@@ -9,7 +9,7 @@ from utils.applicant import is_applicant
 from utils.dto import check_data_on_empty
 
 
-def create_applicant(data: ApplicantDTO, db: Session, user_id: str):
+def create_applicant(data: ApplicantDTO, user_id: str, db: Session):
     if not check_data_on_empty(data):
         raise HTTPException(
             status_code=400,
@@ -79,7 +79,7 @@ def get_applicant_by_user_id(user_id: str, db: Session):
     return applicant
 
 
-def get_paginated_applicants(page: int, archived: bool, db: Session):
+def get_paginated_applicants(page: int, archived: bool, user_id: str, db: Session):
     # Кол-во элементов на странице
     items_on_page = 20
     # Смещение, от 0-20, от 20-40 и т.д
@@ -91,7 +91,7 @@ def get_paginated_applicants(page: int, archived: bool, db: Session):
     return applicants[::-1]
 
 
-def in_archive_applicant(applicant_id: str, db: Session, user_id: str):
+def in_archive_applicant(applicant_id: str, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_applicant(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -123,7 +123,7 @@ def in_archive_applicant(applicant_id: str, db: Session, user_id: str):
     }
 
 
-def from_archive_applicant(applicant_id: str, db: Session, user_id: str):
+def from_archive_applicant(applicant_id: str, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_applicant(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -155,7 +155,7 @@ def from_archive_applicant(applicant_id: str, db: Session, user_id: str):
     }
 
 
-def delete_applicant(applicant_id: str, db: Session, user_id: str):
+def delete_applicant(applicant_id: str, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_applicant(user_id, db):
         raise HTTPException(
             status_code=403,

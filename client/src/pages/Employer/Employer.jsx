@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
-import { createNewEmployer, getPaginatedEmployers } from '../../services/employer';
+import { createNewEmployer, getEmployerByUserID, getPaginatedEmployers } from '../../services/employer';
 import { createNewVacancy, getVacanciesByEmployer } from '../../services/vacancy';
 
 import styles from './Employer.module.scss';
@@ -26,6 +26,7 @@ function Employer() {
   const [activeTab, setActiveTab] = useState('activeVacancies');
   const [vacancies, setVacancies] = useState([])
   const [employers, setEmployers] = useState([])
+  const [employerID, setEmployerID] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -39,22 +40,26 @@ function Employer() {
     }
   }, [isAuthorized]);
 
-  const getEmployerId = () => {
-    const decoded_token = jwt_decode(access_token);
-    const employer_id = decoded_token.employer_id;
-
-    return employer_id;
-  }
-
   useEffect(() => {
-    if (role === 'employer') {
-      const employer_id = getEmployerId()
-      getVacanciesByEmployer(employer_id)
-        .then((data) => {
-          setVacancies(data);
-        })
-        .catch((error) => console.log(error));
-    }
+    const fetchData = async () => {
+      if (role === 'employer') {
+        try {
+          const decoded_token = jwt_decode(access_token);
+          const userID = decoded_token.sub;
+
+          const employerData = await getEmployerByUserID(userID);
+          const employerID = employerData.id;
+          setEmployerID(employerID);
+
+          const vacanciesData = await getVacanciesByEmployer(employerID);
+          setVacancies(vacanciesData);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+
+    fetchData();
   }, [role]);
 
   useEffect(() => {
@@ -186,12 +191,11 @@ function Employer() {
 
       const handleTabClick = (tab) => {
         setActiveTab(tab);
-        const employer_id = getEmployerId()
-        getVacanciesByEmployer(employer_id)
-        .then((data) => {
-          setVacancies(data);
-        })
-        .catch((error) => console.log(error));
+        getVacanciesByEmployer(employerID)
+          .then((data) => {
+            setVacancies(data);
+          })
+          .catch((error) => console.log(error));
       };
 
       const renderContent = () => {
@@ -206,6 +210,7 @@ function Employer() {
                         <VacancyCard
                           key={vacancy.id}
                           vacancy_id={vacancy.id}
+                          company_name={"Вашей компании"}
                           name={vacancy.name}
                           created_at={vacancy.created_at}
                           description={vacancy.description}
@@ -236,6 +241,7 @@ function Employer() {
                         <VacancyCard
                           key={vacancy.id}
                           vacancy_id={vacancy.id}
+                          company_name={"Вашей компании"}
                           name={vacancy.name}
                           created_at={vacancy.created_at}
                           description={vacancy.description}
@@ -266,6 +272,7 @@ function Employer() {
                         <VacancyCard
                           key={vacancy.id}
                           vacancy_id={vacancy.id}
+                          company_name={"Вашей компании"}
                           name={vacancy.name}
                           created_at={vacancy.created_at}
                           description={vacancy.description}

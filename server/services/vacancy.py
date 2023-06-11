@@ -3,13 +3,16 @@ from sqlalchemy.orm import Session
 
 from models.vacancy import Vacancy
 from dto.vacancy import Vacancy as VacancyDTO
-from services.employer import get_employer_by_user_id
+from services.employer import get_employer_by_user_id, get_employer_by_employer_id
+from services.applicant import get_applicant_by_user_id
 from utils.admin import is_admin
 from utils.employer import is_employer
+from utils.applicant import is_applicant
+from utils.feedback import is_feedback
 from utils.dto import check_data_on_empty
 
 
-def create_vacancy(data: VacancyDTO, db: Session, user_id: str):
+def create_vacancy(data: VacancyDTO, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -71,7 +74,8 @@ def get_vacancies_by_employer_id(employer_id: str, db: Session):
     return vacancies[::-1]
 
 
-def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, db: Session):
+def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, user_id: str, db: Session):
+    vacancies_arr = []
     # Кол-во элементов на странице
     items_on_page = 20
     # Смещение, от 0-20, от 20-40 и т.д
@@ -81,10 +85,35 @@ def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, db: Sess
         Vacancy.is_confirmed == confirmed,
         Vacancy.is_archived == archived
     ).offset(offset).limit(items_on_page).all()
-    return vacancies
+
+    feedback = False
+    for vacancy in vacancies:
+        if is_applicant(user_id, db):
+            applicant = get_applicant_by_user_id(user_id, db)
+            feedback = is_feedback(applicant.id, db)
+
+        employer = get_employer_by_employer_id(vacancy.employer_id, db)
+
+        vacancy_dict = {
+            "id": vacancy.id,
+            "company": employer.company_name,
+            "name": vacancy.name,
+            "description": vacancy.description,
+            "place": vacancy.place,
+            "salary": vacancy.salary,
+            "experience": vacancy.experience,
+            "tags": vacancy.tags,
+            "created_at": vacancy.created_at,
+            "is_confirmed": vacancy.is_confirmed,
+            "is_archived": vacancy.is_archived,
+            "is_feedback": feedback
+        }
+        vacancies_arr.append(vacancy_dict)
+
+    return vacancies_arr
 
 
-def confirm_vacancy(vacancy_id, db: Session, user_id: str):
+def confirm_vacancy(vacancy_id, user_id: str, db: Session):
     if not is_admin(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -103,7 +132,7 @@ def confirm_vacancy(vacancy_id, db: Session, user_id: str):
     }
 
 
-def in_archive_vacancy(vacancy_id, db: Session, user_id: str):
+def in_archive_vacancy(vacancy_id, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -135,7 +164,7 @@ def in_archive_vacancy(vacancy_id, db: Session, user_id: str):
     }
 
 
-def from_archive_vacancy(vacancy_id, db: Session, user_id: str):
+def from_archive_vacancy(vacancy_id, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,

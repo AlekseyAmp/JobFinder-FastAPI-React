@@ -26,7 +26,7 @@ export async function getPaginatedApplicants(current_page, archived) {
 }
 
 
-export async function getApplicant(user_id) {
+export async function getApplicantByUserID(user_id) {
     try {
         const response = await axios.get(`/applicants/user/${user_id}`);
 
@@ -37,7 +37,6 @@ export async function getApplicant(user_id) {
         console.log(error.response.data.detail);
     }
 }
-
 
 export async function deleteApplicant(applicant_id, applicants, setApplicants) {
     try {

@@ -9,7 +9,7 @@ from utils.employer import is_employer
 from utils.dto import check_data_on_empty
 
 
-def create_employer(data: EmployerDTO, db: Session, user_id: str):
+def create_employer(data: EmployerDTO, user_id: str, db: Session):
     if not check_data_on_empty(data):
         raise HTTPException(
             status_code=400,
@@ -87,7 +87,7 @@ def get_employer_by_employer_id(employer_id: str, db: Session):
     return employer
 
 
-def get_paginated_employers(page: int, confirmed: bool, db: Session):
+def get_paginated_employers(page: int, confirmed: bool, user_id: str, db: Session):
     # Кол-во элементов на странице
     items_on_page = 20
     # Смещение, от 0-20, от 20-40 и т.д
@@ -99,7 +99,7 @@ def get_paginated_employers(page: int, confirmed: bool, db: Session):
     return employers
 
 
-def confirm_employer(employer_id, db: Session, user_id: str):
+def confirm_employer(employer_id, user_id: str, db: Session):
     if not is_admin(user_id, db):
         raise HTTPException(
             status_code=403,
@@ -122,7 +122,7 @@ def confirm_employer(employer_id, db: Session, user_id: str):
     }
 
 
-def delete_employer(employer_id: str, db: Session, user_id: str):
+def delete_employer(employer_id: str, user_id: str, db: Session):
     if not is_admin(user_id, db) and not is_employer(user_id, db):
         raise HTTPException(
             status_code=403,

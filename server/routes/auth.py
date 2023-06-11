@@ -27,7 +27,7 @@ async def login(data: LoginDTO, response: Response, db: Session = Depends(get_db
 
 @router.get("/auth/refresh_token")
 async def refresh_token(response: Response, authorize: AuthJWT = Depends(), user_id: str = Depends(get_user_id)):
-    return AuthService.refresh_token(authorize, response, user_id)
+    return AuthService.refresh_token(response, authorize, user_id)
 
 
 @router.get("/auth/logout")

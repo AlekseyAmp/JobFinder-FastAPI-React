@@ -3,31 +3,38 @@ import React from 'react';
 import styles from './VacancyCard.module.scss';
 
 import { confirmVacancy, deleteVacancy, fromArchiveVacancy, inArchiveVacancy } from '../../../services/vacancy';
+import { createNewFeedback } from '../../../services/feedback';
 
 import RedButton from '../../Buttons/RedButton/RedButton';
 import GreenButton from '../../Buttons/GreenButton/GreenButton';
 import BlueButton from '../../Buttons/BlueButton/BlueButton';
 
-function VacancyCard({ vacancy_id, name, created_at, description, place, salary, experience, tags, is_confirmed, is_archived, role, vacancies, setVacancies, showButtons = true }) {
+function VacancyCard({ vacancy_id, applicant_id, company_name, name, created_at, description, place, salary, experience, tags, is_confirmed, is_archived, is_feedback, role, vacancies, setVacancies, showButtons = true }) {
   return (
     <div className={styles.vacancyCard}>
+      <div className={styles.vacancyCardCompany}>
+        <h3 className={`title`}>От {company_name}</h3>
+      </div>
       <div className={styles.vacancyCardTitle}>
         <h3 className={`title`}>{name}</h3>
-        <p className={`small-text`}>Дата размещения: {created_at.split('T')[0]}</p>
+        <div className={styles.vacancyCardDate}>
+          <span className={`small-text`}>Дата размещения: {created_at.split('T')[0]}</span>
+          <span className={`small-text`}>Номер: {vacancy_id}</span>
+        </div>
       </div>
 
-        <div className={`line`}></div>
+      <div className={`line`}></div>
       <div className={styles.vacancyCardUnderTitle}>
         <p className={`dark-text`}>
           <span className={`bold-text`}>{salary}</span> <span className={`green-text`}>руб.</span>
         </p>
-        
+
         <div className={`vertical-line`}></div>
-        
-        <p className={`dark-text`}>Требуемый опыт: <span className={`bold-text`}>{experience}</span> г.</p>
-        
+
+        <p className={`dark-text`}>Требуемый опыт: <span className={`bold-text`}>{experience}</span></p>
+
         <div className={`vertical-line`}></div>
-        
+
         <p className={`dark-text`}>г. <span className={`bold-text`}>{place}</span></p>
       </div>
 
@@ -85,6 +92,19 @@ function VacancyCard({ vacancy_id, name, created_at, description, place, salary,
           </div>
         )
       )}
+      {role === 'applicant' && is_feedback ? (
+        <div className={styles.vacancyCardButtons}>
+          <span className={`blue-text`}>Вы откликнулись на эту вакансию</span>
+        </div>
+      ) : role === 'applicant' && (
+        <div className={styles.vacancyCardButtons}>
+          <GreenButton
+            title={"Откликнуться на вакансию"}
+            onClick={() => createNewFeedback(applicant_id, vacancy_id, vacancies, setVacancies)}
+          />
+        </div>
+      )}
+
     </div>
   );
 }

@@ -12,13 +12,8 @@ router = APIRouter()
 
 
 @router.post("/vacancies/create")
-async def create_vacancy(data: VacancyDTO, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
-    return VacancyService.create_vacancy(data, db, user_id)
-
-
-@router.get("/vacancies/{vacancy_id}")
-async def get_vacancy_by_vacancy_id(vacancy_id: str, db: Session = Depends(get_db)):
-    return VacancyService.get_vacancy_by_vacancy_id(vacancy_id, db)
+async def create_vacancy(data: VacancyDTO, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.create_vacancy(data, user_id, db)
 
 
 @router.get("/vacancies/employer/{employer_id}")
@@ -27,25 +22,25 @@ async def get_vacancies_by_employer_id(employer_id: str, db: Session = Depends(g
 
 
 @router.get("/vacancies")
-async def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, db: Session = Depends(get_db)):
-    return VacancyService.get_paginated_vacancies(page, confirmed, archived, db)
+async def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.get_paginated_vacancies(page, confirmed, archived, user_id, db)
 
 
 @router.patch("/vacancies/confirm/{vacancy_id}")
-async def confirm_vacancy(vacancy_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
-    return VacancyService.confirm_vacancy(vacancy_id, db, user_id)
+async def confirm_vacancy(vacancy_id: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.confirm_vacancy(vacancy_id, user_id, db)
 
 
 @router.patch("/vacancies/in_archive/{vacancy_id}")
-async def in_archive_vacancy(vacancy_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
-    return VacancyService.in_archive_vacancy(vacancy_id, db, user_id)
+async def in_archive_vacancy(vacancy_id: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.in_archive_vacancy(vacancy_id, user_id, db)
 
 
 @router.patch("/vacancies/from_archive/{vacancy_id}")
-async def from_archive_vacancy(vacancy_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
-    return VacancyService.from_archive_vacancy(vacancy_id, db, user_id)
+async def from_archive_vacancy(vacancy_id: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.from_archive_vacancy(vacancy_id, user_id, db)
 
 
 @router.delete("/vacancies/delete/{vacancy_id}")
-async def delete_vacancy(vacancy_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_user_id)):
-    return VacancyService.delete_vacancy(vacancy_id, db, user_id)
+async def delete_vacancy(vacancy_id: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.delete_vacancy(vacancy_id, user_id, db)
