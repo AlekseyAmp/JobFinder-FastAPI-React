@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from models.applicant import Applicant
 from models.user import User
@@ -89,6 +90,15 @@ def get_paginated_applicants(page: int, archived: bool, user_id: str, db: Sessio
         Applicant.is_archived == archived,
     ).offset(offset).limit(items_on_page).all()
     return applicants[::-1]
+
+
+def search_applicants(query: str, user_id: str, db: Session):
+    search_results = db.query(Applicant).filter(
+        func.lower(Applicant.speciality).contains(query.lower()),
+        Applicant.is_archived == False
+    ).all()
+
+    return search_results
 
 
 def in_archive_applicant(applicant_id: str, user_id: str, db: Session):

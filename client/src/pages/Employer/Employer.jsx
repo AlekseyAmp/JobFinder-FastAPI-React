@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
-import { createNewEmployer, getEmployerByUserID, getPaginatedEmployers } from '../../services/employer';
+import { createNewEmployer, getEmployerByUserID, getPaginatedEmployers, searchEmployers } from '../../services/employer';
 import { createNewVacancy, getVacanciesByEmployer } from '../../services/vacancy';
 
 import styles from './Employer.module.scss';
 
+import SearchForm from '../../components/Forms/SearchForm/SearchForm';
 import EmployerCard from '../../components/Cards/EmployerCard/EmployerCard';
 import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard'
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
@@ -28,6 +29,11 @@ function Employer() {
   const [employers, setEmployers] = useState([])
   const [employerID, setEmployerID] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchResults, setSearchResults] = useState([]);
+
+  const inputConfigSearch = [
+      { title: 'Поиск по работодателям', type: 'text', name: 'search', placeholder: 'Например: Газпром' },
+  ]
 
   useEffect(() => {
     if (isAuthorized) {
@@ -62,15 +68,39 @@ function Employer() {
     fetchData();
   }, [role]);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (role === 'applicant' || role === 'admin') {
-      getPaginatedEmployers(1, true)
-        .then((data) => {
-          setEmployers(data);
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentPage = parseInt(urlParams.get('page')) || 1;
+      const query = urlParams.get('query');
+
+      if (!query) {
+        getPaginatedEmployers(currentPage, true)
+          .then((data) => {
+            setEmployers(data);
+          })
+          .catch((error) => console.log(error));
+      }
+
+      if (query !== null) {
+        searchEmployers(query)
+        .then((results) => {
+            setSearchResults(results);
         })
         .catch((error) => console.log(error));
     }
+    }
   }, [role]);
+
+  const handleSearchClick = async (e) => {
+    e.preventDefault();
+    const query = e.target.search.value;
+    const results = await searchEmployers(query);
+    setSearchResults(results);
+    setEmployers([]);
+    const searchParams = new URLSearchParams({ query });
+    navigate(`/employers/search?${searchParams.toString()}`);
+};
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -79,6 +109,11 @@ function Employer() {
   const handleRegisterClick = () => {
     navigate('/register');
   };
+
+  const handleBackClick = () => {
+    navigate('/employers')
+    window.location.reload();
+};
 
   const renderContent = () => {
     if (role === 'user') {
@@ -345,11 +380,12 @@ function Employer() {
       const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
-        getPaginatedEmployers(nextPage, true)
+        getPaginatedEmployers(nextPage, true, false)
           .then((data) => {
             setEmployers(data);
           })
           .catch((error) => console.log(error));
+        navigate(`/employers?page=${nextPage}&confirmed=true`);
       };
 
       const goToPreviousPage = (currentPage) => {
@@ -360,6 +396,7 @@ function Employer() {
             setEmployers(data);
           })
           .catch((error) => console.log(error));
+        navigate(`/employers?page=${previousPage}&confirmed=true`);
       };
 
       return (
@@ -367,10 +404,14 @@ function Employer() {
           <FilterBar />
           <div className={`content`}>
             <h3 className={`title`}>Работодатели</h3>
+            <SearchForm
+              inputConfigs={inputConfigSearch}
+              onSubmit={handleSearchClick}
+            />
             <div className={`cards`}>
               <div className={`cards-content`}>
-                {employers.map((employer) => {
-                  return (
+                {employers.length > 0 ? (
+                  employers.map((employer) => (
                     <EmployerCard
                       key={employer.id}
                       employer_id={employer.id}
@@ -384,8 +425,32 @@ function Employer() {
                       employers={employers}
                       setEmployers={setEmployers}
                     />
-                  );
-                })}
+                  ))
+                ) : searchResults.length > 0 ? (
+                  searchResults.map((employer) => (
+                    <EmployerCard
+                      key={employer.id}
+                      employer_id={employer.id}
+                      company_name={employer.company_name}
+                      company_description={employer.company_description}
+                      contact={employer.contact}
+                      website={employer.website}
+                      created_at={employer.created_at}
+                      is_confirmed={true}
+                      role={role}
+                      employers={employers}
+                      setEmployers={setEmployers}
+                    />
+                  ))
+                ) : (
+                  <div className='searchNotFound'>
+                    <p className={`red-text`}>Ничего не найдено</p>
+                    <GreenButton
+                      title={"Вернуться к работодателям"}
+                      onClick={handleBackClick}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className={`pagination`}>

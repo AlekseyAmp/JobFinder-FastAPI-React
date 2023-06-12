@@ -16,7 +16,13 @@ def create_feedback(data: FeedbackDTO, user_id: str, db: Session):
         )
 
     get_applicant_by_applicant_id(data.applicant_id, db)
-    get_vacancy_by_vacancy_id(data.vacancy_id, db)
+    vacancy = get_vacancy_by_vacancy_id(data.vacancy_id, db)
+
+    if vacancy.is_archived:
+        raise HTTPException(
+            status_code=409,
+            detail="The vacancy in the archive"
+        )
 
     feedback_exists = db.query(Feedback).filter(
         Feedback.applicant_id == data.applicant_id,

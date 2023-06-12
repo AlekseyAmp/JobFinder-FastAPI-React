@@ -8,32 +8,45 @@ import Vacancies from './pages/Vacancies/Vacancies';
 
 const routes = [
     {
-        path: '/',
-        page: Main,
+      path: '/',
+      page: Main,
     },
     {
-        path: '/register',
-        page: Register,
+      path: '/register',
+      page: Register,
     },
     {
-        path: '/login',
-        page: Login,
+      path: '/login',
+      page: Login,
     },
     {
-        path: '/employers',
-        page: Employer,
+      path: '/employers',
+      page: Employer,
     },
     {
-        path: '/applicants',
-        page: Applicant,
+      path: '/employers/search',
+      page: Employer,
     },
     {
-        path: '/vacancies',
-        page: Vacancies,
+      path: '/applicants',
+      page: Applicant,
     },
     {
-        path: '/admin',
-        page: Admin
-    }
-]
+      path: '/applicants/search',
+      page: Applicant,
+    },
+    {
+      path: '/vacancies',
+      page: Vacancies,
+    },
+    {
+      path: '/vacancies/search',
+      page: Vacancies,
+    },
+    {
+      path: '/admin',
+      page: Admin,
+    },
+  ];
+  
 export default routes;

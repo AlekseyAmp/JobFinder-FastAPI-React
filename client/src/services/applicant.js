@@ -26,6 +26,19 @@ export async function getPaginatedApplicants(current_page, archived) {
 }
 
 
+export async function searchApplicants(query) {
+    try {
+      const response = await axios.get(`/applicants/search?query=${query}`);
+  
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log(error.response.data.detail);
+    }
+}  
+
+
 export async function getApplicantByUserID(user_id) {
     try {
         const response = await axios.get(`/applicants/user/${user_id}`);

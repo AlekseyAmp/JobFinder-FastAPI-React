@@ -5,10 +5,11 @@ import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
 import { getApplicantByUserID } from '../../services/applicant';
-import { getPaginatedVacancies } from '../../services/vacancy';
+import { getPaginatedVacancies, searchVacancies } from '../../services/vacancy';
 
 import styles from './Vacancies.module.scss';
 
+import SearchForm from '../../components/Forms/SearchForm/SearchForm';
 import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import FilterBar from '../../components/FilterBar/FilterBar';
@@ -21,6 +22,11 @@ function Vacancies() {
     const [vacancies, setVacancies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [applicantID, setApplicantID] = useState(null);
+    const [searchResults, setSearchResults] = useState([]);
+
+    const inputConfigSearch = [
+        { title: 'Поиск по вакансиям', type: 'text', name: 'search', placeholder: 'Например: Разработчик' },
+    ]
 
     useEffect(() => {
         if (isAuthorized) {
@@ -36,24 +42,47 @@ function Vacancies() {
     useEffect(() => {
         if (role) {
             if (role === 'applicant') {
-              const decoded_token = jwt_decode(access_token);
-              const userID = decoded_token.sub;
+                const decoded_token = jwt_decode(access_token);
+                const userID = decoded_token.sub;
 
-              getApplicantByUserID(userID)
-              .then((data) => {
-                setApplicantID(data.id);
-              })
-              .catch((error) => console.log(error));
-          }
-          getPaginatedVacancies(1, true, false)
-            .then((data) => {
-              setVacancies(data);
-            })
-            .catch((error) => console.log(error));
+                getApplicantByUserID(userID)
+                    .then((data) => {
+                        setApplicantID(data.id);
+                    })
+                    .catch((error) => console.log(error));
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentPage = parseInt(urlParams.get('page')) || 1;
+            const archived = urlParams.get('archived') || false;
+            const query = urlParams.get('query');
+
+            if (!query) {
+                getPaginatedVacancies(currentPage, true, archived)
+                .then((data) => {
+                    setVacancies(data);
+                })
+                .catch((error) => console.log(error));
+            }
+
+            if (query !== null) {
+                searchVacancies(query)
+                .then((results) => {
+                    setSearchResults(results);
+                })
+                .catch((error) => console.log(error));
+            }
         }
-      
-      }, [role]);
-      
+    }, [role]);
+
+    const handleSearchClick = async (e) => {
+        e.preventDefault();
+        const query = e.target.search.value;
+        const results = await searchVacancies(query);
+        setSearchResults(results);
+        setVacancies([]);
+        const searchParams = new URLSearchParams({ query });
+        navigate(`/vacancies/search?${searchParams.toString()}`);
+    };
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -61,6 +90,11 @@ function Vacancies() {
 
     const handleRegisterClick = () => {
         navigate('/register');
+    };
+
+    const handleBackClick = () => {
+        navigate('/vacancies')
+        window.location.reload();
     };
 
     const goToNextPage = (currentPage) => {
@@ -71,6 +105,7 @@ function Vacancies() {
                 setVacancies(data);
             })
             .catch((error) => console.log(error));
+        navigate(`/vacancies?page=${nextPage}&confirmed=true&archived=false`);
     };
 
     const goToPreviousPage = (currentPage) => {
@@ -81,6 +116,7 @@ function Vacancies() {
                 setVacancies(data);
             })
             .catch((error) => console.log(error));
+        navigate(`/vacancies?page=${previousPage}&confirmed=true&archived=false`);
     };
 
     return (
@@ -93,10 +129,14 @@ function Vacancies() {
                         <FilterBar />
                         <div className={`content`}>
                             <h3 className={`title`}>Вакансии</h3>
+                            <SearchForm
+                                inputConfigs={inputConfigSearch}
+                                onSubmit={handleSearchClick}
+                            />
                             <div className={`cards`}>
                                 <div className={`cards-content`}>
-                                    {vacancies.map((vacancy) => {
-                                        return (
+                                    {vacancies.length > 0 ? (
+                                        vacancies.map((vacancy) => (
                                             <VacancyCard
                                                 key={vacancy.id}
                                                 vacancy_id={vacancy.id}
@@ -117,8 +157,40 @@ function Vacancies() {
                                                 setVacancies={setVacancies}
                                                 showButtons={false}
                                             />
-                                        );
-                                    })}
+                                        ))
+                                    ) : searchResults.length > 0 ? (
+                                        searchResults.map((vacancy) => (
+                                            <VacancyCard
+                                                key={vacancy.id}
+                                                vacancy_id={vacancy.id}
+                                                applicant_id={applicantID}
+                                                company_name={vacancy.company}
+                                                name={vacancy.name}
+                                                created_at={vacancy.created_at}
+                                                description={vacancy.description}
+                                                place={vacancy.place}
+                                                salary={vacancy.salary}
+                                                experience={vacancy.experience}
+                                                tags={vacancy.tags}
+                                                is_confirmed={true}
+                                                is_archived={false}
+                                                is_feedback={vacancy.is_feedback}
+                                                role={role}
+                                                vacancies={vacancies}
+                                                setVacancies={setVacancies}
+                                                showButtons={false}
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className='searchNotFound'>
+                                            <p className={`red-text`}>Ничего не найдено</p>
+                                            <GreenButton
+                                                title={"Вернуться к вакансиям"}
+                                                onClick={handleBackClick}
+                                            />
+                                        </div>
+                                    )}
+
                                 </div>
                             </div>
                             <div className={`pagination`}>

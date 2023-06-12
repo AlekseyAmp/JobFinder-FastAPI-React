@@ -1,0 +1,30 @@
+@import '../../../assets/variables.scss';
+
+.searchInput {
+    margin-top: 30px;
+
+    input {
+        font-family: 'Segoe UI';
+        font-weight: 400;
+        font-size: 16px;
+        background: $white;
+        border: 2px solid $gray;
+        outline: none;
+        border-radius: 10px;
+        width: 400px;
+        height: 34px;
+        padding-left: 15px;
+        transition: 0.2s;
+    }
+
+    input:focus {
+        border: 2px solid $green
+    }
+
+    label {
+        margin-bottom: 10px;
+    }
+
+    display: flex;
+    flex-direction: column;
+}

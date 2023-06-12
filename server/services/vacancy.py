@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from models.vacancy import Vacancy
 from dto.vacancy import Vacancy as VacancyDTO
@@ -28,7 +29,7 @@ def create_vacancy(data: VacancyDTO, user_id: str, db: Session):
     employer = get_employer_by_user_id(user_id, db)
 
     new_vacancy = Vacancy(
-        name=data.name.strip(),
+        name=data.name.strip().title(),
         description=data.description.strip(),
         place=data.place.strip(),
         salary=data.salary.strip().replace(" ", "."),
@@ -111,6 +112,40 @@ def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, user_id:
         vacancies_arr.append(vacancy_dict)
 
     return vacancies_arr
+
+
+def search_vacancies(query: str, user_id: str, db: Session):
+    search_results = []
+
+    vacancies = db.query(Vacancy).filter(
+        func.lower(Vacancy.name).contains(query.lower())
+    ).all()
+
+    feedback = False
+    for vacancy in vacancies:
+        if is_applicant(user_id, db):
+            applicant = get_applicant_by_user_id(user_id, db)
+            feedback = is_feedback(applicant.id, db)
+
+        employer = get_employer_by_employer_id(vacancy.employer_id, db)
+
+        vacancy_dict = {
+            "id": vacancy.id,
+            "company": employer.company_name,
+            "name": vacancy.name,
+            "description": vacancy.description,
+            "place": vacancy.place,
+            "salary": vacancy.salary,
+            "experience": vacancy.experience,
+            "tags": vacancy.tags,
+            "created_at": vacancy.created_at,
+            "is_confirmed": vacancy.is_confirmed,
+            "is_archived": vacancy.is_archived,
+            "is_feedback": feedback
+        }
+        search_results.append(vacancy_dict)
+
+    return search_results
 
 
 def confirm_vacancy(vacancy_id, user_id: str, db: Session):

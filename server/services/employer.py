@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from models.employer import Employer
 from models.user import User
@@ -97,6 +98,15 @@ def get_paginated_employers(page: int, confirmed: bool, user_id: str, db: Sessio
         Employer.is_confirmed == confirmed,
     ).offset(offset).limit(items_on_page).all()
     return employers
+
+
+def search_employers(query: str, user_id: str, db: Session):
+    search_results = db.query(Employer).filter(
+        func.lower(Employer.company_name).contains(query.lower()),
+        Employer.is_confirmed
+    ).all()
+
+    return search_results
 
 
 def confirm_employer(employer_id, user_id: str, db: Session):

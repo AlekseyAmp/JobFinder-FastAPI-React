@@ -26,6 +26,11 @@ async def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, us
     return VacancyService.get_paginated_vacancies(page, confirmed, archived, user_id, db)
 
 
+@router.get("/vacancies/search")
+async def search_vacancies(query: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return VacancyService.search_vacancies(query, user_id, db)
+
+
 @router.patch("/vacancies/confirm/{vacancy_id}")
 async def confirm_vacancy(vacancy_id: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
     return VacancyService.confirm_vacancy(vacancy_id, user_id, db)

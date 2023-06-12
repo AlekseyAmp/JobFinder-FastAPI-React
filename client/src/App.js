@@ -14,7 +14,11 @@ function App() {
       <Header />
       <Routes>
         {routes.map((route) => (
-          <Route key={route.path} path={route.path} element={<route.page />} />
+          <Route 
+          key={route.path} 
+          path={route.path} 
+          element={<route.page />}
+          />
         ))}
       </Routes>
     </div>

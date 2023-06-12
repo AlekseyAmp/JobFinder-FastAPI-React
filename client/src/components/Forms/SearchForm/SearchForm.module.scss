@@ -1,0 +1,10 @@
+@import '../../../assets/variables.scss';
+
+.searchForm{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    button {
+        margin-top: 60px;
+    }
+}

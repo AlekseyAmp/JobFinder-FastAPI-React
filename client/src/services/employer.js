@@ -39,6 +39,19 @@ export async function getPaginatedEmployers(current_page, confirmed) {
 }
 
 
+export async function searchEmployers(query) {
+    try {
+      const response = await axios.get(`/employers/search?query=${query}`);
+  
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      console.log(error.response.data.detail);
+    }
+}  
+
+
 export async function confirmEmployer(employer_id, employers, setEmployers) {
     try {
         const response = await axios.patch(`/employers/confirm/${employer_id}`);

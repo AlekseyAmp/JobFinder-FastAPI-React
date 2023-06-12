@@ -26,6 +26,11 @@ async def get_paginated_applicants(page: int, archived: bool, user_id: str = Dep
     return ApplicantService.get_paginated_applicants(page, archived, user_id, db)
 
 
+@router.get("/applicants/search")
+async def search_applicants(query: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return ApplicantService.search_applicants(query, user_id, db)
+
+
 @router.patch("/applicants/in_archive/{applicant_id}")
 async def in_archive_applicant(applicant_id: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
     return ApplicantService.in_archive_applicant(applicant_id, user_id, db)
