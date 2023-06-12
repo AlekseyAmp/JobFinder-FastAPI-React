@@ -18,6 +18,11 @@ body{
     display: flex;
 }
 
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
 .line {
     height: 1px;
     width: 100%;
@@ -58,6 +63,32 @@ body{
     display: flex;
     justify-content: center;
     margin-top: 30px;
+    span {
+        text-decoration: none;
+        font-family: 'Segoe UI';
+        font-size: 17px;
+        font-weight: 500;
+        color: $dark;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    button {
+        text-align: center;
+        cursor: pointer;
+        background-color: $gray;
+        border-style: none;
+        outline: none;
+        border-radius: 10px;
+        padding: 9px 9px;
+        color: $dark;
+        font-family: 'Segoe UI';
+        font-size: 14px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+    button:hover {
+        background: $light_green;
+    }
 }
 
 .tab-menu {

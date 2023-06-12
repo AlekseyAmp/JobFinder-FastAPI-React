@@ -11,11 +11,11 @@ from services import feedback as FeedbackService
 router = APIRouter()
 
 
-@router.post("/feedback/create")
+@router.post("/feedbacks/create")
 async def create_feedback(data: FeedbackDTO, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
     return FeedbackService.create_feedback(data, user_id, db)
 
 
-@router.get("/feedback/vacancy/{vacancy_id}")
+@router.get("/feedbacks/vacancy/{vacancy_id}")
 async def get_feedbacks_by_vacancy_id(vacancy_id: str, db: Session = Depends(get_db)):
     return FeedbackService.get_feedbacks_by_vacancy_id(vacancy_id, db)

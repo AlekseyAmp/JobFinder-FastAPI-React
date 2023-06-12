@@ -6,6 +6,7 @@ import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
 import { getApplicantByUserID } from '../../services/applicant';
 import { getPaginatedVacancies, searchVacancies } from '../../services/vacancy';
+import { getFeedbackByVacancy } from '../../services/feedback';
 
 import styles from './Vacancies.module.scss';
 
@@ -126,7 +127,9 @@ function Vacancies() {
                     <div>Loading...</div>
                 ) : (
                     <div className={styles.vacanciesSection}>
-                        <FilterBar />
+                        <FilterBar
+                        is_vacancies={true}
+                        />
                         <div className={`content`}>
                             <h3 className={`title`}>Вакансии</h3>
                             <SearchForm

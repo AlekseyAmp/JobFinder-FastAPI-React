@@ -18,6 +18,12 @@ def create_feedback(data: FeedbackDTO, user_id: str, db: Session):
     get_applicant_by_applicant_id(data.applicant_id, db)
     vacancy = get_vacancy_by_vacancy_id(data.vacancy_id, db)
 
+    if not vacancy.is_confirmed:
+        raise HTTPException(
+            status_code=409,
+            detail="The vacancy not is confirmed"
+        )
+
     if vacancy.is_archived:
         raise HTTPException(
             status_code=409,
@@ -64,4 +70,4 @@ def get_feedbacks_by_vacancy_id(vacancy_id: str, db: Session):
         }
         feedbacks_arr.append(feedback_dict)
 
-    return feedback_dict
+    return feedbacks_arr

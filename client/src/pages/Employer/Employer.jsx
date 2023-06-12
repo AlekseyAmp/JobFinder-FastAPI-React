@@ -32,7 +32,7 @@ function Employer() {
   const [searchResults, setSearchResults] = useState([]);
 
   const inputConfigSearch = [
-      { title: 'Поиск по работодателям', type: 'text', name: 'search', placeholder: 'Например: Газпром' },
+    { title: 'Поиск по работодателям', type: 'text', name: 'search', placeholder: 'Например: Газпром' },
   ]
 
   useEffect(() => {
@@ -68,7 +68,7 @@ function Employer() {
     fetchData();
   }, [role]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (role === 'applicant' || role === 'admin') {
       const urlParams = new URLSearchParams(window.location.search);
       const currentPage = parseInt(urlParams.get('page')) || 1;
@@ -84,11 +84,11 @@ function Employer() {
 
       if (query !== null) {
         searchEmployers(query)
-        .then((results) => {
+          .then((results) => {
             setSearchResults(results);
-        })
-        .catch((error) => console.log(error));
-    }
+          })
+          .catch((error) => console.log(error));
+      }
     }
   }, [role]);
 
@@ -100,7 +100,7 @@ function Employer() {
     setEmployers([]);
     const searchParams = new URLSearchParams({ query });
     navigate(`/employers/search?${searchParams.toString()}`);
-};
+  };
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -113,7 +113,7 @@ function Employer() {
   const handleBackClick = () => {
     navigate('/employers')
     window.location.reload();
-};
+  };
 
   const renderContent = () => {
     if (role === 'user') {
@@ -401,7 +401,10 @@ function Employer() {
 
       return (
         <div className={styles.employerSection}>
-          <FilterBar />
+          <FilterBar
+            is_employers={true}
+
+          />
           <div className={`content`}>
             <h3 className={`title`}>Работодатели</h3>
             <SearchForm

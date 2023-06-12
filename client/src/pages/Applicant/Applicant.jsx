@@ -204,7 +204,9 @@ function Applicant() {
             )}
           </div>
           <div className={styles.applicantSectionContent}>
-            <FilterBar />
+            <FilterBar
+            is_applicants={true}
+            />
             <div className={`content`}>
               <h3 className={`title`}>Все активные резюме на сервисе</h3>
               <SearchForm
@@ -300,7 +302,9 @@ function Applicant() {
 
       return (
         <div className={`${styles.applicantSection} df`}>
-          <FilterBar />
+          <FilterBar
+          is_applicants={true}
+          />
           <div className={`content`}>
             <h3 className={`title`}>Соискатели</h3>
             <SearchForm

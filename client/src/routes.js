@@ -1,4 +1,3 @@
-import Main from './pages/Main/Main';
 import Register from './pages/Auth/Register'
 import Login from './pages/Auth/Login'
 import Employer from './pages/Employer/Employer';
@@ -9,7 +8,7 @@ import Vacancies from './pages/Vacancies/Vacancies';
 const routes = [
     {
       path: '/',
-      page: Main,
+      page: Vacancies,
     },
     {
       path: '/register',
