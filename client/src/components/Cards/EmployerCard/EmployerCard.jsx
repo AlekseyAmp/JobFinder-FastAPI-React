@@ -22,7 +22,7 @@ function EmployerCard({ employer_id, company_name, company_description, contact,
         </div>
       </div>
 
-      <span className='dark-text'>Описание: <p className={`gray-text`}>{company_description}</p></span>
+      <span className='dark-text'>Описание: <span className={`gray-text`}>{company_description}</span></span>
 
       {role === 'admin' ? (
         is_confirmed ? (

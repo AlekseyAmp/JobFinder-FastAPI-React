@@ -21,7 +21,7 @@ function Login() {
         const phone_number = e.target.phone.value;
         const password = e.target.password.value;
         login(phone_number, password)
-        navigate('/')
+        navigate('/vacancies')
     };
 
     return (

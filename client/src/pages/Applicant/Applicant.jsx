@@ -182,7 +182,7 @@ function Applicant() {
 
       return (
         <div className={styles.applicantSection}>
-          <div className={styles.applicationSummary}>
+          <div className={styles.applicantSummary}>
             <h3 className={`title`}>Моё резюме</h3>
             {mySummary.id && (
               <ApplicantCard

@@ -13,6 +13,7 @@ from utils.auth import (
     hash_password,
     verify_password,
     is_valid_email,
+    is_valid_phone_number,
     is_valid_name_surname,
     create_access_token,
     create_refresh_token
@@ -31,6 +32,12 @@ def create_user(data: RegisterDTO, response: Response, db: Session, authorize: A
         raise HTTPException(
             status_code=400,
             detail="Name or surname can only contain letters"
+        )
+
+    if not is_valid_phone_number(data.phone_number):
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect phone number"
         )
 
     if not is_valid_email(data.email):

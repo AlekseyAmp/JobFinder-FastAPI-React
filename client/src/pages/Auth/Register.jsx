@@ -27,7 +27,7 @@ function Register() {
         const email = e.target.email.value;
         const password = e.target.password.value;
         register(name, surname, phone_number, email, password);
-        navigate('/')
+        navigate('/vacancies')
     };
 
     return (
@@ -40,7 +40,7 @@ function Register() {
                     <div className={`${styles.registrationContent} center mt50px`}>
                         <AuthForm
                             inputConfigs={inputConfigs}
-                            buttonTitle='Зарегестрироваться'
+                            buttonTitle='Зарегистрироваться'
                             authHelpText='Есть аккаунт?'
                             onSubmit={handleRegisterSubmit}
                             authHelpPage='Вход'
