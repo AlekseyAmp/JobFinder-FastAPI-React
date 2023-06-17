@@ -1,22 +1,90 @@
 @import '../../assets/variables.scss';
 
 .filterBar {
-    width: 400px;
-    height: 600px;
+    display: inline-block;
     background-color: $light_gray;
     box-shadow: 0px 0px 9px 2px rgba(34, 60, 80, 0.2);
     border-radius: 20px;
+    padding: 10px; 
     &Content {
         padding: 20px 40px;
     }
+
     &Block {
         margin-top: 20px;
+
         &Form {
-            margin-top: 10px;
-            align-items: center;
+            margin-top: 20px;
+
             label {
-                margin-left: 5px;
+                display: flex;
+                cursor: pointer;
+                font-weight: 500;
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 0.375em;
+
+                input {
+                    position: absolute;
+                    left: -9999px;
+
+                    &:checked+span {
+                        background-color: mix($white, $light_green, 60%);
+
+                        &:before {
+                            box-shadow: inset 0 0 0 0.3em $light_green;
+                        }
+                    }
+                }
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    padding: 0.375em 0.75em 0.375em 0.375em;
+                    border-radius: 99em;
+                    transition: 0.25s ease;
+
+                    &:hover {
+                        background-color: $gray;
+                    }
+
+                    &:before {
+                        display: flex;
+                        flex-shrink: 0;
+                        content: "";
+                        background-color: #fff;
+                        width: 1.5em;
+                        height: 1.5em;
+                        border-radius: 50%;
+                        margin-right: 0.375em;
+                        transition: 0.25s ease;
+                        box-shadow: inset 0 0 0 0.125em $light_green;
+                    }
+                }
             }
         }
+
+    }
+    button {
+        margin-top: 10px;
+    }
+}
+
+.citySelect {
+    display: block;
+    width: 250px;
+    padding: 5px 20px;
+    border-radius: 99em;
+    background-color: $white;
+    box-shadow: 0px 0px 9px 2px rgba(34, 60, 80, 0.2);
+    border: 2px solid $light_gray;
+    cursor: pointer;
+    transition: 0.25s ease;
+    outline: none;
+    margin-top: 20px;
+
+    &:hover {
+        outline: none;
+        background-color: $light_gray;
     }
 }

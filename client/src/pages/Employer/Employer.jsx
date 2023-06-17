@@ -9,13 +9,13 @@ import { createNewVacancy, getVacanciesByEmployer } from '../../services/vacancy
 
 import styles from './Employer.module.scss';
 
+import ErrorBox from '../../components/ErrorBox/ErrorBox';
 import SearchForm from '../../components/Forms/SearchForm/SearchForm';
 import EmployerCard from '../../components/Cards/EmployerCard/EmployerCard';
 import VacancyCard from '../../components/Cards/VacancyCard/VacancyCard'
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
 import TextareaForm from '../../components/Forms/TextareaForm/TextareaForm';
-import FilterBar from '../../components/FilterBar/FilterBar';
 
 function Employer() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +30,8 @@ function Employer() {
   const [employerID, setEmployerID] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   const inputConfigSearch = [
     { title: 'Поиск по работодателям', type: 'text', name: 'search', placeholder: 'Например: Газпром' },
@@ -98,6 +100,7 @@ function Employer() {
     const results = await searchEmployers(query);
     setSearchResults(results);
     setEmployers([]);
+    setCurrentPage(1);
     const searchParams = new URLSearchParams({ query });
     navigate(`/employers/search?${searchParams.toString()}`);
   };
@@ -123,7 +126,7 @@ function Employer() {
 
       const handleCreateEmployerSubmit = (e) => {
         e.preventDefault();
-        createNewEmployer(e.target.company_name.value, e.target.company_description.value, e.target.contact.value, e.target.website.value);
+        createNewEmployer(e.target.company_name.value, e.target.company_description.value, e.target.contact.value, e.target.website.value, setError, setShowError);
       };
 
       const inputConfigs = [
@@ -168,6 +171,7 @@ function Employer() {
               </div>
             </div>
           )}
+        {showError && <ErrorBox error={error} />}
         </div>
       );
     }
@@ -186,7 +190,7 @@ function Employer() {
       const handleCreateVacancySubmit = (e) => {
         e.preventDefault();
         createNewVacancy(e.target.name.value, e.target.description.value,
-          e.target.place.value, e.target.salary.value, e.target.experience.value, e.target.tags.value.trim().split(','));
+          e.target.place.value, e.target.salary.value, e.target.experience.value, e.target.tags.value.trim().split(','), setError, setShowError, navigate);
       };
 
       const inputConfigs = [
@@ -201,12 +205,12 @@ function Employer() {
           name: 'place'
         },
         {
-          title: 'Заработная плата (Например: 35.000)',
+          title: 'Заработная плата (Например: 35000)',
           type: 'text',
           name: 'salary'
         },
         {
-          title: 'Требуемый опыт (Например: 2 года, 10 месяцев)',
+          title: 'Требуемый опыт в годах (Например: 1)',
           type: 'text',
           name: 'experience'
         },
@@ -373,6 +377,7 @@ function Employer() {
               <div className={styles.employerCards}>{renderContent()}</div>
             </div>
           )}
+          {showError && <ErrorBox error={error} />}
         </div>
       );
     }
@@ -380,6 +385,7 @@ function Employer() {
       const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
+        setSearchResults([]);
         getPaginatedEmployers(nextPage, true, false)
           .then((data) => {
             setEmployers(data);
@@ -391,6 +397,7 @@ function Employer() {
       const goToPreviousPage = (currentPage) => {
         const previousPage = currentPage - 1;
         setCurrentPage(previousPage);
+        setSearchResults([]);
         getPaginatedEmployers(previousPage, true)
           .then((data) => {
             setEmployers(data);
@@ -401,18 +408,14 @@ function Employer() {
 
       return (
         <div className={styles.employerSection}>
-          <FilterBar
-            is_employers={true}
-
-          />
           <div className={`content`}>
             <h3 className={`title`}>Работодатели</h3>
             <SearchForm
               inputConfigs={inputConfigSearch}
               onSubmit={handleSearchClick}
             />
-            <div className={`cards`}>
-              <div className={`cards-content`}>
+            <div className={`grid-cards`}>
+              <div className={`grid-cards-content`}>
                 {employers.length > 0 ? (
                   employers.map((employer) => (
                     <EmployerCard
@@ -446,7 +449,7 @@ function Employer() {
                     />
                   ))
                 ) : (
-                  <div className='searchNotFound'>
+                  <div className='searchNotFound mt50px'>
                     <p className={`red-text`}>Ничего не найдено</p>
                     <GreenButton
                       title={"Вернуться к работодателям"}

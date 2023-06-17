@@ -1,17 +1,24 @@
 import axios from '../utils/axios';
 
 
-export async function createNewVacancy(name, description, place, salary, experience, tags) {
+export async function createNewVacancy(name, description, place, salary, experience, tags, setError, setShowError, navigate) {
     try {
         const response = await axios.post('/vacancies/create', { name, description, place, salary, experience, tags });
 
         if (response.data) {
+            navigate('/employers');
+            window.location.reload(); 
             console.log(response.data);
-            window.location.reload();
         }
     } catch (error) {
-        console.log(error.response.data.detail);
-    }
+        const errorMessage = error.response.data.detail;
+        setError(errorMessage);
+        setShowError(true);
+        setTimeout(() => {
+          setShowError(false);
+          setError(null);
+        }, 2500);
+      }    
 }
 
 
@@ -26,6 +33,19 @@ export async function getVacanciesByEmployer(employer_id) {
         console.log(error.response.data.detail);
     }
 }
+
+
+export async function getFilteredVacancies(place, salary, experience) {
+    try {
+        const response = await axios.get(`/vacancies/filter?place=${place}&salary=${salary}&experience=${experience}`);
+        if (response.data) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
 
 
 export async function getPaginatedVacancies(current_page, confirmed, archived) {

@@ -1,15 +1,23 @@
 import axios from '../utils/axios';
 
-export async function createNewApplicant(speciality, experience, salary, resume_text) {
+export async function createNewApplicant(speciality, experience, salary, resume_text, setError, setShowError, navigate) {
     try {
         const response = await axios.post('/applicants/create', { speciality, experience, salary, resume_text });
 
         if (response.data) {
+            navigate('/applicants')            
+            window.location.reload();
             console.log(response.data);
         }
     } catch (error) {
-        console.log(error.response.data.detail);
-    }
+      const errorMessage = error.response.data.detail;
+      setError(errorMessage);
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError(null);
+      }, 2500);
+    }    
 }
 
 
@@ -17,6 +25,18 @@ export async function getPaginatedApplicants(current_page, archived) {
     try {
         const response = await axios.get(`/applicants/?page=${current_page}&archived=${archived}`);
 
+        if (response.data) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log(error.response.data.detail);
+    }
+}
+
+
+export async function getFilteredApplicants(salary, experience) {
+    try {
+        const response = await axios.get(`/applicants/filter?salary=${salary}&experience=${experience}`);
         if (response.data) {
             return response.data;
         }

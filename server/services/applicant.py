@@ -7,7 +7,8 @@ from models.user import User
 from dto.applicant import Applicant as ApplicantDTO
 from utils.admin import is_admin
 from utils.applicant import is_applicant
-from utils.dto import check_data_on_empty
+from utils.dto import check_data_on_empty, check_salary_and_experience
+from constants.filter_data import salary_filters_for_applicants, experience_filters_for_applicants
 
 
 def create_applicant(data: ApplicantDTO, user_id: str, db: Session):
@@ -15,6 +16,15 @@ def create_applicant(data: ApplicantDTO, user_id: str, db: Session):
         raise HTTPException(
             status_code=400,
             detail="One or more field(s) is empty"
+        )
+    
+    salary = data.salary.strip()
+    experience = data.experience.strip()
+
+    if not check_salary_and_experience(salary, experience):
+        raise HTTPException(
+            status_code=400,
+            detail="Salary or experience should consist only of numbers and should not be negative"
         )
 
     user = db.query(User).filter(
@@ -29,8 +39,8 @@ def create_applicant(data: ApplicantDTO, user_id: str, db: Session):
 
     new_applicant = Applicant(
         speciality=data.speciality.strip(),
-        experience=data.experience.strip(),
-        salary=data.salary.strip(),
+        salary=int(salary),
+        experience=int(experience),
         resume_text=data.resume_text.strip(),
         phone_number=user.phone_number,
         email=user.email,
@@ -92,13 +102,26 @@ def get_paginated_applicants(page: int, archived: bool, user_id: str, db: Sessio
     return applicants[::-1]
 
 
+def get_filtered_applicants(salary: str, experience: str, user_id: str, db: Session):
+    salary_filter = salary_filters_for_applicants.get(salary)
+    experience_filter = experience_filters_for_applicants.get(experience)
+
+    applicants = db.query(Applicant).filter(
+        Applicant.is_archived == False,
+        salary_filter,
+        experience_filter,
+    ).all()
+
+    return applicants[::-1]
+
+
 def search_applicants(query: str, user_id: str, db: Session):
     search_results = db.query(Applicant).filter(
         func.lower(Applicant.speciality).contains(query.lower()),
         Applicant.is_archived == False
     ).all()
 
-    return search_results
+    return search_results[::-1]
 
 
 def in_archive_applicant(applicant_id: str, user_id: str, db: Session):

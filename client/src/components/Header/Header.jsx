@@ -50,7 +50,7 @@ function Header() {
 
   return (
     <div className={styles.header}>
-      <Link to='/' className={styles.logo}>
+      <Link to='/vacancies' className={styles.logo}>
         <img src="../img/logo.png" alt="Logo" />
         <h3 className={`title`}>JobFinder</h3>
       </Link>

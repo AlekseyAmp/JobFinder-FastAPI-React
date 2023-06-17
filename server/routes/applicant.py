@@ -26,6 +26,11 @@ async def get_paginated_applicants(page: int, archived: bool, user_id: str = Dep
     return ApplicantService.get_paginated_applicants(page, archived, user_id, db)
 
 
+@router.get("/applicants/filter")
+async def get_filtered_applicants(salary: str, experience: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
+    return ApplicantService.get_filtered_applicants(salary, experience, user_id, db)
+
+
 @router.get("/applicants/search")
 async def search_applicants(query: str, user_id: str = Depends(get_user_id), db: Session = Depends(get_db)):
     return ApplicantService.search_applicants(query, user_id, db)

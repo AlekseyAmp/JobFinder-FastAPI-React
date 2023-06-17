@@ -1,0 +1,24 @@
+@import '../../assets/variables.scss';
+
+.errorBox {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: $red;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    animation: slide-in 0.3s ease-in-out forwards;
+  }
+  
+  @keyframes slide-in {
+    0% {
+      left: -200px;
+    }
+    100% {
+      left: 20px;
+    }
+  }
+  
+  
+  

@@ -24,6 +24,12 @@ def is_valid_email(email: str):
     return False
 
 
+def is_valid_password(password: str):
+    if len(password) >= 8:
+        return True
+    return False
+
+
 def is_valid_phone_number(phone_number: str):
     phone_syntax = r"^(?:\+7|8)[-\s]?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{2}[-\s]?\d{2}$"
     if re.match(phone_syntax, phone_number):

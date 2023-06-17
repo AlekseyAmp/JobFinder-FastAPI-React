@@ -48,7 +48,7 @@ function VacancyCard({ vacancy_id, applicant_id, company_name, name, created_at,
 
         <div className={`vertical-line`}></div>
 
-        <p className={`dark-text`}>Требуемый опыт: <span className={`bold-text`}>{experience}</span></p>
+        <p className={`dark-text`}>Требуемый опыт: <span className={`bold-text`}>{experience} год(а)</span></p>
 
         <div className={`vertical-line`}></div>
 

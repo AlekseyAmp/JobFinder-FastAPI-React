@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { logout } from '../../services/auth';
 
+import ErrorBox from '../../components/ErrorBox/ErrorBox';
+
 function Logout() {
-  const handleLogoutSubmit = (e) => {
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
+
+  const handleLogoutSubmit = async (e) => {
     e.preventDefault();
-    logout();
+    await logout(setError, setShowError, navigate);
   };
 
   return (
-    <a onClick={handleLogoutSubmit} className={"link-text"}>Выйти</a>
+    <div className={'content'}>
+      <a onClick={handleLogoutSubmit} className={"link-text"}>Выйти</a>
+      {showError && <ErrorBox error={error} />}
+    </div>
   );
 }
 

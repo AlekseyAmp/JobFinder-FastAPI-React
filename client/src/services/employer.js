@@ -1,6 +1,6 @@
 import axios from '../utils/axios';
 
-export async function createNewEmployer(company_name, company_description, contact, website) {
+export async function createNewEmployer(company_name, company_description, contact, website, setError, setShowError) {
     try {
         const response = await axios.post('/employers/create', { company_name, company_description, contact, website });
 
@@ -9,8 +9,14 @@ export async function createNewEmployer(company_name, company_description, conta
             window.location.reload();
         }
     } catch (error) {
-        console.log(error.response.data.detail);
-    }
+        const errorMessage = error.response.data.detail;
+        setError(errorMessage);
+        setShowError(true);
+        setTimeout(() => {
+          setShowError(false);
+          setError(null);
+        }, 2500);
+      }    
 }
 
 export async function getEmployerByUserID(user_id) {

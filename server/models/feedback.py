@@ -6,7 +6,7 @@ from config.database import Base
 
 
 class Feedback(Base):
-    __tablename__ = 'feedback'
+    __tablename__ = 'feedbacks'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     created_at = Column(DateTime, default=datetime.now)

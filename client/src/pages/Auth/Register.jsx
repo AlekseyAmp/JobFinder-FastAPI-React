@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate  } from 'react-router-dom';
 
 import { register } from '../../services/auth';
 import { access_token } from '../../constants/token';
 
+import ErrorBox from '../../components/ErrorBox/ErrorBox';
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Register() {
     const navigate = useNavigate();
     const isAuthorize = access_token
+    const [error, setError] = useState(null);
+    const [showError, setShowError] = useState(false);
 
     const inputConfigs = [
         { title: "Имя", type: 'text', name: 'name' },
@@ -19,15 +22,14 @@ function Register() {
         { title: "Придумайте пароль", type: 'password', name: 'password' },
     ]
 
-    const handleRegisterSubmit = (e) => {
+    const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         const name = e.target.name.value
         const surname = e.target.surname.value;
         const phone_number = e.target.phone.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
-        register(name, surname, phone_number, email, password);
-        navigate('/vacancies')
+        await register(name, surname, phone_number, email, password, setError, setShowError, navigate);
     };
 
     return (
@@ -50,7 +52,9 @@ function Register() {
                     </div>
                 </div>
             )}
+        {showError && <ErrorBox error={error} />}
         </div>
+        
     )
 }
 

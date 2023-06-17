@@ -37,3 +37,5 @@ def get_user_id(authorize: AuthJWT = Depends()):
             status_code=401,
             detail="Not authorized"
         )
+
+

@@ -97,7 +97,7 @@ def get_paginated_employers(page: int, confirmed: bool, user_id: str, db: Sessio
     employers = db.query(Employer).filter(
         Employer.is_confirmed == confirmed,
     ).offset(offset).limit(items_on_page).all()
-    return employers
+    return employers[::-1]
 
 
 def search_employers(query: str, user_id: str, db: Session):
@@ -106,7 +106,7 @@ def search_employers(query: str, user_id: str, db: Session):
         Employer.is_confirmed
     ).all()
 
-    return search_results
+    return search_results[::-1]
 
 
 def confirm_employer(employer_id, user_id: str, db: Session):

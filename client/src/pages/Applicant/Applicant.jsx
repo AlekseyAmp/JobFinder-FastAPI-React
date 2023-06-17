@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
-import { createNewApplicant, getApplicantByUserID, getPaginatedApplicants, searchApplicants } from '../../services/applicant';
+import { createNewApplicant, getApplicantByUserID, getPaginatedApplicants, getFilteredApplicants, searchApplicants } from '../../services/applicant';
 
 import styles from './Applicant.module.scss';
 
+import ErrorBox from '../../components/ErrorBox/ErrorBox';
 import SearchForm from '../../components/Forms/SearchForm/SearchForm';
 import BlueButton from '../../components/Buttons/BlueButton/BlueButton';
 import GreenButton from '../../components/Buttons/GreenButton/GreenButton';
@@ -25,6 +26,9 @@ function Applicant() {
   const [showApplicantCreateForm, setShowApplicantCreateForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
+  const [filteredApplicants, setFilteredApplicants] = useState([]);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   const inputConfigSearch = [
     { title: 'Поиск по соискателям', type: 'text', name: 'search', placeholder: 'Например: Электромонтажник' },
@@ -55,11 +59,12 @@ function Applicant() {
       }
       const urlParams = new URLSearchParams(window.location.search);
       const currentPage = parseInt(urlParams.get('page')) || 1;
-      const archived = urlParams.get('archived') || false;
       const query = urlParams.get('query');
-      
-      if (!query) {
-        getPaginatedApplicants(currentPage, archived)
+      const salary = urlParams.get('salary');
+      const experience = urlParams.get('experience');
+
+      if (!query && !salary && !experience) {
+        getPaginatedApplicants(currentPage, false)
           .then((data) => {
             setApplicants(data);
           })
@@ -68,11 +73,19 @@ function Applicant() {
 
       if (query !== null) {
         searchApplicants(query)
-        .then((results) => {
+          .then((results) => {
             setSearchResults(results);
-        })
-        .catch((error) => console.log(error));
-    }
+          })
+          .catch((error) => console.log(error));
+      }
+
+      if (salary && experience) {
+        getFilteredApplicants(salary, experience)
+          .then((filteredData) => {
+            setFilteredApplicants(filteredData);
+          })
+          .catch((error) => console.log(error));
+      }
     }
   }, [role]);
 
@@ -82,9 +95,25 @@ function Applicant() {
     const results = await searchApplicants(query);
     setSearchResults(results);
     setApplicants([]);
+    setFilteredApplicants([]);
+    setCurrentPage(1);
     const searchParams = new URLSearchParams({ query });
     navigate(`/applicants/search?${searchParams.toString()}`);
   };
+
+  const handleFilterClick = async (e) => {
+    e.preventDefault();
+    const salary = e.target.salary.value;
+    const experience = e.target.experience.value;
+    const filteredApplicants = await getFilteredApplicants(salary, experience);
+    setFilteredApplicants(filteredApplicants);
+    setApplicants([]);
+    setSearchResults([]);
+    setCurrentPage(1);
+    const searchParams = new URLSearchParams({ salary, experience });
+    navigate(`/applicants/filter?${searchParams.toString()}`);
+  };
+
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -107,8 +136,7 @@ function Applicant() {
 
       const handleCreateApplicantSubmit = (e) => {
         e.preventDefault();
-        createNewApplicant(e.target.speciality.value, e.target.experience.value, e.target.salary.value, e.target.resume_text.value);
-        navigate('/vacancies')
+        createNewApplicant(e.target.speciality.value, e.target.experience.value, e.target.salary.value, e.target.resume_text.value, setError, setShowError, navigate);
       };
 
       const inputConfigs = [
@@ -118,12 +146,12 @@ function Applicant() {
           name: 'speciality'
         },
         {
-          title: 'Требуемый опыт (Например: 2 года, 10 месяцев)',
+          title: 'Ваш опыт работы в годах (Например: 1)',
           type: 'text',
           name: 'experience'
         },
         {
-          title: 'Зарплатные ожидания (Например: 25.000)',
+          title: 'Зарплатные ожидания (Например: 25000)',
           type: 'text',
           name: 'salary'
         }
@@ -153,6 +181,7 @@ function Applicant() {
               </div>
             </div>
           )}
+          {showError && <ErrorBox error={error} />}
         </div>
       );
     }
@@ -161,6 +190,8 @@ function Applicant() {
       const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
+        setSearchResults([]);
+        setFilteredApplicants([]);
         getPaginatedApplicants(nextPage, false)
           .then((data) => {
             setApplicants(data);
@@ -172,6 +203,8 @@ function Applicant() {
       const goToPreviousPage = (currentPage) => {
         const previousPage = currentPage - 1;
         setCurrentPage(previousPage);
+        setSearchResults([]);
+        setFilteredApplicants([]);
         getPaginatedApplicants(previousPage, false)
           .then((data) => {
             setApplicants(data);
@@ -205,7 +238,8 @@ function Applicant() {
           </div>
           <div className={styles.applicantSectionContent}>
             <FilterBar
-            is_applicants={true}
+              is_applicants={true}
+              onSubmit={handleFilterClick}
             />
             <div className={`content`}>
               <h3 className={`title`}>Все активные резюме на сервисе</h3>
@@ -249,13 +283,32 @@ function Applicant() {
                         showButtons={false}
                       />
                     ))
-                  ) : (<div className='searchNotFound'>
-                    <p className={`red-text`}>Ничего не найдено</p>
-                    <GreenButton
-                      title={"Вернуться к соискателям"}
-                      onClick={handleBackClick}
-                    />
-                  </div>)}
+                  ) : filteredApplicants.length > 0 ? (
+                    filteredApplicants.map((applicant) => (
+                      <ApplicantCard
+                        key={applicant.id}
+                        applicant_id={applicant.id}
+                        created_at={applicant.created_at}
+                        speciality={applicant.speciality}
+                        experience={applicant.experience}
+                        salary={applicant.salary}
+                        phone_number={applicant.phone_number}
+                        email={applicant.email}
+                        resume_text={applicant.resume_text}
+                        is_archived={false}
+                        role={role}
+                        showButtons={false}
+                      />
+                    ))
+                  ) : (
+                    <div className='searchNotFound'>
+                      <p className={`red-text`}>Ничего не найдено</p>
+                      <GreenButton
+                        title={"Вернуться к соискателям"}
+                        onClick={handleBackClick}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className={`pagination`}>
@@ -281,6 +334,8 @@ function Applicant() {
       const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
+        setSearchResults([]);
+        setFilteredApplicants([]);
         getPaginatedApplicants(nextPage, false)
           .then((data) => {
             setApplicants(data);
@@ -292,6 +347,8 @@ function Applicant() {
       const goToPreviousPage = (currentPage) => {
         const previousPage = currentPage - 1;
         setCurrentPage(previousPage);
+        setSearchResults([]);
+        setFilteredApplicants([]);
         getPaginatedApplicants(previousPage, false)
           .then((data) => {
             setApplicants(data);
@@ -303,7 +360,8 @@ function Applicant() {
       return (
         <div className={`${styles.applicantSection} df`}>
           <FilterBar
-          is_applicants={true}
+            is_applicants={true}
+            onSubmit={handleFilterClick}
           />
           <div className={`content`}>
             <h3 className={`title`}>Соискатели</h3>
@@ -347,15 +405,35 @@ function Applicant() {
                       showButtons={false}
                     />
                   ))
-                ) : (<div className='searchNotFound'>
-                  <p className={`red-text`}>Ничего не найдено</p>
-                  <GreenButton
-                    title={"Вернуться к соискателям"}
-                    onClick={handleBackClick}
-                  />
-                </div>)}
+                ) : filteredApplicants.length > 0 ? (
+                  filteredApplicants.map((applicant) => (
+                    <ApplicantCard
+                      key={applicant.id}
+                      applicant_id={applicant.id}
+                      created_at={applicant.created_at}
+                      speciality={applicant.speciality}
+                      experience={applicant.experience}
+                      salary={applicant.salary}
+                      phone_number={applicant.phone_number}
+                      email={applicant.email}
+                      resume_text={applicant.resume_text}
+                      is_archived={false}
+                      role={role}
+                      showButtons={false}
+                    />
+                  ))
+                ) : (
+                  <div className='searchNotFound'>
+                    <p className={`red-text`}>Ничего не найдено</p>
+                    <GreenButton
+                      title={"Вернуться к соискателям"}
+                      onClick={handleBackClick}
+                    />
+                  </div>
+                )}
               </div>
             </div>
+
             <div className={`pagination`}>
               <div className={`pagination-content`}>
 

@@ -7,10 +7,6 @@ import Vacancies from './pages/Vacancies/Vacancies';
 
 const routes = [
     {
-      path: '/',
-      page: Vacancies,
-    },
-    {
       path: '/register',
       page: Register,
     },
@@ -31,11 +27,19 @@ const routes = [
       page: Applicant,
     },
     {
+      path: '/applicants/filter',
+      page: Applicant,
+    },
+    {
       path: '/applicants/search',
       page: Applicant,
     },
     {
       path: '/vacancies',
+      page: Vacancies,
+    },
+    {
+      path: '/vacancies/filter',
       page: Vacancies,
     },
     {

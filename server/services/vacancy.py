@@ -10,7 +10,8 @@ from utils.admin import is_admin
 from utils.employer import is_employer
 from utils.applicant import is_applicant
 from utils.feedback import is_feedback
-from utils.dto import check_data_on_empty
+from utils.dto import check_data_on_empty, check_salary_and_experience
+from constants.filter_data import salary_filters_for_vacancy, experience_filters_for_vacancy
 
 
 def create_vacancy(data: VacancyDTO, user_id: str, db: Session):
@@ -26,14 +27,26 @@ def create_vacancy(data: VacancyDTO, user_id: str, db: Session):
             detail="One or more field(s) is empty"
         )
 
+    salary = data.salary.strip()
+    experience = data.experience.strip()
+
+    if not check_salary_and_experience(salary, experience):
+        raise HTTPException(
+            status_code=400,
+            detail="Salary or experience should consist only of numbers and should not be negative"
+        )
+
     employer = get_employer_by_user_id(user_id, db)
+
+    salary = data.salary.strip()
+    experience = data.experience.strip()
 
     new_vacancy = Vacancy(
         name=data.name.strip().title(),
         description=data.description.strip(),
         place=data.place.strip(),
-        salary=data.salary.strip().replace(" ", "."),
-        experience=data.experience,
+        salary=int(salary),
+        experience=int(experience),
         tags=data.tags,
         employer_id=employer.id
     )
@@ -111,14 +124,57 @@ def get_paginated_vacancies(page: int, confirmed: bool, archived: bool, user_id:
         }
         vacancies_arr.append(vacancy_dict)
 
-    return vacancies_arr
+    return vacancies_arr[::-1]
+
+
+def get_filtered_vacancies(place: str, salary: str, experience: str, user_id: str, db: Session):
+    vacancies_arr = []
+
+    salary_filter = salary_filters_for_vacancy.get(salary)
+    experience_filter = experience_filters_for_vacancy.get(experience)
+
+    vacancies = db.query(Vacancy).filter(
+        Vacancy.is_confirmed,
+        Vacancy.is_archived == False,
+        func.lower(Vacancy.place).contains(place.lower()),
+        salary_filter,
+        experience_filter,
+    ).all()
+
+    for vacancy in vacancies:
+        feedback = False
+        if is_applicant(user_id, db):
+            applicant = get_applicant_by_user_id(user_id, db)
+            feedback = is_feedback(applicant.id, db)
+
+        employer = get_employer_by_employer_id(vacancy.employer_id, db)
+
+        vacancy_dict = {
+            "id": vacancy.id,
+            "company": employer.company_name,
+            "name": vacancy.name,
+            "description": vacancy.description,
+            "place": vacancy.place,
+            "salary": vacancy.salary,
+            "experience": vacancy.experience,
+            "tags": vacancy.tags,
+            "created_at": vacancy.created_at,
+            "is_confirmed": vacancy.is_confirmed,
+            "is_archived": vacancy.is_archived,
+            "is_feedback": feedback
+        }
+        vacancies_arr.append(vacancy_dict)
+
+    return vacancies_arr[::-1]
 
 
 def search_vacancies(query: str, user_id: str, db: Session):
     search_results = []
 
     vacancies = db.query(Vacancy).filter(
-        func.lower(Vacancy.name).contains(query.lower())
+        func.lower(Vacancy.name).contains(query.lower()),
+        Vacancy.is_confirmed,
+        Vacancy.is_archived == False
     ).all()
 
     feedback = False
@@ -145,7 +201,7 @@ def search_vacancies(query: str, user_id: str, db: Session):
         }
         search_results.append(vacancy_dict)
 
-    return search_results
+    return search_results[::-1]
 
 
 def confirm_vacancy(vacancy_id, user_id: str, db: Session):

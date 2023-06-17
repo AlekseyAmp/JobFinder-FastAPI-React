@@ -14,6 +14,7 @@ from utils.auth import (
     verify_password,
     is_valid_email,
     is_valid_phone_number,
+    is_valid_password,
     is_valid_name_surname,
     create_access_token,
     create_refresh_token
@@ -37,13 +38,19 @@ def create_user(data: RegisterDTO, response: Response, db: Session, authorize: A
     if not is_valid_phone_number(data.phone_number):
         raise HTTPException(
             status_code=400,
-            detail="Incorrect phone number"
+            detail="Incorrect phone number. Only Russian numbers (start with +7 or 8)"
         )
 
     if not is_valid_email(data.email):
         raise HTTPException(
             status_code=400,
             detail="Incorrect email address"
+        )
+
+    if not is_valid_password(data.password):
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect password. Minimum number of characters = 8"
         )
 
     phone_exists = db.query(User).filter(
@@ -122,7 +129,7 @@ def login_user(data: LoginDTO, response: Response, db: Session, authorize: AuthJ
     if not verify_password(data.password, user.password):
         raise HTTPException(
             status_code=400,
-            detail="Wrong email or password"
+            detail="Wrong phone number or password"
         )
 
     access_token = create_access_token(authorize, str(user.id))
@@ -175,7 +182,9 @@ def refresh_token(response: Response, authorize: AuthJWT, user_id: str):
                         True,
                         "lax")
 
-    return access_token
+    return { 
+        "access_token": access_token
+    }
 
 
 def logout_user(response: Response, authorize: AuthJWT):

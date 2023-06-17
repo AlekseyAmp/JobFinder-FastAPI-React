@@ -10,8 +10,8 @@ class Applicant(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     speciality = Column(String(255))
-    experience = Column(String(50))
-    salary = Column(String(255))
+    salary = Column(Integer)
+    experience = Column(Integer)
     resume_text = Column(String)
     phone_number = Column(String(50), unique=True)
     email = Column(String(50), unique=True)

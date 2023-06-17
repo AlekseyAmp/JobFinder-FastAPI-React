@@ -5,7 +5,7 @@ import jwt_decode from 'jwt-decode';
 import { access_token } from '../../constants/token';
 import { getUserInfo } from '../../services/user';
 import { getApplicantByUserID } from '../../services/applicant';
-import { getPaginatedVacancies, searchVacancies } from '../../services/vacancy';
+import { getFilteredVacancies, getPaginatedVacancies, searchVacancies } from '../../services/vacancy';
 import { getFeedbackByVacancy } from '../../services/feedback';
 
 import styles from './Vacancies.module.scss';
@@ -24,6 +24,7 @@ function Vacancies() {
     const [currentPage, setCurrentPage] = useState(1);
     const [applicantID, setApplicantID] = useState(null);
     const [searchResults, setSearchResults] = useState([]);
+    const [filteredVacancies, setFilteredVacancies] = useState([]);
 
     const inputConfigSearch = [
         { title: 'Поиск по вакансиям', type: 'text', name: 'search', placeholder: 'Например: Разработчик' },
@@ -54,11 +55,13 @@ function Vacancies() {
             }
             const urlParams = new URLSearchParams(window.location.search);
             const currentPage = parseInt(urlParams.get('page')) || 1;
-            const archived = urlParams.get('archived') || false;
             const query = urlParams.get('query');
+            const place = urlParams.get('place');
+            const salary = urlParams.get('salary');
+            const experience = urlParams.get('experience'); 
 
-            if (!query) {
-                getPaginatedVacancies(currentPage, true, archived)
+            if (!query && !place && !salary && !experience) {
+                getPaginatedVacancies(currentPage, true, false)
                 .then((data) => {
                     setVacancies(data);
                 })
@@ -72,6 +75,14 @@ function Vacancies() {
                 })
                 .catch((error) => console.log(error));
             }
+
+            if (place && salary && experience) {
+                getFilteredVacancies(place, salary, experience)
+                  .then((filteredData) => {
+                    setFilteredVacancies(filteredData);
+                  })
+                  .catch((error) => console.log(error));
+              }
         }
     }, [role]);
 
@@ -81,6 +92,8 @@ function Vacancies() {
         const results = await searchVacancies(query);
         setSearchResults(results);
         setVacancies([]);
+        setFilteredVacancies([]);
+        setCurrentPage(1);
         const searchParams = new URLSearchParams({ query });
         navigate(`/vacancies/search?${searchParams.toString()}`);
     };
@@ -98,9 +111,24 @@ function Vacancies() {
         window.location.reload();
     };
 
+    const handleFilterClick = async (e) => {
+        e.preventDefault();
+        const place = e.target.place.value;
+        const salary = e.target.salary.value;
+        const experience = e.target.experience.value;
+        const filteredApplicants = await getFilteredVacancies(place, salary, experience);
+        setFilteredVacancies(filteredApplicants);
+        setVacancies([]);
+        setCurrentPage(1);
+        const searchParams = new URLSearchParams({ place, salary, experience });
+        navigate(`/vacancies/filter?${searchParams.toString()}`);
+      };
+
     const goToNextPage = (currentPage) => {
         const nextPage = currentPage + 1;
         setCurrentPage(nextPage);
+        setSearchResults([]);
+        setFilteredVacancies([]);
         getPaginatedVacancies(nextPage, true, false)
             .then((data) => {
                 setVacancies(data);
@@ -112,6 +140,8 @@ function Vacancies() {
     const goToPreviousPage = (currentPage) => {
         const previousPage = currentPage - 1;
         setCurrentPage(previousPage);
+        setSearchResults([]);
+        setFilteredVacancies([]);
         getPaginatedVacancies(previousPage, true, false)
             .then((data) => {
                 setVacancies(data);
@@ -128,6 +158,7 @@ function Vacancies() {
                 ) : (
                     <div className={styles.vacanciesSection}>
                         <FilterBar
+                        onSubmit={handleFilterClick}
                         is_vacancies={true}
                         />
                         <div className={`content`}>
@@ -163,6 +194,29 @@ function Vacancies() {
                                         ))
                                     ) : searchResults.length > 0 ? (
                                         searchResults.map((vacancy) => (
+                                            <VacancyCard
+                                                key={vacancy.id}
+                                                vacancy_id={vacancy.id}
+                                                applicant_id={applicantID}
+                                                company_name={vacancy.company}
+                                                name={vacancy.name}
+                                                created_at={vacancy.created_at}
+                                                description={vacancy.description}
+                                                place={vacancy.place}
+                                                salary={vacancy.salary}
+                                                experience={vacancy.experience}
+                                                tags={vacancy.tags}
+                                                is_confirmed={true}
+                                                is_archived={false}
+                                                is_feedback={vacancy.is_feedback}
+                                                role={role}
+                                                vacancies={vacancies}
+                                                setVacancies={setVacancies}
+                                                showButtons={false}
+                                            />
+                                        ))
+                                    ) : filteredVacancies.length > 0 ? (
+                                        filteredVacancies.map((vacancy) => (
                                             <VacancyCard
                                                 key={vacancy.id}
                                                 vacancy_id={vacancy.id}

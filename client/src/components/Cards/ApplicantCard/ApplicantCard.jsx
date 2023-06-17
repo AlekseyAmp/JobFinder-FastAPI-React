@@ -19,9 +19,9 @@ function ApplicantCard({ applicant_id, created_at, speciality, experience, salar
             <div className={styles.applicantCardMain}>
                 <div className={styles.applicantCardTitle}>
                     <h3 className={`title`}>{speciality}</h3>
-                    <span className='small-text'>Опыт работы: <span className={`title`}>{experience}</span></span>
+                    <span className='small-text'>Опыт работы: <span className={`title`}>{experience} год(а)</span></span>
                 </div>
-                <p className="gray-text">Зарплатные ожидания: <span className={`green-text`}>{salary}</span></p>
+                <p className="gray-text">Зарплатные ожидания: <span className={`dark-text`}>{salary} <span className={`green-text`}>руб.</span> </span></p>
                 <div className={styles.applicantCardContacts}>
                     <h3 className={`dark-text`}>Контакты</h3>
                     <div className={styles.applicantCardContactsContent}>

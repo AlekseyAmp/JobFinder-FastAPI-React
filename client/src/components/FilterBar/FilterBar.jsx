@@ -1,173 +1,150 @@
 import React from 'react';
+
 import styles from './FilterBar.module.scss';
 
-function FilterBar({ is_vacancies = false, is_applicants = false, is_employers = false }) {
+import BlueButton from '../Buttons/BlueButton/BlueButton';
+
+function FilterBar({ is_vacancies = false, is_applicants = false, onSubmit }) {
   return (
     <div className={styles.filterBar}>
       {is_vacancies &&
-        <div className={styles.filterBarContent}>
+        <form className={styles.filterBarContent} onSubmit={onSubmit}>
           <div className={styles.filterBarBlock}>
-            <h3 className={`dark-text`}>Уровень дохода</h3>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp1" />
-              <label className={`small-text`} htmlFor="zp1">От 25.000</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp2" />
-              <label className={`small-text`} htmlFor="zp2">От 50.000</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp3" />
-              <label className={`small-text`} htmlFor="zp3">От 100.000</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp4" />
-              <label className={`small-text`} htmlFor="zp4">От 150.000</label>
-            </div>
-
+            <h3 className={`bold-text`}>Город</h3>
+            <select className={`${styles.citySelect} ${`blue-text`}`} name="place">
+              <option className={`dark-text`} value="Москва">Москва</option>
+              <option className={`dark-text`} value="Санкт-Петербург">Санкт-Петербург</option>
+              <option className={`dark-text`} value="Новосибирск">Новосибирск</option>
+              {/* Add other cities here */}
+            </select>
 
           </div>
 
-          <div className={styles.filterBarBlock}>
-            <h3 className={`dark-text`}>Занятость</h3>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp1" />
-              <label className={`small-text`} htmlFor="zp1">5 через 2</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp2" />
-              <label className={`small-text`} htmlFor="zp2">2 через 2</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp3" />
-              <label className={`small-text`} htmlFor="zp3">3 через 2</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp4" />
-              <label className={`small-text`} htmlFor="zp4">7 через 0</label>
-            </div>
-
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp5" />
-              <label className={`small-text`} htmlFor="zp5">Гибкий график</label>
-            </div>
-
-          </div>
+          <div className={`line`}></div>
 
           <div className={styles.filterBarBlock}>
-            <h3 className={`dark-text`}>Опыт работы</h3>
-
+            <h3 className={`bold-text`}>Уровень дохода</h3>
             <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp1" />
-              <label className={`small-text`} htmlFor="zp1">Не нужен</label>
-            </div>
 
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp2" />
-              <label className={`small-text`} htmlFor="zp2">0-1 год</label>
-            </div>
+              <label>
+                <input value="25-59" type="radio" name="salary" />
+                <span className={`dark-text`}>От 25.000 до 59.000 руб.</span>
+              </label>
 
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp3" />
-              <label className={`small-text`} htmlFor="zp3">1-3 года</label>
-            </div>
+              <label>
+                <input value="60-109" type="radio" name="salary" />
+                <span className={`dark-text`}>От 60.000 до 109.000 руб.</span>
+              </label>
 
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp4" />
-              <label className={`small-text`} htmlFor="zp4">3-6 года</label>
-            </div>
+              <label>
+                <input value="110-159" type="radio" name="salary" />
+                <span className={`dark-text`}>От 110.000 до 159.000 руб.</span>
+              </label>
 
-            <div className={styles.filterBarBlockForm}>
-              <input type="checkbox" name="zp5" />
-              <label className={`small-text`} htmlFor="zp5">6+ лет</label>
-            </div>
+              <label>
+                <input value="160" type="radio" name="salary" />
+                <span className={`dark-text`}>От 160.000+ руб.</span>
+              </label>
 
+            </div>
           </div>
-        </div>
+
+          <div className={`line`}></div>
+
+          <div className={styles.filterBarBlock}>
+            <h3 className={`bold-text`}>Опыт</h3>
+            <div className={styles.filterBarBlockForm}>
+              <label>
+                <input value="0" type="radio" name="experience" />
+                <span className={`dark-text`}>Нет опыта</span>
+              </label>
+
+              <label>
+                <input value="1-3" type="radio" name="experience" />
+                <span className={`dark-text`}>От 1 до 3 лет</span>
+              </label>
+
+              <label>
+                <input value="4-7" type="radio" name="experience" />
+                <span className={`dark-text`}>От 4 до 7 лет</span>
+              </label>
+
+              <label>
+                <input value="8" type="radio" name="experience" />
+                <span className={`dark-text`}>От 8+ лет</span>
+              </label>
+
+            </div>
+          </div>
+
+          <div className={`line`}></div>
+          <BlueButton title={"Применить"} />
+        </form>
       }
       {is_applicants &&
-                <div className={styles.filterBarContent}>
-                <div className={styles.filterBarBlock}>
-                  <h3 className={`dark-text`}>Зарплатные ожидания</h3>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp1" />
-                    <label className={`small-text`} htmlFor="zp1">От 25.000</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp2" />
-                    <label className={`small-text`} htmlFor="zp2">От 50.000</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp3" />
-                    <label className={`small-text`} htmlFor="zp3">От 100.000</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp4" />
-                    <label className={`small-text`} htmlFor="zp4">От 150.000</label>
-                  </div>
-      
-      
-                </div>
-    
-                <div className={styles.filterBarBlock}>
-                  <h3 className={`dark-text`}>Опыт работы</h3>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp1" />
-                    <label className={`small-text`} htmlFor="zp1">Не нужен</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp2" />
-                    <label className={`small-text`} htmlFor="zp2">0-1 год</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp3" />
-                    <label className={`small-text`} htmlFor="zp3">1-3 года</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp4" />
-                    <label className={`small-text`} htmlFor="zp4">3-6 года</label>
-                  </div>
-      
-                  <div className={styles.filterBarBlockForm}>
-                    <input type="checkbox" name="zp5" />
-                    <label className={`small-text`} htmlFor="zp5">6+ лет</label>
-                  </div>
-      
-                </div>
-              </div>
-      }
-      {is_employers && 
-              <div className={styles.filterBarContent}>
-              <div className={styles.filterBarBlock}>
-    
-                <div className={styles.filterBarBlockForm}>
-                  <input type="checkbox" name="zp1" />
-                  <label className={`dark-text`} htmlFor="zp1">Рекомендованный работодатель</label>
-                </div>
+        <form className={styles.filterBarContent} onSubmit={onSubmit}>
 
-                <div className={styles.filterBarBlockForm}>
-                  <input type="checkbox" name="zp2" />
-                  <label className={`dark-text`} htmlFor="zp2">Активно ищет сотрудников</label>
-                </div>
-      
-              </div>
+          <div className={styles.filterBarBlock}>
+            <h3 className={`bold-text`}>Желаемый уровень дохода</h3>
+
+            <div className={styles.filterBarBlockForm}>
+
+              <label>
+                <input value="25-59" type="radio" name="salary" />
+                <span className={`dark-text`}>От 25.000 до 59.000 руб.</span>
+              </label>
+
+              <label>
+                <input value="60-109" type="radio" name="salary" />
+                <span className={`dark-text`}>От 60.000 до 109.000 руб.</span>
+              </label>
+
+              <label>
+                <input value="110-159" type="radio" name="salary" />
+                <span className={`dark-text`}>От 110.000 до 159.000 руб.</span>
+              </label>
+
+              <label>
+                <input value="160" type="radio" name="salary" />
+                <span className={`dark-text`}>От 160.000+ руб.</span>
+              </label>
+
             </div>
+          </div>
+
+          <div className={`line`}></div>
+
+          <div className={styles.filterBarBlock}>
+            <h3 className={`bold-text`}>Опыт</h3>
+
+            <div className={styles.filterBarBlockForm}>
+              <label>
+                <input value="0" type="radio" name="experience" />
+                <span className={`dark-text`}>Нет опыта</span>
+              </label>
+
+              <label>
+                <input value="1-3" type="radio" name="experience" />
+                <span className={`dark-text`}>От 1 до 3 лет</span>
+              </label>
+
+              <label>
+                <input value="4-7" type="radio" name="experience" />
+                <span className={`dark-text`}>От 4 до 7 лет</span>
+              </label>
+
+              <label>
+                <input value="8" type="radio" name="experience" />
+                <span className={`dark-text`}>От 8+ лет</span>
+              </label>
+
+            </div>
+          </div>
+
+          <div className={`line`}></div>
+
+          <BlueButton title={"Применить"} />
+        </form>
       }
     </div>
   );

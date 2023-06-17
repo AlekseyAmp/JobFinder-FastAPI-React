@@ -1,27 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { login } from '../../services/auth'
 import { access_token } from '../../constants/token'
 
+import ErrorBox from '../../components/ErrorBox/ErrorBox';
 import AuthForm from '../../components/Forms/AuthForm/AuthForm';
 import styles from './Auth.module.scss';
 
 function Login() {
     const navigate = useNavigate();
     const isAuthorize = access_token
+    const [error, setError] = useState(null);
+    const [showError, setShowError] = useState(false);
 
     const inputConfigs = [
         { title: "Номер телефона", type: 'text', name: 'phone' },
         { title: "Введите пароль", type: 'password', name: 'password' },
     ]
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
         const phone_number = e.target.phone.value;
         const password = e.target.password.value;
-        login(phone_number, password)
-        navigate('/vacancies')
+        await login(phone_number, password, setError, setShowError, navigate)
     };
 
     return (
@@ -43,6 +45,7 @@ function Login() {
                     </div>
                 </div>
             )}
+        {showError && <ErrorBox error={error} />}
         </div>
     )
 }

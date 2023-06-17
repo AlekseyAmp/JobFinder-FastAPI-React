@@ -70,4 +70,4 @@ def get_feedbacks_by_vacancy_id(vacancy_id: str, db: Session):
         }
         feedbacks_arr.append(feedback_dict)
 
-    return feedbacks_arr
+    return feedbacks_arr[::-1]
