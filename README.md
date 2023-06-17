@@ -6,7 +6,7 @@
   Установить git (https://git-scm.com/download/win)
   Зайти в удобный редактор кода и открыть термин (ctrl + shift + ё)
   ```
-  git clone https://github.com/AlekseyAmp  JobFinder-FastAPI-React.git
+  git clone https://github.com/AlekseyAmp/JobFinder-FastAPI-React
   ```
 
 - Создать .env файл 
