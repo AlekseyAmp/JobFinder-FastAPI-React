@@ -1,6 +1,6 @@
 ## JobFinder
 
-JobFinder - это веб-приложение для поиска работы, построенное с использованием FastAPI (Python) для бэкенда API и ReactJS для пользовательского интерфейса. Оно использует PostgreSQL в качестве базы данных. Пользователи могу становить работодателями, либо соискателями. Размещать вакансии и откликаться на них. Размещать своё резюме. Фильтровать данные и искать их.
+JobFinder is a web application for storing files, built with FastAPI (Python) for the API backend and ReactJS for the user interface. It uses MongoDB as the database and allows users to store files in different categories (folders). Users can create, rename, and delete their own custom categories, as well as upload, download, rename, and delete files. Additionally, users can move files to trash or favorites, and view their history of actions on the site. The project also features a sidebar that displays useful information and options for users.
 
 ---
 
