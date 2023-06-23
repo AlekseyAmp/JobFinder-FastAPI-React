@@ -1,20 +1,26 @@
-### Запуск проекта
-  
-  - Установите БД PostgreSQL (https://www.postgresql.org/download/windows/)
-  - Зайдите в PgAdmin4 и создайте базу данных с названием JobFinder
+## JobFinder
 
-  Установить git (https://git-scm.com/download/win)
-  Зайти в удобный редактор кода и открыть термин (ctrl + shift + ё)
+JobFinder - это веб-приложение для поиска работы, построенное с использованием FastAPI (Python) для бэкенда API и ReactJS для пользовательского интерфейса. Оно использует PostgreSQL в качестве базы данных. Пользователи могу становить работодателями, либо соискателями. Размещать вакансии и откликаться на них. Размещать своё резюме. Фильтровать данные и искать их.
+
+---
+
+### Running the project 
+  
+  - Install the PostgreSQL database (https://www.postgresql.org/download/windows/)
+  - Go to PgAdmin4 and create a database called JobFinder
+
+  Install git (https://git-scm.com/download/win)
+  Go into a convenient code editor and open the term (ctrl + shift + e)
   ```
   git clone https://github.com/AlekseyAmp/JobFinder-FastAPI-React
   ```
 
-- Создать .env файл 
-    - Перейти в папку server 
-    - Создать файл ".env"
-    - Скопируйте информацию снизу и вставьте в .env
+- Create an .env file 
+    - Go to folder server 
+    - Create a ".env" file
+    - Copy the information from the bottom and paste it into the .env
     
-    ```.env
+    ``.env
     DATABASE_URL=postgresql://postgres:1@localhost:5432/JobFinder
     DATABASE_NAME=JobFinder
     ACCESS_TOKEN_EXPIRES_IN=15
@@ -27,37 +33,44 @@
     REFRESH_TOKEN_EXPIRES_IN=15
     ACCESS_TOKEN_EXPIRES_IN=60
     ```
-- Создайте виртуальное окружение, в терминале перейдите по пути "cd/server" и вставьте эту команду
-    ```.bash
+- Create a virtual environment, go to "cd/server" in the terminal and paste this command
+    ``.bash
     python -m venv venv
     ```
-- Активируйте venv
-  - на Windows ```
+- Activate venv
+  - on Windows ```
                venv/scripts/activate
                ```
-  - на Linux ```
+  - On Linux ```
              venv/bin/activate
              ```
-  - Установите нужные библиотеки
-  ```.bash
+  - Install the required libraries
+  ``.bash
   pip install -r requirements.txt
   ```
 
-  - Запустите сервер
-  ```.bash
+  - Start the server
+  ``.bash
   uvicorn main:app --reload
   ```
 
-#### Запуск клиента
-- Скачайте https://nodejs.org/en/download
-- В терминале перейдите по пути "cd/client" 
-- Установите нужные библиотеки
-  ```.bash
+#### Run the client
+- Download https://nodejs.org/en/download
+- In the terminal go to the path "cd/client". 
+- Install the required libraries
+  ``.bash
   npm install react-router-dom
   ```
-- Запустите клиент
-  ```.bash
+- Run the client
+  ``.bash
   npm start
   ```
 
 ---
+
+
+### The stack
+
+- **Python** - FastAPI framework for API design
+- **ReactJS** - for the user interface
+- **PostgreSQL** - Database
