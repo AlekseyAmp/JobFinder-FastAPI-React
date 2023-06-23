@@ -36,7 +36,7 @@ JobFinder is a web application for storing files, built with FastAPI (Python) fo
     ```
 
 - Create a virtual environment, go to "cd/server" in the terminal and paste this command
-    ``.bash
+    ```bash
     python -m venv venv
     ```
 - Activate venv
