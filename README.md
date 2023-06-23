@@ -11,7 +11,8 @@ JobFinder is a web application for storing files, built with FastAPI (Python) fo
 
   Install git (https://git-scm.com/download/win)
   Go into a convenient code editor and open the term (ctrl + shift + e)
-  ```
+  
+  ```bash
   git clone https://github.com/AlekseyAmp/JobFinder-FastAPI-React
   ```
 
@@ -20,7 +21,7 @@ JobFinder is a web application for storing files, built with FastAPI (Python) fo
     - Create a ".env" file
     - Copy the information from the bottom and paste it into the .env
     
-    ``.env
+    ```.env
     DATABASE_URL=postgresql://postgres:1@localhost:5432/JobFinder
     DATABASE_NAME=JobFinder
     ACCESS_TOKEN_EXPIRES_IN=15
@@ -33,24 +34,25 @@ JobFinder is a web application for storing files, built with FastAPI (Python) fo
     REFRESH_TOKEN_EXPIRES_IN=15
     ACCESS_TOKEN_EXPIRES_IN=60
     ```
+
 - Create a virtual environment, go to "cd/server" in the terminal and paste this command
     ``.bash
     python -m venv venv
     ```
 - Activate venv
-  - on Windows ```
+  - on Windows ```bash
                venv/scripts/activate
                ```
-  - On Linux ```
+  - On Linux ```bash
              venv/bin/activate
              ```
   - Install the required libraries
-  ``.bash
+  ```bash
   pip install -r requirements.txt
   ```
 
   - Start the server
-  ``.bash
+  ```bash
   uvicorn main:app --reload
   ```
 
@@ -58,11 +60,11 @@ JobFinder is a web application for storing files, built with FastAPI (Python) fo
 - Download https://nodejs.org/en/download
 - In the terminal go to the path "cd/client". 
 - Install the required libraries
-  ``.bash
+  ```bash
   npm install react-router-dom
   ```
 - Run the client
-  ``.bash
+  ```bash
   npm start
   ```
 
