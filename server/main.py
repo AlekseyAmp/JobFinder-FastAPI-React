@@ -19,7 +19,7 @@ from routes import (
 )
 
 
-app = FastAPI()
+app = FastAPI(title="JobFinder", version="0.1")
 
 
 user.Base.metadata.create_all(bind=engine)
